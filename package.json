@@ -1,0 +1,37 @@
+{
+  "name": "chatbot-blacks-station",
+  "version": "1.0.0",
+  "description": "Chatbot Restaurante Blacks La Estación",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neviskala-laloma/Chatbot-Blacks-Station.git"
+  },
+  "bugs": {
+    "url": "https://github.com/neviskala-laloma/Chatbot-Blacks-Station/issues"
+  },
+  "homepage": "https://github.com/neviskala-laloma/Chatbot-Blacks-Station#readme",
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.893.0",
+    "@aws-sdk/s3-request-presigner": "^3.893.0",
+    "aws-sdk": "^1.18.0",
+    "axios": "^1.13.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "glob": "^13.0.6",
+    "googleapis": "^171.4.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0",
+    "nodemon": "^3.1.14"
+  }
+}
