@@ -37,119 +37,14 @@ class MessageHandler {
     this.assistandState = {};
   }
 
-  async handleIncomingMessage(message, senderInfo, screen, datosReserva, datosPedido, pedidoStr) {
+  async handleIncomingMessage(message) {
     try {
-      if (!isWithinBusinessHours()) {
         if (message?.type === 'text') {
-        const incomingMessage = message.text.body.toLowerCase().trim();
-          await this.handleAssistand(message.from, incomingMessage);
-          if (this.isGreeting(incomingMessage)) {
-            await this.sendWelcomeMessage(message.from, message.id, senderInfo);
-            await this.sendWelcomeMenu(message.from);
-          } else if (incomingMessage === 'ayuda') {
-            await this.helpMenu(message.from);
-          } else if (incomingMessage === 'carta') {
-            await whatsappService.sendMessage(message.from, "Espera que cargue la carta... 📄");
-            await this.sendMedia(message.from);
-          } else if (incomingMessage === 'ubicacion' || incomingMessage === 'ubicación') {
-            await this.sendLocation(message.from);
-          } else if (incomingMessage === 'asesor') {
-            await this.sendContact(message.from); 
-          } else if (this.isReservation(incomingMessage)) {
-            await this.handleMenuOption(message.from, 'option_2');
-          } else if (this.isOrder(incomingMessage)) {
-            await this.handleMenuOption(message.from, 'option_1');
-          } else if (this.isQuestion(incomingMessage)) {
-            this.assistandState[message.from] = { step: 'question' };
-            await this.handleAssistandFlow(message.from, incomingMessage);
-          } 
-          else if (this.appointmentState[message.from]) {
-            await this.handleAppointmentFlow(message.from, incomingMessage);
-          } 
-          else if (this.assistandState[message.from]) {
-            await this.handleAssistandFlow(message.from, incomingMessage);
-          } 
-          else {
-            await this.handleMenuOption(message.from, incomingMessage);
-          }
-            await whatsappService.markAsRead(message.id);
-
-        } else if (message?.type === 'interactive') {
-            if (message?.interactive.type === 'nfm_reply') {
-              await this.respFlow(message.from, screen, datosReserva, datosPedido, pedidoStr);
-              await whatsappService.markAsRead(message.id);
-              accion["pantalla"] = screen;
-            }
-            else {
-              const option = message?.interactive?.button_reply?.id;
-              await this.handleMenuOption(message.from, option);
-              await whatsappService.markAsRead(message.id);
-            }        
-      } else if (message?.type === 'image' && accion["pantalla"] === 'SUMMARY') {
-        const datosUsuario = userOrderDataMap[message.from] || {};
-        const imageBuffer = await downloadImageFromMeta(message.image.url);
-        
-        // 2. Subir a S3
-        const publicUrl = await uploadToPublicStorage(imageBuffer, message.image.mime_type);
-        
-        // 3. Enviar la imagen al número oficial
-        const nombre = datosUsuario.name || "";
-        const celular = datosUsuario.phone || "";
-        const direccion = datosUsuario.address || "";
-        const monto = datosUsuario.monto || "";
-        const pedido = datosUsuario.pedidoStr || "";
-
-        const templateVars = [
-          nombre,
-          celular,
-          direccion,
-          pedido,
-          monto ? monto.toLocaleString('es-CO') : "",
-        ];
-
-        const numerosOficiales = [
-          "573162822076",
-          "573134315692"
-        ];
-
-        for (const numero of numerosOficiales) {
-          await whatsappService.sendTemplateMediaMessage(
-            numero, // Número oficial
-            "comprobante_pago", // Nombre de tu plantilla
-            publicUrl,         // URL pública de la imagen en S3
-            templateVars
-          );
-        }
-        const msg = "Gracias por compartirnos el comprobante de tu pago ✅\n\nPronto nos pondremos en contacto contigo para confirmar tu pedido 😊";
-        await whatsappService.sendMessage(message.from, msg);
-        await this.menuOpcionalHiring(message.from);
-        }
-      } else if (message?.type === 'text' && this.isQuestion(message?.text.body.toLowerCase().trim())) {
           const incomingMessage = message.text.body.toLowerCase().trim();
-          this.assistandState[message.from] = { step: 'question' };
           await this.handleAssistand(message.from, incomingMessage);
-      } else if (message?.type === 'text' && message?.text.body.toLowerCase().trim() === 'ayuda') {
-          await this.helpMenu(message.from);
-      } else if (message?.type === 'text' && message?.text.body.toLowerCase().trim() === 'carta') {
-          await whatsappService.sendMessage(message.from, "Espera que cargue la carta... 📄");
-          await this.sendMedia(message.from);
-      } else if (message?.type === 'text' && message?.text.body.toLowerCase().trim() === 'ubicacion' || message?.type === 'text' && message?.text.body.toLowerCase().trim() === 'ubicación') {
-          await this.sendLocation(message.from);
-      } else if (message?.type === 'text' && message?.text.body.toLowerCase().trim() === 'asesor') {
-          await this.sendContact(message.from);
-      } else if (message?.type === 'text' && this.isReservation(message?.text.body.toLowerCase().trim())) {
-          await this.handleMenuOption(message.from, 'option_2');
+          await whatsappService.markAsRead(message.id);
       }
-      else if (message?.type === 'interactive' && message?.interactive.type === 'nfm_reply' && screen==="RESUMEN") {
-        await this.respFlow(message.from, screen, datosReserva, datosPedido, pedidoStr);
-        await whatsappService.markAsRead(message.id);
-      } else {
-        const msg = "¡Hola! 😊\nNuestro horario de atención es *todos los días* de *12:00 p.m. a 10:00 p.m.*\nSi necesitas *Reservar* puedes hacerlo en el *botón de Reservas* o si prefieres hablar con la IA🤖 haz tu pregunta con el signo ❔\n\n ¡Gracias por escribirnos! 😊";
-        await this.menuReserva(message.from);
-        await whatsappService.sendMessage(message.from, msg, message.id);
-        return;
-      }
-  } catch (error) {
+    } catch (error) {
     printDetailedError(error);
   }
 }
