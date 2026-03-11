@@ -39,15 +39,18 @@ class MessageHandler {
 
   async handleIncomingMessage(message) {
     try {
-        if (message?.type === 'text') {
-          const incomingMessage = message.text.body.toLowerCase().trim();
-          await this.handleAssistand(message.from, incomingMessage);
-          await whatsappService.markAsRead(message.id);
+      if (message?.type === 'text') {
+        const incomingMessage = message.text.body.toLowerCase().trim();
+        const userId = message.from;
+        
+        // Procesar con Gemini pasando el ID del usuario
+        await this.handleAssistand(userId, incomingMessage);
+        await whatsappService.markAsRead(message.id);
       }
     } catch (error) {
-    printDetailedError(error);
+      printDetailedError(error);
+    }
   }
-}
 
   isGreeting(message) {
     const greetings = ["hola", "hi", "ok", "listo", "bien", "bueno", "hello", "HL", "Oe", "buenas", "buenos dias", "buenas tardes", "buenas noches", "saludos", "como estás", "hl", "gracias", "muchas gracias"];
@@ -1228,20 +1231,18 @@ completeOrder(productos, data) {
     await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
   }
 
-  async handleAssistand(to, message) {
-    // const state = this.assistandState[to];
-    let response;
-
-    // switch (state.step) {
-      // case 'question':
-    response = await geminiService(message);
-  //   break;
-  // default:
-    // response = "Lo siento 😔 no entendí tu respuesta\nPor Favor, elige una de las opciones del menú.";
-    // }
-
-    // delete this.assistandState[to];
-    await whatsappService.sendMessage(to, response);
+  async handleAssistand(userId, message) {
+    try {
+      // Obtener respuesta de Gemini con memoria de conversación
+      const response = await geminiService(message, userId);
+      
+      // Enviar respuesta al usuario
+      await whatsappService.sendMessage(userId, response);
+    } catch (error) {
+      console.error("Error en handleAssistand:", error);
+      printDetailedError(error);
+      await whatsappService.sendMessage(userId, "Lo siento, estoy teniendo problemas técnicos. Intenta nuevamente 🔧");
+    }
   }
 
   async sendContact(to) {
