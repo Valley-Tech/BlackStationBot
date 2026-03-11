@@ -40,7 +40,10 @@ const geminiService = async (userMessage, userId) => {
     session.lastMessage = new Date();
 
     // Crear modelo con streaming deshabilitado para mejor control
-    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-3-flash-preview",
+      systemInstruction: systemPrompt
+    });
 
     // Construir historial de chat
     const chatHistory = session.history.map(msg => ({
@@ -52,6 +55,7 @@ const geminiService = async (userMessage, userId) => {
     const chat = model.startChat({
       history: chatHistory,
       generationConfig: {
+        maxOutputTokens: 4096,
         temperature: 0.7,
         topP: 0.9,
         topK: 40
