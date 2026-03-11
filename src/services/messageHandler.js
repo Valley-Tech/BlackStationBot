@@ -39,9 +39,10 @@ class MessageHandler {
 
   async handleIncomingMessage(message, senderInfo, screen, datosReserva, datosPedido, pedidoStr) {
     try {
-      if (isWithinBusinessHours()) {
+      if (!isWithinBusinessHours()) {
         if (message?.type === 'text') {
         const incomingMessage = message.text.body.toLowerCase().trim();
+          await this.handleAssistand(message.from, incomingMessage);
           if (this.isGreeting(incomingMessage)) {
             await this.sendWelcomeMessage(message.from, message.id, senderInfo);
             await this.sendWelcomeMenu(message.from);
