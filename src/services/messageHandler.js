@@ -1334,18 +1334,18 @@ completeOrder(productos, data) {
   }
 
   async handleAssistand(to, message) {
-    const state = this.assistandState[to];
+    // const state = this.assistandState[to];
     let response;
 
-    switch (state.step) {
-      case 'question':
-        response = await geminiService(message);
-        break;
-      default:
-        response = "Lo siento 😔 no entendí tu respuesta\nPor Favor, elige una de las opciones del menú.";
-    }
+    // switch (state.step) {
+      // case 'question':
+    response = await geminiService(message);
+  //   break;
+  // default:
+    // response = "Lo siento 😔 no entendí tu respuesta\nPor Favor, elige una de las opciones del menú.";
+    // }
 
-    delete this.assistandState[to];
+    // delete this.assistandState[to];
     await whatsappService.sendMessage(to, response);
   }
 
