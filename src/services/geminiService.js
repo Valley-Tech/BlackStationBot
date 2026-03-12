@@ -20,8 +20,8 @@ INSTRUCCIONES IMPORTANTES:
 
 INFORMACIÓN DEL RESTAURANTE:
 
-CARTA: 
-ASADOS AL CARBÓN
+CARTA MENU PARRILLA BAR LA ESTACION:
+- ASADOS AL CARBÓN
 
 Carne
 Carne a la brasa, ensalada + papa o patacones.
@@ -55,7 +55,7 @@ Asado Trifásico
 Lomo de cerdo, carne y pechuga + ensalada + papa o patacones.
 Precio: $30.000
 
-ASADOS AL BARRIL
+- ASADOS AL BARRIL
 
 Alitas Tradicionales
 Alitas + papas francesas.
@@ -77,7 +77,7 @@ Chorizos
 Chorizo + papas francesas.
 Precio: $7.000
 
-SALCHIPAPAS
+- SALCHIPAPAS
 
 Porción de Papa
 Papa + queso + salsa.
@@ -115,7 +115,7 @@ Super Estación
 Carne, pechuga, lomo de cerdo, chorizo, butifarra, salchicha, salchicha ranchera, maíz, vegetales, salsa y queso.
 Precio: $25.000
 
-PICADAS
+- PICADAS
 
 Todas las picadas incluyen: carne, pechuga, lomo de cerdo, chorizo, butifarra, salchicha, vegetales, salsa y queso.
 
@@ -140,7 +140,7 @@ Picada Familiar
 Incluye maíz.
 Precio: $140.000
 
-BURGERS
+- BURGERS
 
 Sencilla
 Carne artesanal, jamón, queso mozzarella, vegetales + papas y queso.
@@ -166,7 +166,7 @@ Estacionaria
 Carne artesanal, pollo, salchicha ranchera, chorizo, tocineta, huevo frito, queso mozzarella, vegetales + papa y queso, jamón.
 Precio: $30.000
 
-PATACÓN BURGER
+- PATACÓN BURGER
 
 Sencillo
 Carne artesanal, jamón, queso mozzarella, vegetales y queso.
@@ -192,7 +192,7 @@ Estacionario
 Carne artesanal, pechuga asada, salchicha ranchera, tocineta, maíz, queso mozzarella, vegetales y queso.
 Precio: $25.000
 
-HOT DOG
+- HOT DOG
 
 Sencillo + Papas
 Salchicha, queso, vegetales, salsa + papa y queso.
@@ -210,7 +210,7 @@ Estacionario
 Chorizo, pollo, tocineta, maíz tierno, jamón, queso mozzarella, papa francesa y salsa.
 Precio: $24.000
 
-MARÍA CASQUITO
+- MARÍA CASQUITO
 
 Sencillo
 Salchicha, chorizo, butifarra, cebolla a la grille, lechuga, salsa y queso.
@@ -220,7 +220,7 @@ Especial
 Carne, pechuga, salchicha ranchera, jamón, cebolla a la grille, lechuga, salsa y queso.
 Precio: $25.000
 
-PATACÓN RELLENO
+- PATACÓN RELLENO
 
 Porción de Patacones
 Patacones + queso.
@@ -234,7 +234,7 @@ Especial
 Carne, pechuga, chorizo, butifarra, lomo de cerdo, jamón, cebolla a la grille, vegetales, queso y salsa.
 Precio: $25.000
 
-DESGRANADOS
+- DESGRANADOS
 
 Sencillo
 Salchicha, butifarra, chorizo, maíz, vegetales, queso y salsa.
@@ -248,7 +248,7 @@ Estacionario (2 personas)
 Maíz tierno, salchicha ranchera, chorizo, butifarra, carne, pechuga, vegetales, queso mozzarella.
 Precio: $40.000
 
-SANDWICH
+- SANDWICH
 
 Sencillo
 Jamón, queso mozzarella, vegetales y salsa.
@@ -266,35 +266,118 @@ Especial Estacionario
 Carne, pechuga, salchicha ranchera, maíz, jamón, queso mozzarella, vegetales, salsa + porción de papa.
 Precio: $25.000
 
-BEBIDAS
+- BEBIDAS
 
 Gaseosa
-
 Agua
-
 Jugo Hit
-
 Pony Malta
-
 Cerveza
-
 Cerveza Escarchada
-
 Jugos Naturales
-
 Limonada Natural
-
 Limonada Cerezada
-
 Micheladas
-
 Malteadas
 
-- Horario: 12:00 PM a 10:00 PM
+CARTA MENU ANILLADO PIZZERIA 2025
+- Pizzas tradicionales:
+
+Pizza Hawaiana: piña, jamón y queso.
+4 porciones = $16.000, 6 porciones = $23.000, 8 porciones = $36.000 y 12 porciones = $54.000.
+
+Pizza Hawaiana Chicken: piña, jamón y pollo.
+4 porciones = $18.000, 6 porciones = $26.000, 8 porciones = $40.000 y 12 porciones = $58.000.
+
+Pizza Queso - Bocadillo: queso y bocadillo.
+4 porciones = $16.000, 6 porciones = $23.000, 8 porciones = $36.000 y 12 porciones = $54.000.
+
+Pizza Jamón: jamón y queso.
+4 porciones = $17.000, 6 porciones = $25.000, 8 porciones = $38.000 y 12 porciones = $55.000.
+
+Pizza Mexicana: carne, maíz, pimentón, cebolla, jalapeño y queso.
+4 porciones = $19.000, 6 porciones = $28.000, 8 porciones = $44.000 y 12 porciones = $61.000.
+
+Pizza Pollo - Jamón: pollo, jamón y queso.
+4 porciones = $18.000, 6 porciones = $25.000, 8 porciones = $39.000 y 12 porciones = $59.000.
+
+Pizza Pollo - Maíz: pollo, maíz y queso.
+4 porciones = $18.000, 6 porciones = $25.000, 8 porciones = $39.000 y 12 porciones = $59.000.
+
+Pizza Vegetariana: pimentón, cebolla, champiñones y tomate.
+4 porciones = $17.000, 6 porciones = $24.000, 8 porciones = $37.000 y 12 porciones = $58.000.
+
+Pizza Napolitana: tomate y orégano.
+4 porciones = $17.000, 6 porciones = $24.000, 8 porciones = $37.000 y 12 porciones = $56.000.
+
+- Súper Especiales
+
+Pizza Salami: salami y queso.
+4 porciones = $19.000, 6 porciones = $27.000, 8 porciones = $42.000 y 12 porciones = $64.000.
+
+Pizza Peperoni: peperoni y queso.
+4 porciones = $19.000, 6 porciones = $27.000, 8 porciones = $42.000 y 12 porciones = $64.000.
+
+Pizza La Paisita: maíz, chorizo y tocineta.
+4 porciones = $12.000, 6 porciones = $28.000, 8 porciones = $44.000 y 12 porciones = $65.000.
+
+Pizza Pollo Tocineta: pollo, tocineta y queso.
+4 porciones = $19.000, 6 porciones = $27.000, 8 porciones = $42.000 y 12 porciones = $64.000.
+
+Pizza Toxi-Queso: tocineta, maíz tierno y queso.
+4 porciones = $19.000, 6 porciones = $27.000, 8 porciones = $42.000 y 12 porciones = $64.000.
+
+Pizza Pollo - Champiñón: pollo, champiñones y queso.
+4 porciones = $19.000, 6 porciones = $27.000, 8 porciones = $42.000 y 12 porciones = $64.000.
+
+Pizza Caprichosa: salami, champiñón, cebolla y pimentón.
+4 porciones = $19.000, 6 porciones = $27.000, 8 porciones = $42.000 y 12 porciones = $64.000.
+
+Pizza Ranchera: salchicha ranchera, tocineta y maíz tierno.
+4 porciones = $20.000, 6 porciones = $29.000, 8 porciones = $44.000 y 12 porciones = $65.000.
+
+Pizza Carnívora: carne, chorizo, tocineta y queso.
+4 porciones = $20.000, 6 porciones = $29.000, 8 porciones = $44.000 y 12 porciones = $65.000.
+
+Pizza Marinera: camarón, champiñón, pimentón, cebolla y queso.
+4 porciones = $22.000, 6 porciones = $30.000, 8 porciones = $48.000 y 12 porciones = $72.000.
+
+- Bordes para pizza:
+
+Borde de queso:
+4 porciones = $4.000, 6 porciones = $6.000, 8 porciones = $9.000 y 12 porciones = $14.000.
+
+Borde de bocadillo:
+4 porciones = $4.000, 6 porciones = $6.000, 8 porciones = $8.000 y 12 porciones = $12.000.
+
+Borde de mozzarella:
+4 porciones = $6.000, 6 porciones = $9.000, 8 porciones = $12.000 y 12 porciones = $16.000.
+
+- Panzerotti
+
+Panzerotti Hawaiana Chicken: pollo, piña y jamón. $15.000.
+Panzerotti Mexicano: carne, maíz, pimentón, cebolla y jalapeño. $17.000.
+Panzerotti 5 Carnes: pollo, jamón, salami, tocineta y peperoni. $20.000.
+Panzerotti Pollo - Jamón: pollo, jamón y queso. $15.000.
+Panzerotti Pollo - Champiñón: pollo, champiñón y queso. $17.000.
+Panzerotti Pollo - Maíz: pollo, maíz y queso. $15.000.
+Panzerotti Carnívoro: carne, chorizo, tocineta y ranchera. $19.000.
+Panzerotti Marinero: camarón, champiñón, pimentón y cebolla. $20.000.
+
+- Lasañas:
+
+Lasaña de carne: $18.000.
+Lasaña de pollo: $18.000.
+Lasaña mixta: $19.000.
+Lasaña pollo - champiñón: $19.000.
+Lasaña trifásica: $20.000.
+
+- Horario: 4:00 PM a 10:00 PM
 - Ubicación: Calle 10 #9-133, La Loma, El Paso, Cesar
-- Teléfono: +573113509246
-- Especialidades: Carnes asadas, mariscos, pizzas, comidas rápidas
-- Servicios: Pedidos a domicilio, reservas de mesa, encuestas de satisfacción`;
+- Teléfono domicilios Pizzería: +573113509246
+- Teléfono domicilios Comidas Rápidas: +573224993245
+- Especialidades: asados, al barril, pizzas, comidas rápidas y helados
+- Servicios: Pedidos a domicilio, reservas de mesa, servicio a la mesa`;
 
 const geminiService = async (userMessage, userId) => {
   try {
