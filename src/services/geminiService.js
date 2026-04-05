@@ -473,7 +473,7 @@ const geminiService = async (userMessage, userId) => {
     if (session.history.length > 20) {
       session.history = session.history.slice(-20);
     }
-    console.log("Respuesta:", response);
+    
     return response;
   } catch (error) {
     console.error("Error en Gemini:", error.message);

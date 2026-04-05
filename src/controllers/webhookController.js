@@ -36,7 +36,6 @@ let pedidoStr;
 class WebhookController {  
   async handleIncoming(req, res) {
     const message = req.body.entry?.[0]?.changes[0]?.value?.messages?.[0];
-    console.log(message);
     const recipientPhone = req.body.entry?.[0]?.changes[0]?.value?.metadata?.phone_number_id;
     
     // Solo responde si el mensaje es para el número de este bot
