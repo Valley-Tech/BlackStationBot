@@ -37,14 +37,23 @@ class MessageHandler {
     this.assistandState = {};
   }
 
-  async handleIncomingMessage(message) {
+  async handleIncomingMessage(message, senderInfo) {
     try {
       if (message?.type === 'text') {
         const incomingMessage = message.text.body.toLowerCase().trim();
         const userId = message.from;
-        
-        // Procesar con Gemini pasando el ID del usuario
-        await this.handleAssistand(userId, incomingMessage);
+        if (this.isGreeting(incomingMessage)) {
+          await this.sendWelcomeMessage(userId, senderInfo);
+          await this.sendWelcomeMenu(userId);
+        } else if (this.isQuestion(incomingMessage)) {
+          await this.handleAssistant(userId, incomingMessage);
+        } else {
+          await this.handleMenuOption(message.from, incomingMessage);
+        }
+        await whatsappService.markAsRead(message.id);
+      } else if (message?.type === 'interactive') {
+        const option = message?.interactive?.button_reply?.id;
+        await this.handleMenuOption(message.from, option);
         await whatsappService.markAsRead(message.id);
       }
     } catch (error) {
@@ -119,11 +128,11 @@ class MessageHandler {
     return senderInfo.profile?.name || senderInfo.wa_id || "Cliente";
   }
 
-  async sendWelcomeMessage(to, messageId, senderInfo) {
+  async sendWelcomeMessage(to, senderInfo) {
     try {
         const name = this.getSenderName(senderInfo).match(/^(\w+)/)?.[1];
-        const welcomeMessage = `¡Hola 👋 ${name}!\nBienvenid@ a *La Estación*🌭🍔🍟🍕\n\n¿Qué deseas disfrutar hoy? 😊\n\nEscribe *ayuda* si la necesitas`;
-        await whatsappService.sendMessage(to, welcomeMessage, messageId);
+        const welcomeMessage = `¡Hola 👋 ${name}!\nBienvenid@ a *MerkaCentro 24 Horas*🏪🛒\n\n¿Qué deseas hacer hoy? 😊\n\nEscribe *ayuda* si la necesitas`;
+        await whatsappService.sendMessage(to, welcomeMessage);
     } catch (error) {
       printDetailedError(error);
     }
@@ -133,41 +142,41 @@ class MessageHandler {
     const menuMessage = "¿Qué deseas hacer?";
     const buttons = [
       {
-        type: 'reply', reply: { id: 'option_1', title: 'Pedir 🛒' }
-      },
-      // {
-      //   type: 'reply', reply: { id: 'option_2', title: 'Reservar 📋' }
-      // },
-      // {
-      //   type: 'reply', reply: { id: 'option_3', title: 'Preguntar 🤖' }
-      // }
-    ];
-
-    await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
-  }
-
-  async menuOpcional(to) {
-    const menuMessage = "Elige la categoría:";
-    const buttons = [
-      {
-        type: 'reply', reply: { id: 'opt1', title: 'Comidas Rápidas🍔' }
+        type: 'reply', reply: { id: 'option_1', title: 'Mercado 🛒🛍️' }
       },
       {
-        type: 'reply', reply: { id: 'opt2', title: 'Blacks Pizzas🍕' }
+        type: 'reply', reply: { id: 'option_2', title: 'Gaseosas y mekatos🥤🍬' }
       },
       {
-        type: 'reply', reply: { id: 'opt3', title: 'Heladería Yellow🍦' }
+        type: 'reply', reply: { id: 'option_3', title: 'Cuidado personal🧼💊' }
       }
     ];
 
     await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
   }
 
-  async botonSi(to) {
-    const menuMessage = "¿Deseas bebida🍹🍸 o postre? 🍨🥞 ";
+  async menuCategorias(to) {
+    const menuMessage = "Elige la categoría:";
     const buttons = [
       {
-        type: 'reply', reply: { id: 'si', title: 'Sí ✅' }
+        type: 'reply', reply: { id: 'opcion_1', title: 'Mercado 🛒🛍️' }
+      },
+      {
+        type: 'reply', reply: { id: 'opcion_2', title: 'Gaseosas y mekatos🥤🍬' }
+      },
+      {
+        type: 'reply', reply: { id: 'opcion_3', title: 'Cuidado personal🧼💊' }
+      }
+    ];
+
+    await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
+  }
+
+  async otrasCategorias(to) {
+    const menuMessage = "Elige la subcategoría: ";
+    const buttons = [
+      {
+        type: 'reply', reply: { id: 'opt1', title: '' }
       }
     ];
 
@@ -208,13 +217,13 @@ class MessageHandler {
   return diaSemana
   }
   
-async menuCarta(to) {
-  let template;
-  if (await this.getDia()==="Domingo") {
-    template = { 
+async catalogoMercado(to) {
+  try {
+    const template = {
       name: "catalogo",
-      language: { 
-          code: "Es_Co" },
+      language: {
+        code: "Es_Co"
+      },
       components: [
           {
             type: "button",
@@ -226,109 +235,97 @@ async menuCarta(to) {
             "action": {
               "sections": [
                 {
-                  "title": "ASADOS AL BARRIL",
+                  "title": "Salsas Y Condimentos",
                   "product_items": [
                     {
-                      "product_retailer_id": "6133f09d5af774183ce25e0f"
+                      "product_retailer_id": "69c36847fd71b5f79f0423f2"
                     },
                     {
-                      "product_retailer_id": "6133e891d145504ca38cbeeb"
+                      "product_retailer_id": "69c36b2420de4f254d316291"
                     },
                     {
-                      "product_retailer_id": "6133f070d145504ca38cbf3a"
-                    }
-                  ]
-                },
-                {
-                  "title": "PARA PICAR",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "5de86e87205aba0e1c990910"
+                      "product_retailer_id": "69c36b146a7528a70c1d8a3c"
                     },
                     {
-                      "product_retailer_id": "654ffcee0779b105ec6ac3bd"
+                      "product_retailer_id": "69c3677ffd71b5f79f040165"
                     },
                     {
-                      "product_retailer_id": "5dbcae51c557e50e67febfcc"
+                      "product_retailer_id": "69c3676dbfb27e5db666fa9a"
                     },
                     {
-                      "product_retailer_id": "5dbcad3fc557e50e67febfac"
+                      "product_retailer_id": "69c3682675e6fcf877e21b7a"
                     },
                     {
-                      "product_retailer_id": "5dbcae00c557e50e67febfc0"
+                      "product_retailer_id": "69c36801a88b9bc519bbc966"
                     },
                     {
-                      "product_retailer_id": "5dbcb083c557e50e67febfdb"
-                    },
-                  ]
-                },
-                {
-                  "title": "PLATOS FUERTES",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "67981c57bd2f74e33cfce707"
+                      "product_retailer_id": "69c368a07896dea20a07269e"
                     },
                     {
-                      "product_retailer_id": "66ef02fa4ff68adb785f09f8"
+                      "product_retailer_id": "69c36812bfb27e5db6671111"
                     },
                     {
-                      "product_retailer_id": "619e8bd01880235f6d5b27e5"
+                      "product_retailer_id": "69c367f07896dea20a0714a5"
                     },
                     {
-                      "product_retailer_id": "5dbcb308c557e50e67febff9"
+                      "product_retailer_id": "69c36c7c6a7528a70c1df41d"
                     },
                     {
-                      "product_retailer_id": "5dc733ad7c14810dfd3fec3f"
+                      "product_retailer_id": "69c36c4c872399ad64747ae6"
                     },
                     {
-                      "product_retailer_id": "6311736932c31c05fbf10f89"
+                      "product_retailer_id": "69c36c591b70fbcf1bc535dc"
                     },
                     {
-                      "product_retailer_id": "68203e8d7f735e5e48b7ec3b"
+                      "product_retailer_id": "69c36c6f3cce32fbe56caa6c"
                     },
                     {
-                      "product_retailer_id": "5e5ae290338d200e065c3577"
+                      "product_retailer_id": "69c368367896dea20a071cd7"
                     },
                     {
-                      "product_retailer_id": "5dbcb3d9c557e50e67fec005"
+                      "product_retailer_id": "69c3661cbfb27e5db666ad95"
                     },
                     {
-                      "product_retailer_id": "5dbcb5a6c557e50e67fec022"
+                      "product_retailer_id": "69c369da3cce32fbe56bf103"
                     },
                     {
-                      "product_retailer_id": "5de84c6e205aba0e1c9907d0"
+                      "product_retailer_id": "69c3698cfd71b5f79f0473f8"
                     },
                     {
-                      "product_retailer_id": "68203ef70ae0923d28d06765"
+                      "product_retailer_id": "69c36adc7896dea20a07a0f2"
                     },
                     {
-                      "product_retailer_id": "667f06fe23caaaaf0451a641"
+                      "product_retailer_id": "69c366e63cce32fbe56b2d46"
                     },
                     {
-                      "product_retailer_id": "5dbcb57ec557e50e67fec01f"
+                      "product_retailer_id": "69c36793872399ad64732db2"
                     },
                     {
-                      "product_retailer_id": "654ff6380779b105ec6ac20a"
+                      "product_retailer_id": "69c36c23bfb27e5db667eadb"
                     },
                     {
-                      "product_retailer_id": "654ff7ba33294a05ef9f32f7"
+                      "product_retailer_id": "69c36c32fd71b5f79f05681c"
                     },
                     {
-                      "product_retailer_id": "61a10ddf1fd14430485f8cb9"
+                      "product_retailer_id": "69c36c8f872399ad64748db7"
                     },
                     {
-                      "product_retailer_id": "61a2657c1fd14430485f9f0e"
-                    },
-                  ],
-                },
-                {
-                  "title": "MENÚ INFANTIL",
-                  "product_items": [ 
-                    {
-                      "product_retailer_id": "6550028ec2087c73f3b7775e"
+                      "product_retailer_id": "69c3699e872399ad6473ba11"
                     },
                     {
-                      "product_retailer_id": "61a118171fd14430485f8d78"
+                      "product_retailer_id": "69c36708bfb27e5db666e687"
+                    },
+                    {
+                      "product_retailer_id": "69c36a71872399ad6473e5ee"
+                    },
+                    {
+                      "product_retailer_id": "69c36a25872399ad6473d106"
+                    },
+                    {
+                      "product_retailer_id": "69c369c31b70fbcf1bc4a8a7"
+                    },
+                    {
+                      "product_retailer_id": "69c36a391b70fbcf1bc4c1e1"
                     },
                   ]
                 }
@@ -338,128 +335,15 @@ async menuCarta(to) {
         ]
           }
       ] 
-  }
-}
-else {
-    template = { 
-      name: "catalogo",
-      language: { 
-          code: "Es_Co" },
-      components: [
-          {
-            type: "button",
-            sub_type: "MPM",
-            index: 0,
-            "parameters": [
-          {
-            "type": "action",
-            "action": {
-              "sections": [
-                {
-                  "title": "PARA PICAR",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "5de86e87205aba0e1c990910"
-                    },
-                    {
-                      "product_retailer_id": "654ffcee0779b105ec6ac3bd"
-                    },
-                    {
-                      "product_retailer_id": "5dbcae51c557e50e67febfcc"
-                    },
-                    {
-                      "product_retailer_id": "5dbcad3fc557e50e67febfac"
-                    },
-                    {
-                      "product_retailer_id": "5dbcae00c557e50e67febfc0"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb083c557e50e67febfdb"
-                    },
-                  ]
-                },
-                {
-                  "title": "PLATOS FUERTES",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "67981c57bd2f74e33cfce707"
-                    },
-                    {
-                      "product_retailer_id": "66ef02fa4ff68adb785f09f8"
-                    },
-                    {
-                      "product_retailer_id": "619e8bd01880235f6d5b27e5"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb308c557e50e67febff9"
-                    },
-                    {
-                      "product_retailer_id": "5dc733ad7c14810dfd3fec3f"
-                    },
-                    {
-                      "product_retailer_id": "6311736932c31c05fbf10f89"
-                    },
-                    {
-                      "product_retailer_id": "68203e8d7f735e5e48b7ec3b"
-                    },
-                    {
-                      "product_retailer_id": "5e5ae290338d200e065c3577"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb3d9c557e50e67fec005"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb5a6c557e50e67fec022"
-                    },
-                    {
-                      "product_retailer_id": "5de84c6e205aba0e1c9907d0"
-                    },
-                    {
-                      "product_retailer_id": "68203ef70ae0923d28d06765"
-                    },
-                    {
-                      "product_retailer_id": "667f06fe23caaaaf0451a641"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb57ec557e50e67fec01f"
-                    },
-                    {
-                      "product_retailer_id": "654ff6380779b105ec6ac20a"
-                    },
-                    {
-                      "product_retailer_id": "654ff7ba33294a05ef9f32f7"
-                    },
-                    {
-                      "product_retailer_id": "61a10ddf1fd14430485f8cb9"
-                    },
-                    {
-                      "product_retailer_id": "61a2657c1fd14430485f9f0e"
-                    },
-                  ],
-                },
-                {
-                  "title": "MENÚ INFANTIL",
-                  "product_items": [ 
-                    {
-                      "product_retailer_id": "6550028ec2087c73f3b7775e"
-                    },
-                    {
-                      "product_retailer_id": "61a118171fd14430485f8d78"
-                    },
-                  ]
-                }
-              ]
-            }
-          }
-        ]
-          }
-      ] 
-  }
-}
+    }
   return await whatsappService.sendMenu(to, template);
+  }
+  catch (error) {
+      printDetailedError(error);
+  }
 }
 
-  async menuCarta2(to) {
+  async catalogoMercado2(to) {
     try {
       const template = {
         name: "menucarta",
@@ -477,127 +361,98 @@ else {
             "action": {
               "sections": [
                 {
-                  "title": "PASTAS",
+                  "title": "Pasabocas Mekatos",
                   "product_items": [
                     {
-                      "product_retailer_id": "67967092084e176a7d5855ba"
+                      "product_retailer_id": "69c226dbfd71b5f79f61d16b"
                     },
                     {
-                      "product_retailer_id": "632df4983bcfe31bedde0e45"
+                      "product_retailer_id": "69c22250fd71b5f79f615912"
                     },
                     {
-                      "product_retailer_id": "5dd9dc26b928d20df3b63e49"
-                    },
-                  ]
-                },
-                {
-                  "title": "PESCADOS Y MARISCOS",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "619d6d801880235f6d5b1c36"
+                      "product_retailer_id": "69c226571a3df39f1103359e"
                     },
                     {
-                      "product_retailer_id": "5dcf187deea63f0df843be1e"
+                      "product_retailer_id": "69c223cf1a3df39f1102f5d7"
                     },
                     {
-                      "product_retailer_id": "5e34ebb51ffca60e28d763ef"
-                    },
-                  ]
-                },
-                {
-                  "title": "ARROCES",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "61a110b91880235f6d5b45a3"
+                      "product_retailer_id": "69c223e2335b9ea55fef2c33"
                     },
                     {
-                      "product_retailer_id": "5f9b5233ef1e265d296b0f8d"
-                    },
-                  ]
-                },
-                {
-                  "title": "SÁNDWICHES",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "6796793106b0703ef18a9f72"
-                    },
-                  ]
-                },
-                {
-                  "title": "ENSALADAS",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "61a119621880235f6d5b4644"
+                      "product_retailer_id": "69c2283df055928f6dde88c4"
                     },
                     {
-                      "product_retailer_id": "61a119421fd14430485f8d96"
-                    },
-                  ]
-                },
-                {
-                  "title": "SUSHI",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "618b0decad2f690565ff0342"
-                    },
-                  ]
-                },
-                {
-                  "title": "COMIDAS RÁPIDAS",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "67981d4d8460dcaf720f2284"
+                      "product_retailer_id": "69c228677896dea20a71f4b8"
                     },
                     {
-                      "product_retailer_id": "67981a7ca9cfd2df9753864e"
+                      "product_retailer_id": "69c228241a3df39f110363d3"
                     },
                     {
-                      "product_retailer_id": "5f9b5636ef1e265d296b0fd3"
+                      "product_retailer_id": "69c2284e1a3df39f11036503"
                     },
                     {
-                      "product_retailer_id": "5dbcb612c557e50e67fec02b"
+                      "product_retailer_id": "69c227bc7bff33f4a3232df4"
                     },
                     {
-                      "product_retailer_id": "5dbcb645c557e50e67fec02e"
+                      "product_retailer_id": "69c2233c7bff33f4a32253bd"
                     },
                     {
-                      "product_retailer_id": "67981bf757fc699d06fbe11c"
+                      "product_retailer_id": "69c228a81a3df39f1103714a"
                     },
                     {
-                      "product_retailer_id": "5ef55e5619721c49eb8bb24a"
+                      "product_retailer_id": "69c222bf19d90721373eeb73"
                     },
                     {
-                      "product_retailer_id": "5dbcb6a5c557e50e67fec03e"
+                      "product_retailer_id": "69c222f17bff33f4a3224ce7"
                     },
                     {
-                      "product_retailer_id": "5dbcb67cc557e50e67fec031"
+                      "product_retailer_id": "69c228bc7896dea20a71fafe"
                     },
                     {
-                      "product_retailer_id": "5dc7332e7c14810dfd3fec34"
+                      "product_retailer_id": "69c22273b5b1d14e31819fff"
                     },
                     {
-                      "product_retailer_id": "5f9b3922ef1e265d296b0d95"
+                      "product_retailer_id": "69c22327335b9ea55fef1534"
                     },
                     {
-                      "product_retailer_id": "5dc7337b7c14810dfd3fec38"
-                    },
-                  ]
-                },
-                {
-                  "title": "CAFÉS",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "62b0b0e63996f328856ad5c3",
+                      "product_retailer_id": "69c22898f055928f6dde8aed"
                     },
                     {
-                      "product_retailer_id": "62b0b10f3996f328856ad5c6"
+                      "product_retailer_id": "69c222da335b9ea55fef097d"
                     },
                     {
-                      "product_retailer_id": "66f990de998c13da021a89ac"
+                      "product_retailer_id": "69c22310fd71b5f79f61659e"
                     },
                     {
-                      "product_retailer_id": "62b0b16b3996f328856ad5d1"
+                      "product_retailer_id": "69c22886335b9ea55ff03046"
                     },
+                    {
+                      "product_retailer_id": "69c222889d3d40869967bb05"
+                    },
+                    {
+                      "product_retailer_id": "69c228d7fd71b5f79f62036b"
+                    },
+                    {
+                      "product_retailer_id": "69c226bc7bff33f4a32302cd"
+                    },
+                    {
+                      "product_retailer_id": "69c21d5e7896dea20a70a2e9",
+                    },
+                    {
+                      "product_retailer_id": "69c21a527896dea20a701c05"
+                    },
+                    {
+                      "product_retailer_id": "69c21d841a3df39f110203a4"
+                    },
+                    {
+                      "product_retailer_id": "69c21da2fd71b5f79f609c2e"
+                    },
+                    {
+                      "product_retailer_id": "69c21d481a3df39f1101fd6e"
+                    },
+                    {
+                      "product_retailer_id": "69c21d367896dea20a709b9b"
+                    }
                   ]
                 }
               ]
@@ -614,7 +469,7 @@ else {
     }
 }
 
-  async menuCarta3(to) {
+  async catalogoMercado3(to) {
     const template = { 
       name: "nuevomenu",
       language: { 
@@ -630,105 +485,103 @@ else {
             "action": {
               "sections": [
                 {
-                  "title": "JUGOS NATURALES",
+                  "title": "Medicamentos",
                     "product_items": [
                       {
-                        "product_retailer_id": "5dc099e151aceb0dd757c620"
+                        "product_retailer_id": "69c218e91a3df39f11010adb"
                       },
                       {
-                        "product_retailer_id": "5dbe24b354eef30e209928e8"
+                        "product_retailer_id": "69c21386f055928f6ddab2eb"
                       },
                       {
-                        "product_retailer_id": "624a2d5d07147a05f0bdab13"
+                        "product_retailer_id": "69c2104f817aaac0ae5feb60"
                       },
                       {
-                        "product_retailer_id": "5dc0a48751aceb0dd757c6fa"
+                        "product_retailer_id": "69c218ba7bff33f4a31fd7c5"
                       },
                       {
-                        "product_retailer_id": "5dc0a48751aceb0dd757c6fb"
+                        "product_retailer_id": "69c217e1335b9ea55fece1cf"
                       },
                       {
-                        "product_retailer_id": "5dc0a48751aceb0dd757c6fc"
+                        "product_retailer_id": "69c2134b7896dea20a6de140"
                       },
                       {
-                        "product_retailer_id": "5dc0a60f51aceb0dd757c70f"
+                        "product_retailer_id": "69c2150b7bff33f4a31e489a"
                       },
                       {
-                        "product_retailer_id": "5f6aafb5456d7550eef4510a"
+                        "product_retailer_id": "69c2146919d90721373bacdd"
                       },
                       {
-                        "product_retailer_id": "5f9b4bb3ef1e265d296b0f1a"
+                        "product_retailer_id": "69c2147b817aaac0ae621f7b"
+                      },
+                      {
+                        "product_retailer_id": "69c21021fd71b5f79f5bc57a"
+                      },
+                      {
+                        "product_retailer_id": "69c212f5b5b1d14e317dbf5e"
+                      },
+                      {
+                        "product_retailer_id": "69c21359b5b1d14e317df5f1"
                       },
                   ]
                 },
                 {
-                  "title": "CÓCTELES",
+                  "title": "Cuidado Y Aseo Del Hogar",
                     "product_items": [
                       {
-                        "product_retailer_id": "5e226a93641dd30e29531e11"
+                        "product_retailer_id": "69c3723e1b70fbcf1bc67a83"
                       },
                       {
-                        "product_retailer_id": "5dbcbb91c557e50e67fec108"
+                        "product_retailer_id": "69c374a2a88b9bc519bf3251"
                       },
                       {
-                        "product_retailer_id": "5dbcbb4ec557e50e67fec0ff"
+                        "product_retailer_id": "69c372a37896dea20a094364"
                       },
                       {
-                        "product_retailer_id": "5f836639e5d38924870320a5"
+                        "product_retailer_id": "69c376d920de4f254d32fb19"
                       },
                       {
-                        "product_retailer_id": "639c9ea052617c1b981ee5f4"
+                        "product_retailer_id": "69c376ce1b70fbcf1bc6f723"
                       },
                       {
-                        "product_retailer_id": "639c9e7352617c1b981ee5e1"
+                        "product_retailer_id": "69c4bcb67362d1fe0b8b6221"
                       },
                       {
-                        "product_retailer_id": "639c9e7352617c1b981ee5e4"
+                        "product_retailer_id": "69c4bca3cfdc708e20239bfe"
                       },
                       {
-                        "product_retailer_id": "639c9e7352617c1b981ee5e2"
+                        "product_retailer_id": "69c4b5f31b70fbcf1b6db8cd"
                       },
                       {
-                        "product_retailer_id": "653859e9dc0e3f05d9fd5ccd"
+                        "product_retailer_id": "69c4b86d1b70fbcf1b6eca0f"
                       },
                       {
-                        "product_retailer_id": "639c9ef852617c1b981ee604"
+                        "product_retailer_id": "69c4b808cfdc708e20219966"
                       },
                       {
-                        "product_retailer_id": "639c9ef852617c1b981ee605"
+                        "product_retailer_id": "69c4b7b5309b847b30a2d4b8"
                       },
                       {
-                        "product_retailer_id": "64a1d25d9c7cb205f4f48a23"
+                        "product_retailer_id": "69c215ec9d3d408699650a87"
                       },
                       {
-                        "product_retailer_id": "639c9ef852617c1b981ee606"
-                      },
-                  ]
-                },
-                {
-                  "title": "POSTRES",
-                    "product_items": [
-                      {
-                        "product_retailer_id": "5dc4ce4651aceb0dd757e786"
+                        "product_retailer_id": "69c2152bb5b1d14e317ea6b1"
                       },
                       {
-                        "product_retailer_id": "639c9b7d3c1b5a05f0d8fb97"
+                        "product_retailer_id": "69c36fd8872399ad64754151"
                       },
                       {
-                        "product_retailer_id": "5f9b455cef1e265d296b0eab"
+                        "product_retailer_id": "69c36e617896dea20a088c7e"
                       },
                       {
-                        "product_retailer_id": "639c9ba452617c1b981ee446"
+                        "product_retailer_id": "69c36e7a6a7528a70c1e9c10"
                       },
                       {
-                        "product_retailer_id": "65500860c2087c73f3b778a3"
+                        "product_retailer_id": "69c36e5075e6fcf877e38f55"
                       },
                       {
-                        "product_retailer_id": "6133e235d145504ca38cbd7e"
-                      },
-                      {
-                        "product_retailer_id": "65550a945e11f905f75326f5"
-                      },
+                        "product_retailer_id": "69c36f9620de4f254d31fbfc"
+                      }
                   ]
                 }
               ]
@@ -778,17 +631,15 @@ else {
     let response;
     switch (option) {
       case 'option_1':
-        this.menuOpcional(to);
+        this.catalogoMercado(to);
         idNumber["numero"] = to;
         break;
       case 'option_2':
         idNumber["numero"] = to;
-        await this.sendMediaEvento(to);
-        await this.menuReserva(to);
+        this.catalogoMercado2(to);
         break;
       case 'option_3':
-        this.assistandState[to] = { step: 'question' };
-        response = 'Realiza tu pregunta: ';
+        this.catalogoMercado3(to);
         break;
       case 'option_4':
         response = "Te esperamos en nuestro restaurante! 📍";
@@ -1207,7 +1058,7 @@ completeOrder(productos, data) {
     appendToSheet(userData, spreadsheetId);
   }
 
-  async handleAssistandFlow(to, message) {
+  async handleAssistantFlow(to, message) {
     const state = this.assistandState[to];
     let response;
 
@@ -1231,7 +1082,7 @@ completeOrder(productos, data) {
     await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
   }
 
-  async handleAssistand(userId, message) {
+  async handleAssistant(userId, message) {
     try {
       // Obtener respuesta de Gemini con memoria de conversación
       const response = await geminiService(message, userId);
@@ -1239,7 +1090,7 @@ completeOrder(productos, data) {
       // Enviar respuesta al usuario
       await whatsappService.sendMessage(userId, response);
     } catch (error) {
-      console.error("Error en handleAssistand:", error);
+      console.error("Error en handleAssistant:", error);
       printDetailedError(error);
       await whatsappService.sendMessage(userId, "Lo siento, estoy teniendo problemas técnicos. Intenta nuevamente 🔧");
     }

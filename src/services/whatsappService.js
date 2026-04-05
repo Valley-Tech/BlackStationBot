@@ -2,7 +2,7 @@ import sendToWhatsApp from "../services/httpRequest/sendToWhatsApp.js";
 import { printDetailedError } from './printDetailError.js';
 
 class WhatsAppService {
-  async sendMessage(to, body, messageId) {
+  async sendMessage(to, body) {
     try {
       const data = {
         messaging_product: 'whatsapp',
