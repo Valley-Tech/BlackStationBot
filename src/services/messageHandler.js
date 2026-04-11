@@ -172,7 +172,7 @@ class MessageHandler {
       parameters: {
         "flow_message_version": "3",
         "flow_id": "1293383568429390",
-        "flow_cta": "Pedido"
+        "flow_cta": "Enviar datos"
       },
     }
     return await whatsappService.sendFlow(to, action);
@@ -804,14 +804,13 @@ class MessageHandler {
   async handleHiringFlow(to, pedido, datosPedido) {
     let response;
 
-    response = `*Pedido:*
+    response = `*Tu compra:*
 
 ${pedido}
 
 Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
   await this.menuPedido(to);
-
-  whatsappService.sendMessage(to, response);
+  await whatsappService.sendMessage(to, response);
   }
 
   async respFlow(to, screen, datosPedido, pedidoStr) {
@@ -833,7 +832,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
           );
           transactionToPhoneMap[idlink] = to;
           // Enviar mensaje con el enlace de pago
-          response = `*Resumen de tu pedido*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\nUtiliza el siguiente *link de pago*:\n\nhttps://checkout.wompi.co/l/${idlink}\n\nLuego, al realizar el pago automáticamente te lo confirmamos! 😊`;
+          response = `*Resumen de tu compra*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\nUtiliza el siguiente *link de pago*:\n\nhttps://checkout.wompi.co/l/${idlink}\n\nLuego, al realizar el pago automáticamente te lo confirmamos! 😊`;
         } catch (error) {
           response = "Hubo un problema al generar el enlace de pago. Por favor, intenta nuevamente.";
         }
@@ -843,7 +842,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
         monto: datosPedido.monto,
         pedidoStr
       };
-        response = `*Resumen de tu pedido*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\n🏦Cuentas bancarias:\n\n*Nequi:* \n\n*Bancolombia Ahorros:* \n\n🚨 Luego, envíanos el comprobante de la transferencia (captura) para confirmar tu pedido 😊`;
+        response = `*Resumen de tu compra*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\n🏦Cuentas bancarias:\n\n*Nequi:* \n\n*Bancolombia Ahorros:* \n\n🚨 Luego, envíanos el comprobante de la transferencia (captura) para confirmar tu pedido 😊`;
       }
    } else if (screen === "RATE") {
     response = "¡Recibido!\nMuchas gracias por tu opinión! 🤗";
@@ -929,18 +928,19 @@ async handleWompiEvent(transaction) {
     await whatsappService.sendMediaMessage(to, type, mediaUrl);
   }
 
-  completeHiring(productos, data) {
+  completeHiring(productos, data, total) {
     let fechayhora = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
     let userData;
     const spreadsheetId = process.env.SPREADSHEETID_PEDIDO;
     const numero = idNumber["numero"] || "No disponible";
+    (total += 3000).toLocaleString('es-CO');
       userData = [
         numero,
         data.name,
         productos,
         data.address,
-        data.phone,
         data.pago,
+        total.toLocaleString('es-CO'),
         data.recomendacion,
         fechayhora,
       ]
@@ -949,119 +949,9 @@ async handleWompiEvent(transaction) {
   }
   
 completeOrder(productos, data) {
-  const waiterOrderArea = {
-    // Barril
-    "6134f560fd56a10e49c4f666": [
-      "6133f09d5af774183ce25e0f",
-      "6133e891d145504ca38cbeeb",
-      "6133f070d145504ca38cbf3a",
-    ],
-    // Cocina
-    "5da0e17b86a93953dd2763bc": [
-      "5de86e87205aba0e1c990910",
-      "654ffcee0779b105ec6ac3bd",
-      "5dbcae51c557e50e67febfcc",
-      "5dbcad3fc557e50e67febfac",
-      "5dbcae00c557e50e67febfc0",
-      "5dbcb083c557e50e67febfdb",
-      "67981c57bd2f74e33cfce707",
-      "66ef02fa4ff68adb785f09f8",
-      "619e8bd01880235f6d5b27e5",
-      "5dbcb308c557e50e67febff9",
-      "5dc733ad7c14810dfd3fec3f",
-      "68203e8d7f735e5e48b7ec3b",
-      "5e5ae290338d200e065c3577",
-      "67981d4d8460dcaf720f2284",
-      "5dcf187deea63f0df843be1e",
-      "5dbcb3d9c557e50e67fec005",
-      "6311736932c31c05fbf10f89",
-      "5dbcb5a6c557e50e67fec022",
-      "5de84c6e205aba0e1c9907d0",
-      "68203ef70ae0923d28d06765",
-      "667f06fe23caaaaf0451a641",
-      "5dbcb57ec557e50e67fec01f",
-      "654ff6380779b105ec6ac20a",
-      "654ff7ba33294a05ef9f32f7",
-      "61a10ddf1fd14430485f8cb9",
-      "61a2657c1fd14430485f9f0e",
-      "6550028ec2087c73f3b7775e",
-      "61a118171fd14430485f8d78",
-      "67967092084e176a7d5855ba",
-      "619d6d801880235f6d5b1c36",
-      "632df4983bcfe31bedde0e45",
-      "5dd9dc26b928d20df3b63e49",
-      "5e34ebb51ffca60e28d763ef",
-      "61a110b91880235f6d5b45a3",
-      "5f9b5233ef1e265d296b0f8d",
-      "6796793106b0703ef18a9f72",
-      "61a119621880235f6d5b4644",
-      "61a119421fd14430485f8d96",
-      "618b0decad2f690565ff0342",
-      "67981a7ca9cfd2df9753864e",
-      "5f9b5636ef1e265d296b0fd3",
-      "5dbcb612c557e50e67fec02b",
-      "5dbcb645c557e50e67fec02e",
-      "67981bf757fc699d06fbe11c",
-      "5ef55e5619721c49eb8bb24a",
-      "5dbcb6a5c557e50e67fec03e",
-      "5dbcb67cc557e50e67fec031",
-      "5dc7332e7c14810dfd3fec34",
-      "5f9b3922ef1e265d296b0d95",
-      "5dc7337b7c14810dfd3fec38",
-
-    ],
-    // Bar
-    "5da0e1817511f32c929a0078": [
-      "5dc099e151aceb0dd757c620",
-      "5dbe24b354eef30e209928e8",
-      "624a2d5d07147a05f0bdab13",
-      "5dc0a48751aceb0dd757c6fa",
-      "5dc0a48751aceb0dd757c6fb",
-      "5dc0a48751aceb0dd757c6fc",
-      "5dc0a60f51aceb0dd757c70f",
-      "5f6aafb5456d7550eef4510a",
-      "5f9b4bb3ef1e265d296b0f1a",
-      "5e226a93641dd30e29531e11",
-      "5dbcbb91c557e50e67fec108",
-      "5dbcbb4ec557e50e67fec0ff",
-      "5f836639e5d38924870320a5",
-      "639c9ea052617c1b981ee5f4",
-      "639c9e7352617c1b981ee5e1",
-      "639c9e7352617c1b981ee5e4",
-      "639c9e7352617c1b981ee5e2",
-      "653859e9dc0e3f05d9fd5ccd",
-      "639c9ef852617c1b981ee604",
-      "639c9ef852617c1b981ee605",
-      "64a1d25d9c7cb205f4f48a23",
-      "639c9ef852617c1b981ee606",
-      "5dc4ce4651aceb0dd757e786",
-      "639c9b7d3c1b5a05f0d8fb97",
-      "5f9b455cef1e265d296b0eab",
-      "639c9ba452617c1b981ee446",
-      "65500860c2087c73f3b778a3",
-      "6133e235d145504ca38cbd7e",
-      "65550a945e11f905f75326f5",
-      "62b0b0e63996f328856ad5c3",
-      "62b0b10f3996f328856ad5c6",
-      "66f990de998c13da021a89ac",
-      "62b0b16b3996f328856ad5d1"
-    ]
-  };
-
-  function getWaiterOrderArea(productId) {
-    for (const [areaId, productIds] of Object.entries(waiterOrderArea)) {
-      if (productIds.includes(productId)) {
-        return areaId;
-      }
-    }
-    return null;
-  }
-
-  // Construye el array de orders con waiterOrderArea y solo la recomendación del cliente
   const orders = productos.map(item => ({
     product: item.product_retailer_id,
     locationStock: "69c0dcf5e903bd1b34167345",
-    waiterOrderArea: "", // getWaiterOrderArea(item.product_retailer_id),
     quantity: item.quantity,
     unit_price: item.item_price,
     notes: data.recomendacion || ""
@@ -1080,7 +970,7 @@ completeOrder(productos, data) {
 
   const pedidoLoggro = {
     table: "69d2d1a47647733152bb5d48",
-    groupName: `Nombre: ${data.name}\nTeléfono: ${data.phone}\nDirección: ${data.address}`,
+    groupName: `Nombre: ${data.name}\nDirección: ${data.address}\n`,
     orders
   };
 

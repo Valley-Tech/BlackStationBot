@@ -62,7 +62,7 @@ class WhatsAppService {
           type: "flow",
           header: {
             type: "text",
-            text: "Danos tus datos: "
+            text: "Dame tus datos: "
           },
           body: { 
             text: "Haz clic aquí 👇" 
