@@ -809,7 +809,7 @@ class MessageHandler {
 ${pedido}
 
 Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
-    await this.menuPedido(to);
+  this.menuPedido(to);
 
       await whatsappService.sendMessage(to, response);
   }
@@ -843,7 +843,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
         monto: datosPedido.monto,
         pedidoStr
       };
-        response = `*Resumen de tu pedido*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\n🏦Cuentas bancarias:\n\n*Nequi:* \n\n*Bancolombia Ahorros:* \n\n*Luego, envíanos el comprobante de la transferencia (captura) para confirmar tu pedido 😊`;
+        response = `*Resumen de tu pedido*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\n🏦Cuentas bancarias:\n\n*Nequi:* \n\n*Bancolombia Ahorros:* \n\n🚨 Luego, envíanos el comprobante de la transferencia (captura) para confirmar tu pedido 😊`;
       }
    } else if (screen === "RATE") {
     response = "¡Recibido!\nMuchas gracias por tu opinión! 🤗";
