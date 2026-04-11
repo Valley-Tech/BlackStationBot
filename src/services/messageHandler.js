@@ -809,9 +809,9 @@ class MessageHandler {
 ${pedido}
 
 Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
-  this.menuPedido(to);
+  await this.menuPedido(to);
 
-      await whatsappService.sendMessage(to, response);
+  whatsappService.sendMessage(to, response);
   }
 
   async respFlow(to, screen, datosPedido, pedidoStr) {
