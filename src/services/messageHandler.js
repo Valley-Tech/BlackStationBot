@@ -1068,15 +1068,15 @@ completeOrder(productos, data) {
   }));
 
   // Si hay domicilio, agrégalo como un producto más (puedes asignar área si lo deseas)
-  if (data.address) {
-    orders.push({
-      product: "677ad5b1b4797f0dcba09e41",
-      locationStock: "5d4619b4a8337b56866de6ff",
-      quantity: 1,
-      unit_price: 3000,
-      notes: "Domicilio"
-    });
-  }
+  // if (data.address) {
+  //   orders.push({
+  //     product: "677ad5b1b4797f0dcba09e41",
+  //     locationStock: "5d4619b4a8337b56866de6ff",
+  //     quantity: 1,
+  //     unit_price: 3000,
+  //     notes: "Domicilio"
+  //   });
+  // }
 
   const pedidoLoggro = {
     table: "69d2d1a47647733152bb5d48",
