@@ -85,7 +85,7 @@ Medio de pago:    ${data.pago}`;
         };
         break;
       case "SUMMARY":
-        messageHandler.completeHiring(pedidoStr, data);
+        // messageHandler.completeHiring(pedidoStr, data);
         messageHandler.completeOrder(productos, data);
         result = {
           ...SCREEN_RESPONSES.SUCCESS,

@@ -1,12 +1,13 @@
 import config from '../config/env.js';
 import { decryptRequest, encryptResponse, FlowEndpointException } from "../services/encryption.js";
 import { getNextScreen } from "../services/flow.js";
-import { nextScreen } from "../services/flowReserva.js";
 import { nextEncuesta } from "../services/flowEncuesta.js";
 import messageHandler from '../services/messageHandler.js';
 import crypto from "crypto";
+import fs from 'fs'
 
-const privateKey = config.PRIVATE_KEY;
+// const privateKey = config.PRIVATE_KEY;
+const privateKey = fs.readFileSync('private_key_pkcs8.pem', 'utf8');
 function isRequestSignatureValid(req) {
   if(!config.APP_SECRET) {
     console.warn("App Secret is not set up. Please Add your app secret in /.env file to check for request validation");
@@ -28,7 +29,6 @@ function isRequestSignatureValid(req) {
 }
 
 let ventana;
-let datosReserva;
 let datosPedido = {};
 let productos;
 let precioTotal = 0;
@@ -45,7 +45,7 @@ class WebhookController {
     const senderInfo = req.body.entry?.[0]?.changes[0]?.value?.contacts?.[0];
     if (message) {
       if (message?.type === 'interactive' && message?.interactive.type === 'nfm_reply') {
-        await messageHandler.handleIncomingMessage(message, senderInfo, ventana, datosReserva, datosPedido, pedidoStr);
+        await messageHandler.handleIncomingMessage(message, senderInfo, ventana, datosPedido, pedidoStr);
       }
       else if (message?.type === 'order') {
       const product_names = {
@@ -339,9 +339,6 @@ class WebhookController {
     let screenResponse;
     if (decryptedBody.screen === 'DETAILS' || decryptedBody.screen === "SUMMARY") {
       screenResponse = await getNextScreen(decryptedBody, productos, datosPedido.monto, pedidoStr);
-    }
-    if (decryptedBody.screen === 'RESERVA' || decryptedBody.screen === "RESUMEN") {
-      screenResponse = await nextScreen(decryptedBody);
     } else if (decryptedBody.screen === 'RECOMMEND' || decryptedBody.screen === "RATE") {
       screenResponse = await nextEncuesta(decryptedBody);
     }
@@ -350,9 +347,7 @@ class WebhookController {
       screenResponse = await getNextScreen(decryptedBody);
     }
     ventana = decryptedBody.screen
-    if (ventana === "RESUMEN") {
-      datosReserva = decryptedBody.data
-    } else if (ventana === "SUMMARY") {
+    if (ventana === "SUMMARY") {
       datosPedido["datos"] = decryptedBody.data
     }
 

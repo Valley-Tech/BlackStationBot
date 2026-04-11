@@ -146,6 +146,22 @@ class WhatsAppService {
       printDetailedError(error);
     }
   }
+
+  async sendProductList(to, template) {
+    try {
+      const data = {
+        recipient_type: 'individual',
+        messaging_product: 'whatsapp',
+        to,
+        type: 'interactive',
+        interactive: template
+      };
+  
+    await sendToWhatsApp(data);
+    } catch (error) {
+      printDetailedError(error);
+    }
+  }
   
   async sendFlowEncuesta(to, action) {
     try {

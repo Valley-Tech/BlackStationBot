@@ -8,22 +8,6 @@ import { printDetailedError } from './printDetailError.js';
 import { downloadImageFromMeta } from './httpRequest/sendToWhatsApp.js';
 import { uploadToPublicStorage } from './awsS3Service.js';
 
-function isWithinBusinessHours() {
-  // Hora actual en Colombia (GMT-5)
-  const now = new Date();
-  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-  const colombiaTime = new Date(utc - (5 * 60 * 60000));
-  const hour = colombiaTime.getHours();
-  const minute = colombiaTime.getMinutes();
-
-  // Horario: 12:00 (12 p.m.) a 22:00 (10 p.m.)
-  const opening = 12 * 60; // 12:00 p.m. en minutos
-  const closing = 22 * 60; // 10:00 p.m. en minutos
-  const current = hour * 60 + minute;
-
-  return current >= opening && current < closing;
-}
-
 const transactionToPhoneMap = {}; // Memoria para mapear transactionId a número de teléfono
 const idNumber = {}
 const accion = {}
@@ -37,7 +21,7 @@ class MessageHandler {
     this.assistandState = {};
   }
 
-  async handleIncomingMessage(message, senderInfo) {
+  async handleIncomingMessage(message, senderInfo, screen, datosPedido, pedidoStr) {
     try {
       if (message?.type === 'text') {
         const incomingMessage = message.text.body.toLowerCase().trim();
@@ -52,9 +36,15 @@ class MessageHandler {
         }
         await whatsappService.markAsRead(message.id);
       } else if (message?.type === 'interactive') {
-        const option = message?.interactive?.button_reply?.id;
-        await this.handleMenuOption(message.from, option);
-        await whatsappService.markAsRead(message.id);
+        if (message?.interactive.type === 'nfm_reply') {
+          await this.respFlow(message.from, screen, datosPedido, pedidoStr);
+          await whatsappService.markAsRead(message.id);
+          accion["pantalla"] = screen;
+        } else {
+          const option = message?.interactive?.button_reply?.id;
+          await this.handleMenuOption(message.from, option);
+          await whatsappService.markAsRead(message.id);
+        }        
       }
     } catch (error) {
       printDetailedError(error);
@@ -82,16 +72,6 @@ class MessageHandler {
       lower.includes('pedido') ||
       lower.includes('orden') ||
       lower.includes('comprar')
-    );
-  }
-
-  isReservation(message) {
-    const lower = message.toLowerCase();
-    return (
-      lower.includes('reservar') ||
-      lower.includes('reserva') ||
-      lower.includes('reservacion') ||
-      lower.includes('reservación')
     );
   }
 
@@ -139,7 +119,7 @@ class MessageHandler {
   }
 
   async sendWelcomeMenu(to) {
-    const menuMessage = "¿Qué deseas hacer?";
+    const menuMessage = "Elige la categoría: ";
     const buttons = [
       {
         type: 'reply', reply: { id: 'option_1', title: 'Mercado 🛒🛍️' }
@@ -155,18 +135,18 @@ class MessageHandler {
     await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
   }
 
-  async menuCategorias(to) {
-    const menuMessage = "Elige la categoría:";
+  async menuSubCategorias(to) {
+    const menuMessage = "Elige la subcategoría:";
     const buttons = [
       {
-        type: 'reply', reply: { id: 'opcion_1', title: 'Mercado 🛒🛍️' }
+        type: 'reply', reply: { id: 'opcion_1', title: 'Salsas 🥫' }
       },
       {
-        type: 'reply', reply: { id: 'opcion_2', title: 'Gaseosas y mekatos🥤🍬' }
+        type: 'reply', reply: { id: 'opcion_2', title: 'Condimentos 🧂' }
       },
-      {
-        type: 'reply', reply: { id: 'opcion_3', title: 'Cuidado personal🧼💊' }
-      }
+      // {
+      //   type: 'reply', reply: { id: 'opcion_3', title: 'Granos 🫘' }
+      // }
     ];
 
     await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
@@ -176,7 +156,10 @@ class MessageHandler {
     const menuMessage = "Elige la subcategoría: ";
     const buttons = [
       {
-        type: 'reply', reply: { id: 'opt1', title: '' }
+        type: 'reply', reply: { id: 'opt1', title: 'Pasabocas 🍬🍭' }
+      },
+      {
+        type: 'reply', reply: { id: 'opt2', title: 'Mekatos 🍿' }
       }
     ];
 
@@ -188,24 +171,11 @@ class MessageHandler {
       name: "flow",
       parameters: {
         "flow_message_version": "3",
-        "flow_id": "992235826682822",
+        "flow_id": "1293383568429390",
         "flow_cta": "Pedido"
       },
     }
     return await whatsappService.sendFlow(to, action);
-  }
-  
-  async menuReserva(to) {
-    idNumber["numero"] = to;
-    const action = {
-      name: "flow",
-      parameters: {
-        "flow_message_version": "3",
-        "flow_id": "2158370944705175",
-        "flow_cta": "Reserva"
-      },
-    }
-    return await whatsappService.sendFlowReserva(to, action);
   }
 
   async getDia() {
@@ -217,131 +187,95 @@ class MessageHandler {
   return diaSemana
   }
   
-async catalogoMercado(to) {
-  try {
-    const template = {
-      name: "catalogo",
-      language: {
-        code: "Es_Co"
-      },
-      components: [
-          {
-            type: "button",
-            sub_type: "MPM",
-            index: 0,
-            "parameters": [
-          {
-            "type": "action",
-            "action": {
-              "sections": [
-                {
-                  "title": "Salsas Y Condimentos",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "69c36847fd71b5f79f0423f2"
-                    },
-                    {
-                      "product_retailer_id": "69c36b2420de4f254d316291"
-                    },
-                    {
-                      "product_retailer_id": "69c36b146a7528a70c1d8a3c"
-                    },
-                    {
-                      "product_retailer_id": "69c3677ffd71b5f79f040165"
-                    },
-                    {
-                      "product_retailer_id": "69c3676dbfb27e5db666fa9a"
-                    },
-                    {
-                      "product_retailer_id": "69c3682675e6fcf877e21b7a"
-                    },
-                    {
-                      "product_retailer_id": "69c36801a88b9bc519bbc966"
-                    },
-                    {
-                      "product_retailer_id": "69c368a07896dea20a07269e"
-                    },
-                    {
-                      "product_retailer_id": "69c36812bfb27e5db6671111"
-                    },
-                    {
-                      "product_retailer_id": "69c367f07896dea20a0714a5"
-                    },
-                    {
-                      "product_retailer_id": "69c36c7c6a7528a70c1df41d"
-                    },
-                    {
-                      "product_retailer_id": "69c36c4c872399ad64747ae6"
-                    },
-                    {
-                      "product_retailer_id": "69c36c591b70fbcf1bc535dc"
-                    },
-                    {
-                      "product_retailer_id": "69c36c6f3cce32fbe56caa6c"
-                    },
-                    {
-                      "product_retailer_id": "69c368367896dea20a071cd7"
-                    },
-                    {
-                      "product_retailer_id": "69c3661cbfb27e5db666ad95"
-                    },
-                    {
-                      "product_retailer_id": "69c369da3cce32fbe56bf103"
-                    },
-                    {
-                      "product_retailer_id": "69c3698cfd71b5f79f0473f8"
-                    },
-                    {
-                      "product_retailer_id": "69c36adc7896dea20a07a0f2"
-                    },
-                    {
-                      "product_retailer_id": "69c366e63cce32fbe56b2d46"
-                    },
-                    {
-                      "product_retailer_id": "69c36793872399ad64732db2"
-                    },
-                    {
-                      "product_retailer_id": "69c36c23bfb27e5db667eadb"
-                    },
-                    {
-                      "product_retailer_id": "69c36c32fd71b5f79f05681c"
-                    },
-                    {
-                      "product_retailer_id": "69c36c8f872399ad64748db7"
-                    },
-                    {
-                      "product_retailer_id": "69c3699e872399ad6473ba11"
-                    },
-                    {
-                      "product_retailer_id": "69c36708bfb27e5db666e687"
-                    },
-                    {
-                      "product_retailer_id": "69c36a71872399ad6473e5ee"
-                    },
-                    {
-                      "product_retailer_id": "69c36a25872399ad6473d106"
-                    },
-                    {
-                      "product_retailer_id": "69c369c31b70fbcf1bc4a8a7"
-                    },
-                    {
-                      "product_retailer_id": "69c36a391b70fbcf1bc4c1e1"
-                    },
-                  ]
-                }
-              ]
+  async catalogoMercado(to) {
+    try {
+      const template = {
+        name: "catalogo",
+        language: {
+          code: "Es_Co"
+        },
+        components: [
+            {
+              type: "button",
+              sub_type: "MPM",
+              index: 0,
+              "parameters": [
+            {
+              "type": "action",
+              "action": {
+                "sections": [
+                  {
+                    "title": "SALSAS",
+                    "product_items": [
+                      {
+                        "product_retailer_id": "69c3661cbfb27e5db666ad95"
+                      },
+                      {
+                        "product_retailer_id": "69c369da3cce32fbe56bf103"
+                      },
+                      {
+                        "product_retailer_id": "69c3698cfd71b5f79f0473f8"
+                      },
+                      {
+                        "product_retailer_id": "69c36adc7896dea20a07a0f2"
+                      },
+                      {
+                        "product_retailer_id": "69c366e63cce32fbe56b2d46"
+                      },
+                      {
+                        "product_retailer_id": "69c3699e872399ad6473ba11"
+                      },
+                      {
+                        "product_retailer_id": "69c36708bfb27e5db666e687"
+                      },
+                      {
+                        "product_retailer_id": "69c36a71872399ad6473e5ee"
+                      },
+                      {
+                        "product_retailer_id": "69c36a25872399ad6473d106"
+                      },
+                      {
+                        "product_retailer_id": "69c369c31b70fbcf1bc4a8a7"
+                      },
+                      {
+                        "product_retailer_id": "69c36a391b70fbcf1bc4c1e1"
+                      },
+                      {
+                        "product_retailer_id": "69c36981bfb27e5db6675521"
+                      },
+                      {
+                        "product_retailer_id": "69c36acdfd71b5f79f04cfe9"
+                      },
+                      {
+                        "product_retailer_id": "69c36a046a7528a70c1d3960"
+                      },
+                      {
+                        "product_retailer_id": "69c366a620de4f254d3081e4"
+                      },
+                      {
+                        "product_retailer_id": "69c365f7872399ad6472c350"
+                      },
+                      {
+                        "product_retailer_id": "69c36b92a88b9bc519bcfa4a"
+                      },
+                      {
+                        "product_retailer_id": "69c36ba5bfb27e5db667aa24"
+                      }
+                    ]
+                  }
+                ]
+              }
             }
-          }
-        ]
-          }
-      ] 
+          ]
+            }
+        ] 
+      }
+    return await whatsappService.sendMenu(to, template);
     }
-  return await whatsappService.sendMenu(to, template);
+    catch (error) {
+        printDetailedError(error);
+    }
   }
-  catch (error) {
-      printDetailedError(error);
-  }
-}
 
   async catalogoMercado2(to) {
     try {
@@ -467,7 +401,7 @@ async catalogoMercado(to) {
   catch (error) {
       printDetailedError(error);
     }
-}
+  }
 
   async catalogoMercado3(to) {
     const template = { 
@@ -595,6 +529,209 @@ async catalogoMercado(to) {
     return await whatsappService.sendMenu(to, template);
   }
 
+  async catalogoSubMercado(to) {
+    const template = { 
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Condimentos 🧂"
+        },
+        body: {
+          text: "Condimentos"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "CONDIMENTOS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69c36847fd71b5f79f0423f2"
+                },
+                {
+                  "product_retailer_id": "69c36b2420de4f254d316291"
+                },
+                {
+                  "product_retailer_id": "69c36b146a7528a70c1d8a3c"
+                },
+                {
+                  "product_retailer_id": "69c3677ffd71b5f79f040165"
+                },
+                {
+                  "product_retailer_id": "69c3676dbfb27e5db666fa9a"
+                },
+                {
+                  "product_retailer_id": "69c3682675e6fcf877e21b7a"
+                },
+                {
+                  "product_retailer_id": "69c36801a88b9bc519bbc966"
+                },
+                {
+                  "product_retailer_id": "69c368a07896dea20a07269e"
+                },
+                {
+                  "product_retailer_id": "69c36812bfb27e5db6671111"
+                },
+                {
+                  "product_retailer_id": "69c367f07896dea20a0714a5"
+                },
+                {
+                  "product_retailer_id": "69c36c7c6a7528a70c1df41d"
+                },
+                {
+                  "product_retailer_id": "69c36c4c872399ad64747ae6"
+                },
+                {
+                  "product_retailer_id": "69c36c591b70fbcf1bc535dc"
+                },
+                {
+                  "product_retailer_id": "69c36c6f3cce32fbe56caa6c"
+                },
+                {
+                  "product_retailer_id": "69c368367896dea20a071cd7"
+                },
+                {
+                  "product_retailer_id": "69c36793872399ad64732db2"
+                },
+                {
+                  "product_retailer_id": "69c36c23bfb27e5db667eadb"
+                },
+                {
+                  "product_retailer_id": "69c36c32fd71b5f79f05681c"
+                },
+                {
+                  "product_retailer_id": "69c36c8f872399ad64748db7"
+                },
+                {
+                  "product_retailer_id": "69c36b6d7896dea20a07c555"
+                },
+                {
+                  "product_retailer_id": "69c36b5175e6fcf877e2d105"
+                },
+            ]
+          }
+        ]
+    }
+  }
+    
+    return await whatsappService.sendProductList(to, template);
+  }
+  
+  async catalogoSubMekatos(to) {
+    const template = { 
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Mekatos"
+        },
+        body: {
+          text: "Mekatos"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "MEKATOS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69c21a36817aaac0ae64710f"
+                },
+                {
+                  "product_retailer_id": "69c22941f055928f6dde94a6"
+                },
+                {
+                  "product_retailer_id": "69c2292d335b9ea55ff03f29"
+                },
+                {
+                  "product_retailer_id": "69c229861a3df39f1103940a"
+                },
+                {
+                  "product_retailer_id": "69c22974f055928f6ddeaf79"
+                },
+                {
+                  "product_retailer_id": "69c229c17bff33f4a3236ae3"
+                },
+                {
+                  "product_retailer_id": "69c229591a3df39f11038692"
+                },
+                {
+                  "product_retailer_id": "69c2299a7896dea20a720b75"
+                },
+                {
+                  "product_retailer_id": "69c229aefd71b5f79f6223dc"
+                },
+                {
+                  "product_retailer_id": "69c2272d335b9ea55ff00c70"
+                },
+                {
+                  "product_retailer_id": "69c227447bff33f4a3232346"
+                },
+                {
+                  "product_retailer_id": "69c22759fd71b5f79f61eb82"
+                },
+                {
+                  "product_retailer_id": "69c2277ab5b1d14e3182ae9e"
+                },
+                {
+                  "product_retailer_id": "69c2212a9d3d408699676377"
+                },
+                {
+                  "product_retailer_id": "69c220e8b5b1d14e31816ce2"
+                },
+                {
+                  "product_retailer_id": "69c22138817aaac0ae65a6e3"
+                },
+                {
+                  "product_retailer_id": "69c226a1335b9ea55feff903"
+                },
+                {
+                  "product_retailer_id": "69c226fbf055928f6dde602b"
+                },
+                {
+                  "product_retailer_id": "69c229007896dea20a71ff28"
+                },
+                {
+                  "product_retailer_id": "69c21ec7fd71b5f79f60e11d"
+                },
+                {
+                  "product_retailer_id": "69c21a8c1a3df39f110186d9"
+                },
+                {
+                  "product_retailer_id": "69c21aa1f055928f6ddccea7"
+                },
+                {
+                  "product_retailer_id": "69c21cf419d90721373dff0d"
+                },
+                {
+                  "product_retailer_id": "69c219c37896dea20a6ff600"
+                },
+                {
+                  "product_retailer_id": "69c21ca57896dea20a707d24"
+                },
+                {
+                  "product_retailer_id": "69c21cce19d90721373dfa55"
+                },
+                {
+                  "product_retailer_id": "69c21a0419d90721373d56d4"
+                },
+                {
+                  "product_retailer_id": "69c21c7af055928f6ddd2b44"
+                },
+                {
+                  "product_retailer_id": "69c21d06817aaac0ae64ef6d"
+                },
+                {
+                  "product_retailer_id": "69c21cbb9d3d40869966cedb"
+                }
+            ]
+          }
+        ]
+    }
+  }
+    
+    return await whatsappService.sendProductList(to, template);
+  }
+
   async encuesta(to) {
     const action = {
       name: "flow",
@@ -631,32 +768,30 @@ async catalogoMercado(to) {
     let response;
     switch (option) {
       case 'option_1':
-        this.catalogoMercado(to);
         idNumber["numero"] = to;
+        this.menuSubCategorias(to);
         break;
       case 'option_2':
         idNumber["numero"] = to;
-        this.catalogoMercado2(to);
+        this.otrasCategorias(to);
         break;
       case 'option_3':
         this.catalogoMercado3(to);
         break;
-      case 'option_4':
-        response = "Te esperamos en nuestro restaurante! 📍";
-        await this.sendLocation(to);
+      case 'opcion_1':
+        this.catalogoMercado(to);
         break;
-      case 'option_5':
-        response = "Es un placer para nosotros servirte, que disfrutes de tu pedido 😊👩‍🍳\nVuelve pronto!";
+      case 'opcion_2':
+        this.catalogoSubMercado(to);
         break;
-      case 'op_3':
-        response = 'Escribe a nuestro Whatsapp personal🤗';
-        await this.sendContact(to);
+      case 'opcion_3':
+        this.sendContact(to);
         break;
       case 'opt1':
-        await this.encuesta(to);
+        this.catalogoMercado2(to);
         break;
-      case 'si':
-        await this.menuCarta3(to);
+      case 'opt2':
+        this.catalogoSubMekatos(to);
         break;
       default:
         response = "Oops😔\nPorfa, elige una de las opciones del menú o escribe *Hola* para volver a empezar\nTambién, escribe *Carta* para verla.";
@@ -664,21 +799,6 @@ async catalogoMercado(to) {
     if (response) {
       await whatsappService.sendMessage(to, response);
     }
-  }
-
-  async handleAppointmentFlow(to, message) {
-    const state = this.appointmentState[to];
-    delete this.appointmentState[to];
-    let response;
-  
-    switch (state.step) {
-      case 'reserva':
-        await this.menuReserva(to);
-        break;
-      default:
-        response = "Lo siento 😔 no entendí tu respuesta\nPor Favor, elige una de las opciones del menú.";
-        await whatsappService.sendMessage(to, response);
-      }
   }
 
   async handleHiringFlow(to, pedido, datosPedido) {
@@ -694,7 +814,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
       await whatsappService.sendMessage(to, response);
   }
 
-  async respFlow(to, screen, datosReserva, datosPedido, pedidoStr) {
+  async respFlow(to, screen, datosPedido, pedidoStr) {
     let response;
     if (screen === "SUMMARY") {
       if (datosPedido.datos.address) {
@@ -702,7 +822,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
       }
       if (datosPedido.datos.pago === "Efectivo") {
         response = "✅¡Pedido recibido!\nPronto nos pondremos en contacto contigo! 🤗";
-        await this.menuOpcionalHiring(to);
+        // await this.menuOpcionalHiring(to);
       } else if (datosPedido.datos.pago === "PSE") {
         try {
           // Generar enlace de pago WOMPi
@@ -723,49 +843,9 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
         monto: datosPedido.monto,
         pedidoStr
       };
-        response = `*Resumen de tu pedido*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\n🏦Cuentas bancarias:\n\n*Nequi:* 3117445749\n*Mar** Ari***\n\n*Bancolombia Ahorros:* 70423175395\nMar** Pat** Ari**\n\n*Banco BBVA:* 0614001209\n\nLuego, envíanos el comprobante de la transferencia (captura) para confirmar tu pedido 😊`;
+        response = `*Resumen de tu pedido*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\n🏦Cuentas bancarias:\n\n*Nequi:* \n\n*Bancolombia Ahorros:* \n\n*Luego, envíanos el comprobante de la transferencia (captura) para confirmar tu pedido 😊`;
       }
-   } else if (screen === "RESUMEN") {
-    const horario = datosReserva.evento === "Festival Gastronomico" 
-      ? 'hora' 
-      : datosReserva.evento === "Cumpleaños" 
-        ? 'horario'
-        : datosReserva.evento === "Reserva normal"
-        ? 'horanormal'
-        : "";
-    
-        const calendario = datosReserva.evento === "Festival Gastronomico" 
-      ? 'fechafestival' 
-      : datosReserva.evento === "Cumpleaños" 
-        ? 'fecha'
-        : datosReserva.evento === "Reserva normal"
-        ? 'fechanormal'
-        : "";
-
-    // Variables para la plantilla (en el orden del body)
-  const templateVars = [
-    datosReserva.nombre,
-    datosReserva.celular,
-    datosReserva.evento,
-    datosReserva[calendario],
-    datosReserva[horario],
-    datosReserva.cuantos,
-    datosReserva.donde
-  ];
-  
-  const publicUrl = "https://micarta.s3.us-east-1.amazonaws.com/confirmacion_reserva.jpeg";
-  const numerosOficiales = [
-    to,
-    "573153652520",
-    "573137517489"
-  ];
-  
-  for (const numero of numerosOficiales) {
-    await whatsappService.sendTemplateMediaMessage(numero, "confirmacion_reserva", publicUrl, templateVars);
-  }
-  this.sendLocation(to);
-
-  } else if (screen === "RATE") {
+   } else if (screen === "RATE") {
     response = "¡Recibido!\nMuchas gracias por tu opinión! 🤗";
   }
   if (response) {
@@ -980,8 +1060,8 @@ completeOrder(productos, data) {
   // Construye el array de orders con waiterOrderArea y solo la recomendación del cliente
   const orders = productos.map(item => ({
     product: item.product_retailer_id,
-    locationStock: "5d4619b4a8337b56866de6ff",
-    waiterOrderArea: getWaiterOrderArea(item.product_retailer_id),
+    locationStock: "69c0dcf5e903bd1b34167345",
+    waiterOrderArea: "", // getWaiterOrderArea(item.product_retailer_id),
     quantity: item.quantity,
     unit_price: item.item_price,
     notes: data.recomendacion || ""
@@ -999,7 +1079,7 @@ completeOrder(productos, data) {
   }
 
   const pedidoLoggro = {
-    table: "6939640ddf7998fb29e63fab",
+    table: "69d2d1a47647733152bb5d48",
     groupName: `Nombre: ${data.name}\nTeléfono: ${data.phone}\nDirección: ${data.address}`,
     orders
   };
@@ -1021,39 +1101,6 @@ completeOrder(productos, data) {
         data.comentarios,
         fechayhora,
       ]
-
-    appendToSheet(userData, spreadsheetId);
-  }
-
-  completeAppointment(data) {
-    let fechayhora = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
-    const spreadsheetId = process.env.SPREADSHEETID_RESERVA;
-    const number = idNumber["numero"] || "No disponible";
-    const horario = data.evento === "Festival Gastronomico" 
-      ? 'hora' 
-      : data.evento === "Cumpleaños" 
-        ? 'horario'
-        : data.evento === "Reserva normal"
-        ? 'horanormal'
-        : "";
-    const calendario = data.evento === "Festival Gastronomico" 
-      ? 'fechafestival' 
-      : data.evento === "Cumpleaños" 
-        ? 'fecha'
-        : data.evento === "Reserva normal"
-        ? 'fechanormal'
-        : "";
-    const userData = [
-      number,
-      data.nombre,
-      data.celular,
-      data.evento,
-      data[calendario],
-      data[horario],
-      data.cuantos,
-      data.donde,
-      fechayhora
-    ]
 
     appendToSheet(userData, spreadsheetId);
   }
