@@ -64,6 +64,9 @@ class WhatsAppService {
             type: "text",
             text: "Danos tus datos: "
           },
+          body: { 
+            text: "Haz clic aquí 👇" 
+          },
           action
         },
       };
