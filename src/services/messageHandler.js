@@ -156,10 +156,10 @@ class MessageHandler {
     const menuMessage = "Elige la subcategoría: ";
     const buttons = [
       {
-        type: 'reply', reply: { id: 'opt1', title: 'Pasabocas 🍬🍭' }
+        type: 'reply', reply: { id: 'opt1', title: 'Pasabocas🍭 y Mekatos🍿' }
       },
       {
-        type: 'reply', reply: { id: 'opt2', title: 'Mekatos 🍿' }
+        type: 'reply', reply: { id: 'opt2', title: 'Gaseosas🥤' }
       }
     ];
 
@@ -617,112 +617,203 @@ class MessageHandler {
     return await whatsappService.sendProductList(to, template);
   }
   
-  async catalogoSubMekatos(to) {
+  async catalogoGaseosas(to) {
     const template = { 
       type: "product_list",
       header: { 
           type: "text",
-          text: "Mekatos"
+          text: "Bebidas y Gaseosas"
         },
         body: {
-          text: "Mekatos"
+          text: "Gaseosas"
         },
         action: {
           catalog_id: "2277977052727019",
           sections: [
           {
-            "title": "MEKATOS",
+            "title": "Gaseosas",
               "product_items": [
                 {
-                  "product_retailer_id": "69c21a36817aaac0ae64710f"
+                  "product_retailer_id": "69d7abe5788108078f3bccc2"
                 },
                 {
-                  "product_retailer_id": "69c22941f055928f6dde94a6"
+                  "product_retailer_id": "69d8f716e4843af3b4f20bb4"
                 },
                 {
-                  "product_retailer_id": "69c2292d335b9ea55ff03f29"
+                  "product_retailer_id": "69d8f8484dbce094f8ea6794"
                 },
                 {
-                  "product_retailer_id": "69c229861a3df39f1103940a"
+                  "product_retailer_id": "69d8f51642a93f3786ce4dad"
                 },
                 {
-                  "product_retailer_id": "69c22974f055928f6ddeaf79"
+                  "product_retailer_id": "69d8f43a42a93f3786cda868"
                 },
                 {
-                  "product_retailer_id": "69c229c17bff33f4a3236ae3"
+                  "product_retailer_id": "69d8f4224dbce094f8e6e87a"
                 },
                 {
-                  "product_retailer_id": "69c229591a3df39f11038692"
+                  "product_retailer_id": "69d8f4634dbce094f8e74bd7"
                 },
                 {
-                  "product_retailer_id": "69c2299a7896dea20a720b75"
+                  "product_retailer_id": "69d8f409681205cd21d38f87"
                 },
                 {
-                  "product_retailer_id": "69c229aefd71b5f79f6223dc"
+                  "product_retailer_id": "69d7aba3dde5ad53159e73d7"
                 },
                 {
-                  "product_retailer_id": "69c2272d335b9ea55ff00c70"
+                  "product_retailer_id": "69d7c00a42a93f37863d02b2"
                 },
                 {
-                  "product_retailer_id": "69c227447bff33f4a3232346"
+                  "product_retailer_id": "69d7dc3e42a93f378669a0b2"
                 },
                 {
-                  "product_retailer_id": "69c22759fd71b5f79f61eb82"
+                  "product_retailer_id": "69d7dc3142a93f3786697f27"
                 },
                 {
-                  "product_retailer_id": "69c2277ab5b1d14e3182ae9e"
+                  "product_retailer_id": "69d7dc4b05edc105d4932f51"
                 },
                 {
-                  "product_retailer_id": "69c2212a9d3d408699676377"
+                  "product_retailer_id": "69d7c07e05edc105d4689411"
                 },
                 {
-                  "product_retailer_id": "69c220e8b5b1d14e31816ce2"
+                  "product_retailer_id": "69d8f69e58479361019907df"
                 },
                 {
-                  "product_retailer_id": "69c22138817aaac0ae65a6e3"
+                  "product_retailer_id": "69d7c025dde5ad5315b2ea90"
                 },
                 {
-                  "product_retailer_id": "69c226a1335b9ea55feff903"
+                  "product_retailer_id": "69d8f34bb0fb5071dc9991f5"
                 },
                 {
-                  "product_retailer_id": "69c226fbf055928f6dde602b"
+                  "product_retailer_id": "69d7aec04dbce094f8484472"
                 },
                 {
-                  "product_retailer_id": "69c229007896dea20a71ff28"
+                  "product_retailer_id": "69d7ae70dde5ad5315a0fcf2"
                 },
                 {
-                  "product_retailer_id": "69c21ec7fd71b5f79f60e11d"
+                  "product_retailer_id": "69d7ae997a48182babee925f"
                 },
                 {
-                  "product_retailer_id": "69c21a8c1a3df39f110186d9"
+                  "product_retailer_id": "69d8f48d681205cd21d4526c"
                 },
                 {
-                  "product_retailer_id": "69c21aa1f055928f6ddccea7"
+                  "product_retailer_id": "69d7d9fa8dab33439493075e"
                 },
                 {
-                  "product_retailer_id": "69c21cf419d90721373dff0d"
+                  "product_retailer_id": "69d7c09f788108078f540a43"
                 },
                 {
-                  "product_retailer_id": "69c219c37896dea20a6ff600"
+                  "product_retailer_id": "69d8f5ec695e2ef9f7b7009f"
                 },
                 {
-                  "product_retailer_id": "69c21ca57896dea20a707d24"
+                  "product_retailer_id": "69d8f254b0fb5071dc990c2f"
                 },
                 {
-                  "product_retailer_id": "69c21cce19d90721373dfa55"
+                  "product_retailer_id": "69d8f303584793610195e4bf"
                 },
                 {
-                  "product_retailer_id": "69c21a0419d90721373d56d4"
+                  "product_retailer_id": "69d8f59f695e2ef9f7b6bd98"
                 },
                 {
-                  "product_retailer_id": "69c21c7af055928f6ddd2b44"
+                  "product_retailer_id": "69d8f26942a93f3786cc0340"
                 },
                 {
-                  "product_retailer_id": "69c21d06817aaac0ae64ef6d"
+                  "product_retailer_id": "69d8f2a0681205cd21d2565d"
                 },
                 {
-                  "product_retailer_id": "69c21cbb9d3d40869966cedb"
-                }
+                  "product_retailer_id": "69d8f56f42a93f3786cebf3c"
+                },
+                // MEKATOS 
+                // {
+                //   "product_retailer_id": "69c21a36817aaac0ae64710f"
+                // },
+                // {
+                //   "product_retailer_id": "69c22941f055928f6dde94a6"
+                // },
+                // {
+                //   "product_retailer_id": "69c2292d335b9ea55ff03f29"
+                // },
+                // {
+                //   "product_retailer_id": "69c229861a3df39f1103940a"
+                // },
+                // {
+                //   "product_retailer_id": "69c22974f055928f6ddeaf79"
+                // },
+                // {
+                //   "product_retailer_id": "69c229c17bff33f4a3236ae3"
+                // },
+                // {
+                //   "product_retailer_id": "69c229591a3df39f11038692"
+                // },
+                // {
+                //   "product_retailer_id": "69c2299a7896dea20a720b75"
+                // },
+                // {
+                //   "product_retailer_id": "69c229aefd71b5f79f6223dc"
+                // },
+                // {
+                //   "product_retailer_id": "69c2272d335b9ea55ff00c70"
+                // },
+                // {
+                //   "product_retailer_id": "69c227447bff33f4a3232346"
+                // },
+                // {
+                //   "product_retailer_id": "69c22759fd71b5f79f61eb82"
+                // },
+                // {
+                //   "product_retailer_id": "69c2277ab5b1d14e3182ae9e"
+                // },
+                // {
+                //   "product_retailer_id": "69c2212a9d3d408699676377"
+                // },
+                // {
+                //   "product_retailer_id": "69c220e8b5b1d14e31816ce2"
+                // },
+                // {
+                //   "product_retailer_id": "69c22138817aaac0ae65a6e3"
+                // },
+                // {
+                //   "product_retailer_id": "69c226a1335b9ea55feff903"
+                // },
+                // {
+                //   "product_retailer_id": "69c226fbf055928f6dde602b"
+                // },
+                // {
+                //   "product_retailer_id": "69c229007896dea20a71ff28"
+                // },
+                // {
+                //   "product_retailer_id": "69c21ec7fd71b5f79f60e11d"
+                // },
+                // {
+                //   "product_retailer_id": "69c21a8c1a3df39f110186d9"
+                // },
+                // {
+                //   "product_retailer_id": "69c21aa1f055928f6ddccea7"
+                // },
+                // {
+                //   "product_retailer_id": "69c21cf419d90721373dff0d"
+                // },
+                // {
+                //   "product_retailer_id": "69c219c37896dea20a6ff600"
+                // },
+                // {
+                //   "product_retailer_id": "69c21ca57896dea20a707d24"
+                // },
+                // {
+                //   "product_retailer_id": "69c21cce19d90721373dfa55"
+                // },
+                // {
+                //   "product_retailer_id": "69c21a0419d90721373d56d4"
+                // },
+                // {
+                //   "product_retailer_id": "69c21c7af055928f6ddd2b44"
+                // },
+                // {
+                //   "product_retailer_id": "69c21d06817aaac0ae64ef6d"
+                // },
+                // {
+                //   "product_retailer_id": "69c21cbb9d3d40869966cedb"
+                // }
             ]
           }
         ]
@@ -791,7 +882,7 @@ class MessageHandler {
         this.catalogoMercado2(to);
         break;
       case 'opt2':
-        this.catalogoSubMekatos(to);
+        this.catalogoGaseosas(to);
         break;
       default:
         response = "Oops😔\nPorfa, elige una de las opciones del menú o escribe *Hola* para volver a empezar\nTambién, escribe *Carta* para verla.";
