@@ -439,15 +439,15 @@ class MessageHandler {
                       {
                         "product_retailer_id": "69c2134b7896dea20a6de140"
                       },
-                      {
-                        "product_retailer_id": "69c2150b7bff33f4a31e489a"
-                      },
+                      // {
+                      //   "product_retailer_id": "69c2150b7bff33f4a31e489a"
+                      // },
                       {
                         "product_retailer_id": "69c2146919d90721373bacdd"
                       },
-                      {
-                        "product_retailer_id": "69c2147b817aaac0ae621f7b"
-                      },
+                      // {
+                      //   "product_retailer_id": "69c2147b817aaac0ae621f7b"
+                      // },
                       {
                         "product_retailer_id": "69c21021fd71b5f79f5bc57a"
                       },
