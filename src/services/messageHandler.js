@@ -156,7 +156,7 @@ class MessageHandler {
     const menuMessage = "Elige la subcategoría: ";
     const buttons = [
       {
-        type: 'reply', reply: { id: 'opt1', title: 'Pasabocas🍭 y Mekatos🍿' }
+        type: 'reply', reply: { id: 'opt1', title: 'Pasabocas🍭y Mekatos🍿' }
       },
       {
         type: 'reply', reply: { id: 'opt2', title: 'Gaseosas🥤' }
