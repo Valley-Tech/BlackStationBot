@@ -30,6 +30,20 @@ class WhatsAppService {
     }
   }
 
+  async sendListMessage(to, listMessage) {
+    try {
+      const data = {
+        messaging_product: 'whatsapp',
+        to,
+        type: 'interactive',
+        interactive: listMessage.interactive ? listMessage.interactive : listMessage
+      };
+      await sendToWhatsApp(data);
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  }
+
   async sendInteractiveButtons(to, bodyText, buttons) {
     try {
       const data = {

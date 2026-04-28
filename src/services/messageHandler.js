@@ -40,6 +40,11 @@ class MessageHandler {
           await this.respFlow(message.from, screen, datosPedido, pedidoStr);
           await whatsappService.markAsRead(message.id);
           accion["pantalla"] = screen;
+        } else if (message?.interactive.type === 'list_reply') {
+          // <-- Aquí manejas la respuesta de la lista
+          const option = message?.interactive?.list_reply?.id;
+          await this.handleMenuOption(message.from, option);
+          await whatsappService.markAsRead(message.id);
         } else {
           const option = message?.interactive?.button_reply?.id;
           await this.handleMenuOption(message.from, option);
@@ -111,7 +116,7 @@ class MessageHandler {
   async sendWelcomeMessage(to, senderInfo) {
     try {
         const name = this.getSenderName(senderInfo).match(/^(\w+)/)?.[1];
-        const welcomeMessage = `¡Hola 👋 ${name}!\nBienvenid@ a *MerkaCentro 24 Horas*🏪🛒\n\n¿Qué deseas hacer hoy? 😊\n\nEscribe *ayuda* si la necesitas`;
+        const welcomeMessage = `¡Hola 👋 ${name}!\nBienvenid@ a *MerkaCentro 24 Horas*🏪🛒\n\n¿Qué deseas comprar hoy?`;
         await whatsappService.sendMessage(to, welcomeMessage);
     } catch (error) {
       printDetailedError(error);
@@ -119,38 +124,53 @@ class MessageHandler {
   }
 
   async sendWelcomeMenu(to) {
-    const menuMessage = "Elige la categoría: ";
-    const buttons = [
-      {
-        type: 'reply', reply: { id: 'option_1', title: 'Mercado 🛒🛍️' }
+  const listMessage = {
+    type: "interactive",
+    interactive: {
+      type: "list",
+      body: {
+        text: "Da clic abajo para ver los productos"
       },
-      {
-        type: 'reply', reply: { id: 'option_2', title: 'Gaseosas y mekatos🥤🍬' }
-      },
-      {
-        type: 'reply', reply: { id: 'option_3', title: 'Cuidado personal🧼💊' }
+      action: {
+        button: "Comprar",
+        sections: [
+          {
+            title: "Mercado 🛒🛍️",
+            rows: [
+              {
+                id: "option_1",
+                title: "Salsas🥫 y Condimentos🧂"
+              },
+              {
+                id: "option_2",
+                title: "Carnes frías🥩 y Frutas🍎🍓"
+              },
+              {
+                id: "option_3",
+                title: "Bebidas🧃 y Gaseosas🥤"
+              }
+            ]
+          },
+          {
+            title: "Cuidado Personal🧴y Hogar",
+            rows: [
+              {
+                id: "opcion_1",
+                title: "Personal🧴🧼"
+              },
+              {
+                id: "opcion_2",
+                title: "Medicamentos 💊",
+              }
+            ]
+          }
+        ]
       }
-    ];
+    }
+  };
 
-    await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
-  }
-
-  async menuSubCategorias(to) {
-    const menuMessage = "Elige la subcategoría:";
-    const buttons = [
-      {
-        type: 'reply', reply: { id: 'opcion_1', title: 'Salsas 🥫' }
-      },
-      {
-        type: 'reply', reply: { id: 'opcion_2', title: 'Condimentos 🧂' }
-      },
-      // {
-      //   type: 'reply', reply: { id: 'opcion_3', title: 'Granos 🫘' }
-      // }
-    ];
-
-    await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
-  }
+  await whatsappService.sendListMessage(to, listMessage);
+}
 
   async otrasCategorias(to) {
     const menuMessage = "Elige la subcategoría: ";
@@ -187,94 +207,106 @@ class MessageHandler {
   return diaSemana
   }
   
-  async catalogoMercado(to) {
-    try {
-      const template = {
-        name: "catalogo",
-        language: {
-          code: "Es_Co"
+  async catalogoSubMercado3(to) {
+    const template = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Cuidado Personal 🧴🧼"
         },
-        components: [
-            {
-              type: "button",
-              sub_type: "MPM",
-              index: 0,
-              "parameters": [
-            {
-              "type": "action",
-              "action": {
-                "sections": [
-                  {
-                    "title": "SALSAS",
-                    "product_items": [
-                      {
-                        "product_retailer_id": "69c3661cbfb27e5db666ad95"
-                      },
-                      {
-                        "product_retailer_id": "69c369da3cce32fbe56bf103"
-                      },
-                      {
-                        "product_retailer_id": "69c3698cfd71b5f79f0473f8"
-                      },
-                      {
-                        "product_retailer_id": "69c36adc7896dea20a07a0f2"
-                      },
-                      {
-                        "product_retailer_id": "69c366e63cce32fbe56b2d46"
-                      },
-                      {
-                        "product_retailer_id": "69c3699e872399ad6473ba11"
-                      },
-                      {
-                        "product_retailer_id": "69c36708bfb27e5db666e687"
-                      },
-                      {
-                        "product_retailer_id": "69c36a71872399ad6473e5ee"
-                      },
-                      {
-                        "product_retailer_id": "69c36a25872399ad6473d106"
-                      },
-                      {
-                        "product_retailer_id": "69c369c31b70fbcf1bc4a8a7"
-                      },
-                      {
-                        "product_retailer_id": "69c36a391b70fbcf1bc4c1e1"
-                      },
-                      {
-                        "product_retailer_id": "69c36981bfb27e5db6675521"
-                      },
-                      {
-                        "product_retailer_id": "69c36acdfd71b5f79f04cfe9"
-                      },
-                      {
-                        "product_retailer_id": "69c36a046a7528a70c1d3960"
-                      },
-                      {
-                        "product_retailer_id": "69c366a620de4f254d3081e4"
-                      },
-                      {
-                        "product_retailer_id": "69c365f7872399ad6472c350"
-                      },
-                      {
-                        "product_retailer_id": "69c36b92a88b9bc519bcfa4a"
-                      },
-                      {
-                        "product_retailer_id": "69c36ba5bfb27e5db667aa24"
-                      }
-                    ]
-                  }
-                ]
-              }
-            }
-          ]
-            }
-        ] 
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "CUIDADO PERSONAL",
+            "product_items": [
+              {
+                "product_retailer_id": "69c4ba6e7362d1fe0b8a9408"
+              },
+              {
+                "product_retailer_id": "69c4b9b91dcfb49c18acc596"
+              },
+              {
+                "product_retailer_id": "69c4b93b1b70fbcf1b6f323e"
+              },
+              {
+                "product_retailer_id": "69c4b89406882b0566570039"
+              },
+              {
+                "product_retailer_id": "69c4b8d3e61fb4357fc253fc"
+              },
+              {
+                "product_retailer_id": "69c4b96a1b70fbcf1b6f3c1d"
+              },
+              {
+                "product_retailer_id": "69c4b999e61fb4357fc29a84"
+              },
+              {
+                "product_retailer_id": "69c4b8bd1b70fbcf1b6edcfe"
+              },
+              {
+                "product_retailer_id": "69c4b95106882b0566575551"
+              },
+              {
+                "product_retailer_id": "69d3bbf86b3269bbe44811f2"
+              },
+              {
+                "product_retailer_id": "69d3bc615e7da3a2f6073e2c"
+              },
+              {
+                "product_retailer_id": "69d3bc73524001f94eca0054"
+              },
+              {
+                "product_retailer_id": "69d3bc9a5e7da3a2f607a8be"
+              },
+              {
+                "product_retailer_id": "69d3bcbbdeafcfb1d1ed53eb"
+              },
+              {
+                "product_retailer_id": "69d3ba66deafcfb1d1ea89a9"
+              },
+              {
+                "product_retailer_id": "69d3ba836b3269bbe4465231"
+              },
+              {
+                "product_retailer_id": "69c4bd58cfdc708e2023ee39"
+              },
+              {
+                "product_retailer_id": "69c4bd35e61fb4357fc405b8"
+              },
+              {
+                "product_retailer_id": "69c4bcde126013bf1f5a1ff4"
+              },
+              {
+                "product_retailer_id": "69c4bd1f126013bf1f5a34a8"
+              },
+              {
+                "product_retailer_id": "69c4bdb0309b847b30a48d28"
+              },
+              {
+                "product_retailer_id": "69c4bd88fd71b5f79fb212f6"
+              },
+              {
+                "product_retailer_id": "69d3b73d719c4da024d31223"
+              },
+              {
+                "product_retailer_id": "69d3b4e25e7da3a2f6ffdf8a"
+              },
+              {
+                "product_retailer_id": "69d3b61cdeafcfb1d1e78e37"
+              },
+              {
+                "product_retailer_id": "69d3b38bdeafcfb1d1e4e15d"
+              },
+            ]
+          },
+        ]
       }
-    return await whatsappService.sendMenu(to, template);
-    }
-    catch (error) {
-        printDetailedError(error);
-    }
+  }
+    return await whatsappService.sendProductList(to, template);
   }
 
   async catalogoMercado2(to) {
@@ -403,211 +435,266 @@ class MessageHandler {
     }
   }
 
-  async catalogoMercado3(to) {
-    const template = { 
-      name: "nuevomenu",
-      language: { 
-          code: "Es_Co" },
-      components: [
-          {
-            type: "button",
-            sub_type: "MPM",
-            index: 0,
-            "parameters": [
-          {
-            "type": "action",
-            "action": {
-              "sections": [
-                {
-                  "title": "Medicamentos",
-                    "product_items": [
-                      {
-                        "product_retailer_id": "69c218e91a3df39f11010adb"
-                      },
-                      {
-                        "product_retailer_id": "69c21386f055928f6ddab2eb"
-                      },
-                      {
-                        "product_retailer_id": "69c2104f817aaac0ae5feb60"
-                      },
-                      {
-                        "product_retailer_id": "69c218ba7bff33f4a31fd7c5"
-                      },
-                      {
-                        "product_retailer_id": "69c217e1335b9ea55fece1cf"
-                      },
-                      {
-                        "product_retailer_id": "69c2134b7896dea20a6de140"
-                      },
-                      // {
-                      //   "product_retailer_id": "69c2150b7bff33f4a31e489a"
-                      // },
-                      {
-                        "product_retailer_id": "69c2146919d90721373bacdd"
-                      },
-                      // {
-                      //   "product_retailer_id": "69c2147b817aaac0ae621f7b"
-                      // },
-                      {
-                        "product_retailer_id": "69c21021fd71b5f79f5bc57a"
-                      },
-                      {
-                        "product_retailer_id": "69c212f5b5b1d14e317dbf5e"
-                      },
-                      {
-                        "product_retailer_id": "69c21359b5b1d14e317df5f1"
-                      },
-                  ]
-                },
-                {
-                  "title": "Cuidado Y Aseo Del Hogar",
-                    "product_items": [
-                      {
-                        "product_retailer_id": "69c3723e1b70fbcf1bc67a83"
-                      },
-                      {
-                        "product_retailer_id": "69c374a2a88b9bc519bf3251"
-                      },
-                      {
-                        "product_retailer_id": "69c372a37896dea20a094364"
-                      },
-                      {
-                        "product_retailer_id": "69c376d920de4f254d32fb19"
-                      },
-                      {
-                        "product_retailer_id": "69c376ce1b70fbcf1bc6f723"
-                      },
-                      {
-                        "product_retailer_id": "69c4bcb67362d1fe0b8b6221"
-                      },
-                      {
-                        "product_retailer_id": "69c4bca3cfdc708e20239bfe"
-                      },
-                      {
-                        "product_retailer_id": "69c4b5f31b70fbcf1b6db8cd"
-                      },
-                      {
-                        "product_retailer_id": "69c4b86d1b70fbcf1b6eca0f"
-                      },
-                      {
-                        "product_retailer_id": "69c4b808cfdc708e20219966"
-                      },
-                      {
-                        "product_retailer_id": "69c4b7b5309b847b30a2d4b8"
-                      },
-                      {
-                        "product_retailer_id": "69c215ec9d3d408699650a87"
-                      },
-                      {
-                        "product_retailer_id": "69c2152bb5b1d14e317ea6b1"
-                      },
-                      {
-                        "product_retailer_id": "69c36fd8872399ad64754151"
-                      },
-                      {
-                        "product_retailer_id": "69c36e617896dea20a088c7e"
-                      },
-                      {
-                        "product_retailer_id": "69c36e7a6a7528a70c1e9c10"
-                      },
-                      {
-                        "product_retailer_id": "69c36e5075e6fcf877e38f55"
-                      },
-                      {
-                        "product_retailer_id": "69c36f9620de4f254d31fbfc"
-                      }
-                  ]
-                }
-              ]
-            }
-          }
-        ]
-          }
-      ] 
-  }
-    
-    return await whatsappService.sendMenu(to, template);
-  }
-
-  async catalogoSubMercado(to) {
-    const template = { 
+  async catalogoSubMercado4(to) {
+    const template = {
       type: "product_list",
       header: { 
           type: "text",
-          text: "Condimentos 🧂"
+          text: "Medicamentos"
         },
         body: {
-          text: "Condimentos"
+          text: "Da clic aquí"
         },
         action: {
           catalog_id: "2277977052727019",
           sections: [
           {
+            "title": "MEDICAMENTOS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69c218e91a3df39f11010adb"
+                },
+                {
+                  "product_retailer_id": "69c21386f055928f6ddab2eb"
+                },
+                {
+                  "product_retailer_id": "69c2104f817aaac0ae5feb60"
+                },
+                {
+                  "product_retailer_id": "69c218ba7bff33f4a31fd7c5"
+                },
+                {
+                  "product_retailer_id": "69c217e1335b9ea55fece1cf"
+                },
+                {
+                  "product_retailer_id": "69c2134b7896dea20a6de140"
+                },
+                {
+                  "product_retailer_id": "69c212467bff33f4a31d16ef"
+                },
+                {
+                  "product_retailer_id": "69c2146919d90721373bacdd"
+                },
+                {
+                  "product_retailer_id": "69c211a7b5b1d14e317d0743"
+                },
+                {
+                  "product_retailer_id": "69c21021fd71b5f79f5bc57a"
+                },
+                {
+                  "product_retailer_id": "69c212f5b5b1d14e317dbf5e"
+                },
+                {
+                  "product_retailer_id": "69c21359b5b1d14e317df5f1"
+                },
+                {
+                  "product_retailer_id": "69c2129efd71b5f79f5d45eb"
+                },
+            ]
+          },
+          // {
+          //   "title": "Cuidado Y Aseo Del Hogar",
+          //     "product_items": [
+          //       {
+          //         "product_retailer_id": "69c3723e1b70fbcf1bc67a83"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c374a2a88b9bc519bf3251"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c372a37896dea20a094364"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c376d920de4f254d32fb19"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c376ce1b70fbcf1bc6f723"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c4bcb67362d1fe0b8b6221"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c4bca3cfdc708e20239bfe"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c4b5f31b70fbcf1b6db8cd"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c4b86d1b70fbcf1b6eca0f"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c4b808cfdc708e20219966"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c4b7b5309b847b30a2d4b8"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c215ec9d3d408699650a87"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c2152bb5b1d14e317ea6b1"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c36fd8872399ad64754151"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c36e617896dea20a088c7e"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c36e7a6a7528a70c1e9c10"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c36e5075e6fcf877e38f55"
+          //       },
+          //       {
+          //         "product_retailer_id": "69c36f9620de4f254d31fbfc"
+          //       }
+          //   ]
+          // }
+        ]
+      }
+  }
+    return await whatsappService.sendProductList(to, template);
+  }
+
+  async catalogoMercado(to) {
+    const template = { 
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Salsas🥫 y Condimentos🧂"
+        },
+        body: {
+          text: "da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "SALSAS",
+            "product_items": [
+              {
+                "product_retailer_id": "69c3661cbfb27e5db666ad95"
+              },
+              {
+                "product_retailer_id": "69c369da3cce32fbe56bf103"
+              },
+              {
+                "product_retailer_id": "69c3698cfd71b5f79f0473f8"
+              },
+              {
+                "product_retailer_id": "69c36adc7896dea20a07a0f2"
+              },
+              {
+                "product_retailer_id": "69c366e63cce32fbe56b2d46"
+              },
+              // {
+              //   "product_retailer_id": "69c3699e872399ad6473ba11"
+              // },
+              // {
+              //   "product_retailer_id": "69c36708bfb27e5db666e687"
+              // },
+              // {
+              //   "product_retailer_id": "69c36a71872399ad6473e5ee"
+              // },
+              // {
+              //   "product_retailer_id": "69c36a25872399ad6473d106"
+              // },
+              // {
+              //   "product_retailer_id": "69c369c31b70fbcf1bc4a8a7"
+              // },
+              // {
+              //   "product_retailer_id": "69c36a391b70fbcf1bc4c1e1"
+              // },
+              // {
+              //   "product_retailer_id": "69c36981bfb27e5db6675521"
+              // },
+              {
+                "product_retailer_id": "69c36acdfd71b5f79f04cfe9"
+              },
+              {
+                "product_retailer_id": "69c36a046a7528a70c1d3960"
+              },
+              {
+                "product_retailer_id": "69c366a620de4f254d3081e4"
+              },
+              {
+                "product_retailer_id": "69c365f7872399ad6472c350"
+              },
+              {
+                "product_retailer_id": "69c36b92a88b9bc519bcfa4a"
+              },
+              {
+                "product_retailer_id": "69c36ba5bfb27e5db667aa24"
+              }
+            ]
+          },
+          {
             "title": "CONDIMENTOS",
               "product_items": [
                 {
-                  "product_retailer_id": "69c36847fd71b5f79f0423f2"
-                },
-                {
-                  "product_retailer_id": "69c36b2420de4f254d316291"
-                },
-                {
-                  "product_retailer_id": "69c36b146a7528a70c1d8a3c"
-                },
-                {
-                  "product_retailer_id": "69c3677ffd71b5f79f040165"
-                },
-                {
-                  "product_retailer_id": "69c3676dbfb27e5db666fa9a"
-                },
-                {
-                  "product_retailer_id": "69c3682675e6fcf877e21b7a"
-                },
-                {
-                  "product_retailer_id": "69c36801a88b9bc519bbc966"
-                },
-                {
-                  "product_retailer_id": "69c368a07896dea20a07269e"
-                },
-                {
-                  "product_retailer_id": "69c36812bfb27e5db6671111"
-                },
-                {
-                  "product_retailer_id": "69c367f07896dea20a0714a5"
-                },
-                {
-                  "product_retailer_id": "69c36c7c6a7528a70c1df41d"
-                },
-                {
-                  "product_retailer_id": "69c36c4c872399ad64747ae6"
-                },
-                {
-                  "product_retailer_id": "69c36c591b70fbcf1bc535dc"
-                },
-                {
-                  "product_retailer_id": "69c36c6f3cce32fbe56caa6c"
-                },
-                {
-                  "product_retailer_id": "69c368367896dea20a071cd7"
-                },
-                {
-                  "product_retailer_id": "69c36793872399ad64732db2"
-                },
-                {
-                  "product_retailer_id": "69c36c23bfb27e5db667eadb"
-                },
-                {
-                  "product_retailer_id": "69c36c32fd71b5f79f05681c"
-                },
-                {
-                  "product_retailer_id": "69c36c8f872399ad64748db7"
-                },
-                {
-                  "product_retailer_id": "69c36b6d7896dea20a07c555"
-                },
-                {
-                  "product_retailer_id": "69c36b5175e6fcf877e2d105"
-                },
+                "product_retailer_id": "69c36847fd71b5f79f0423f2"
+              },
+              {
+                "product_retailer_id": "69c36b2420de4f254d316291"
+              },
+              {
+                "product_retailer_id": "69c36b146a7528a70c1d8a3c"
+              },
+              {
+                "product_retailer_id": "69c3677ffd71b5f79f040165"
+              },
+              {
+                "product_retailer_id": "69c3676dbfb27e5db666fa9a"
+              },
+              {
+                "product_retailer_id": "69c3682675e6fcf877e21b7a"
+              },
+              {
+                "product_retailer_id": "69c36801a88b9bc519bbc966"
+              },
+              {
+                "product_retailer_id": "69c368a07896dea20a07269e"
+              },
+              {
+                "product_retailer_id": "69c36812bfb27e5db6671111"
+              },
+              {
+                "product_retailer_id": "69c367f07896dea20a0714a5"
+              },
+              {
+                "product_retailer_id": "69c36c7c6a7528a70c1df41d"
+              },
+              {
+                "product_retailer_id": "69c36c4c872399ad64747ae6"
+              },
+              {
+                "product_retailer_id": "69c36c591b70fbcf1bc535dc"
+              },
+              // {
+              //   "product_retailer_id": "69c36c6f3cce32fbe56caa6c"
+              // },
+              {
+                "product_retailer_id": "69c368367896dea20a071cd7"
+              },
+              {
+                "product_retailer_id": "69c36793872399ad64732db2"
+              },
+              // {
+              //   "product_retailer_id": "69c36c23bfb27e5db667eadb"
+              // },
+              {
+                "product_retailer_id": "69c36c32fd71b5f79f05681c"
+              },
+              {
+                "product_retailer_id": "69c36c8f872399ad64748db7"
+              },
+              {
+                "product_retailer_id": "69c36b6d7896dea20a07c555"
+              },
+              {
+                "product_retailer_id": "69c36b5175e6fcf877e2d105"
+              }
             ]
           }
         ]
@@ -616,8 +703,107 @@ class MessageHandler {
     
     return await whatsappService.sendProductList(to, template);
   }
+
+  async catalogoSubMercado(to) {
+    const template = { 
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Carnes Frías🥩 y Frutas🍎🍓"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "CARNES FRÍAS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d9139f69b309cf44adc8b4"
+                },
+                {
+                  "product_retailer_id": "69d912def2b6880f9d9d4771"
+                },
+                {
+                  "product_retailer_id": "69d913703393eb999423cfc9"
+                },
+                {
+                  "product_retailer_id": "69d90f0fb200cc804d9de1a6"
+                },
+                {
+                  "product_retailer_id": "69d90efd69b309cf44a7b8cb"
+                },
+                {
+                  "product_retailer_id": "69d90ec7af2108383d2710a6"
+                },
+                {
+                  "product_retailer_id": "69d90eda65d4204c37031c2d"
+                },
+                {
+                  "product_retailer_id": "69d90f8bdef710fb3c89d069"
+                },
+                {
+                  "product_retailer_id": "69d90f2cf600f1b5793c17f3"
+                },
+                {
+                  "product_retailer_id": "69d911cd65d4204c3706ccdf"
+                },
+                {
+                  "product_retailer_id": "69d90f71f2b6880f9d996971"
+                },
+                {
+                  "product_retailer_id": "69d90eb7f2b6880f9d9882fb"
+                },
+                {
+                  "product_retailer_id": "69d912482ec32e3834785f6c"
+                },
+                {
+                  "product_retailer_id": "69d911f77da5b1ef28b7e997"
+                },
+                {
+                  "product_retailer_id": "69d9128765d4204c3707b9c3"
+                },
+                {
+                  "product_retailer_id": "69d912713393eb999422d717"
+                },
+            ]
+          },
+          {
+            "title": "FRUTAS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d8ff7d42a93f3786d6c182"
+                },
+                {
+                  "product_retailer_id": "69d8ff93695e2ef9f7c05ffb"
+                },
+                {
+                  "product_retailer_id": "69d90a85af2108383d22ab9b"
+                },
+                {
+                  "product_retailer_id": "69d90a75f2b6880f9d93c142"
+                },
+                {
+                  "product_retailer_id": "69d8feea681205cd21dd39f2"
+                },
+                {
+                  "product_retailer_id": "69d8ff0442a93f3786d66d24"
+                },
+                {
+                  "product_retailer_id": "69d8ff1858479361019fd609"
+                }
+              ]
+          }
+        ]
+    }
+  }
+    
+    return await whatsappService.sendProductList(to, template);
+  }
   
-  async catalogoGaseosas(to) {
+  async catalogoSubMercado2(to) {
     const template = { 
       type: "product_list",
       header: { 
@@ -860,23 +1046,23 @@ class MessageHandler {
     switch (option) {
       case 'option_1':
         idNumber["numero"] = to;
-        this.menuSubCategorias(to);
+        this.catalogoMercado(to);
         break;
       case 'option_2':
         idNumber["numero"] = to;
-        this.otrasCategorias(to);
-        break;
-      case 'option_3':
-        this.catalogoMercado3(to);
-        break;
-      case 'opcion_1':
-        this.catalogoMercado(to);
-        break;
-      case 'opcion_2':
         this.catalogoSubMercado(to);
         break;
+      case 'option_3':
+        this.catalogoSubMercado2(to);
+        break;
+      case 'opcion_1':
+        this.catalogoSubMercado3(to);
+        break;
+      case 'opcion_2':
+        this.catalogoSubMercado4(to);
+        break;
       case 'opcion_3':
-        this.sendContact(to);
+        // this.catalogoSubMercado2(to);
         break;
       case 'opt1':
         this.catalogoMercado2(to);
