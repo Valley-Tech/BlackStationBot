@@ -490,67 +490,59 @@ class MessageHandler {
                 {
                   "product_retailer_id": "69c2129efd71b5f79f5d45eb"
                 },
+                {
+                  "product_retailer_id": "69c2152bb5b1d14e317ea6b1"
+                },
+                {
+                  "product_retailer_id": "69c213199d3d40869963b864"
+                },
+                {
+                  "product_retailer_id": "69c21443817aaac0ae61faef"
+                },
+                {
+                  "product_retailer_id": "69c212cef055928f6dda5831"
+                },
+                {
+                  "product_retailer_id": "69c2155a7bff33f4a31e5b16"
+                },
+                {
+                  "product_retailer_id": "69c2103d7896dea20a6c422c"
+                }
+                {
+                  "product_retailer_id": "69c2142019d90721373b83f2"
+                },
+                {
+                  "product_retailer_id": "69c2160a19d90721373c246e"
+                },
+                {
+                  "product_retailer_id": "69c215d5b5b1d14e317ede7d"
+                },
+                {
+                  "product_retailer_id": "69c2136c335b9ea55feb5687"
+                },
+                {
+                  "product_retailer_id": "69c2139c1a3df39f11ff88f1"
+                },
+                {
+                  "product_retailer_id": "69c214907bff33f4a31e2a0c"
+                },
+                {
+                  "product_retailer_id": "69c214069d3d408699643684"
+                },
+                {
+                  "product_retailer_id": "69c21543335b9ea55febfce1"
+                },
+                {
+                  "product_retailer_id": "69c21122fd71b5f79f5c5747"
+                },
+                {
+                  "product_retailer_id": "69c213d47896dea20a6e041f"
+                },
+                {
+                  "product_retailer_id": "69c213341a3df39f11ff6603"
+                }
             ]
-          },
-          // {
-          //   "title": "Cuidado Y Aseo Del Hogar",
-          //     "product_items": [
-          //       {
-          //         "product_retailer_id": "69c3723e1b70fbcf1bc67a83"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c374a2a88b9bc519bf3251"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c372a37896dea20a094364"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c376d920de4f254d32fb19"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c376ce1b70fbcf1bc6f723"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c4bcb67362d1fe0b8b6221"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c4bca3cfdc708e20239bfe"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c4b5f31b70fbcf1b6db8cd"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c4b86d1b70fbcf1b6eca0f"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c4b808cfdc708e20219966"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c4b7b5309b847b30a2d4b8"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c215ec9d3d408699650a87"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c2152bb5b1d14e317ea6b1"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c36fd8872399ad64754151"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c36e617896dea20a088c7e"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c36e7a6a7528a70c1e9c10"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c36e5075e6fcf877e38f55"
-          //       },
-          //       {
-          //         "product_retailer_id": "69c36f9620de4f254d31fbfc"
-          //       }
-          //   ]
-          // }
+          }
         ]
       }
   }
