@@ -507,7 +507,7 @@ class MessageHandler {
                 },
                 {
                   "product_retailer_id": "69c2103d7896dea20a6c422c"
-                }
+                },
                 {
                   "product_retailer_id": "69c2142019d90721373b83f2"
                 },
