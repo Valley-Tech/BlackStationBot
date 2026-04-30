@@ -812,15 +812,6 @@ class MessageHandler {
                 {
                   "product_retailer_id": "69d9070bb0fb5071dcac759a"
                 },
-                {
-                  "product_retailer_id": "69d9060a695e2ef9f7c76831"
-                },
-                {
-                  "product_retailer_id": "69d90669b36510b69a6fa1a8"
-                },
-                {
-                  "product_retailer_id": "69d904ae531e72507856fca8"
-                },
               ]
           }
         ]
