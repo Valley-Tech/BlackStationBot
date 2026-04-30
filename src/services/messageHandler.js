@@ -787,6 +787,41 @@ class MessageHandler {
                   "product_retailer_id": "69d8ff1858479361019fd609"
                 }
               ]
+          },
+          {
+            "title": "CHOCOLATES",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d90bfe7da5b1ef28b1fb68"
+                },
+                {
+                  "product_retailer_id": "69d9062e681205cd21e472e1"
+                },
+                {
+                  "product_retailer_id": "69d90b9df600f1b57937fecf"
+                },
+                {
+                  "product_retailer_id": "69d90be065d4204c37004155"
+                },
+                {
+                  "product_retailer_id": "69d90b51def710fb3c858ed7"
+                },
+                {
+                  "product_retailer_id": "69d906bee4843af3b4ff5d2b"
+                },
+                {
+                  "product_retailer_id": "69d9070bb0fb5071dcac759a"
+                },
+                {
+                  "product_retailer_id": "69d9060a695e2ef9f7c76831"
+                },
+                {
+                  "product_retailer_id": "69d90669b36510b69a6fa1a8"
+                },
+                {
+                  "product_retailer_id": "69d904ae531e72507856fca8"
+                },
+              ]
           }
         ]
     }
