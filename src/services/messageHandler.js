@@ -785,12 +785,7 @@ class MessageHandler {
                 },
                 {
                   "product_retailer_id": "69d8ff1858479361019fd609"
-                }
-              ]
-          },
-          {
-            "title": "CHOCOLATES",
-              "product_items": [
+                },
                 {
                   "product_retailer_id": "69d90bfe7da5b1ef28b1fb68"
                 },
