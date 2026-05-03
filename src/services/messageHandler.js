@@ -50,6 +50,44 @@ class MessageHandler {
           await this.handleMenuOption(message.from, option);
           await whatsappService.markAsRead(message.id);
         }        
+      } else if (message?.type === 'image' && accion["pantalla"] === 'SUMMARY') {
+        const datosUsuario = userOrderDataMap[message.from] || {};
+        const imageBuffer = await downloadImageFromMeta(message.image.url);
+        
+        // 2. Subir a S3
+        const publicUrl = await uploadToPublicStorage(imageBuffer, message.image.mime_type);
+        
+        // 3. Enviar la imagen al número oficial
+        const nombre = datosUsuario.name || "";
+        const celular = datosUsuario.phone || "";
+        const direccion = datosUsuario.address || "";
+        const monto = datosUsuario.monto || "";
+        const pedido = datosUsuario.pedidoStr || "";
+
+        const templateVars = [
+          nombre,
+          celular,
+          direccion,
+          pedido,
+          monto ? monto.toLocaleString('es-CO') : "",
+        ];
+
+        const numerosOficiales = [
+          "573161763710",
+          "573162822076"
+        ];
+
+        for (const numero of numerosOficiales) {
+          await whatsappService.sendTemplateMediaMessage(
+            numero, // Número oficial
+            "comprobante_pago", // Nombre de tu plantilla
+            publicUrl,         // URL pública de la imagen en S3
+            templateVars
+          );
+        }
+        const msg = "Gracias por compartirnos el comprobante de tu pago ✅\n\nPronto nos pondremos en contacto contigo para confirmar tu pedido 😊";
+        await whatsappService.sendMessage(message.from, msg);
+        await this.menuOpcionalHiring(message.from);
       }
     } catch (error) {
       printDetailedError(error);
@@ -1450,7 +1488,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
         monto: datosPedido.monto,
         pedidoStr
       };
-        response = `*Resumen de tu compra*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\n🏦Cuentas bancarias:\n\n*Nequi:* \n\n*Bancolombia Ahorros:* \n\n🚨 Luego, envíanos el comprobante de la transferencia (captura) para confirmar tu pedido 😊`;
+        response = `*Resumen de tu compra*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\n🏦Cuentas bancarias:\n\n*Nequi/Daviplata:* 3233082273\n\n*Bancolombia Ahorros:* 70416357747\n\n🚨 Luego, envíanos el comprobante de la transferencia (captura) para confirmar tu pago 😊`;
       }
    } else if (screen === "RATE") {
     response = "¡Recibido!\nMuchas gracias por tu opinión! 🤗";
