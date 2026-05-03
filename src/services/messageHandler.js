@@ -147,7 +147,7 @@ class MessageHandler {
               },
               {
                 id: "option_3",
-                title: "Lácteos Y Refrigeración🥛🧊"
+                title: "Lácteos Y Refrigeración🥛"
               },
               {
                 id: "option_4",
@@ -709,7 +709,7 @@ class MessageHandler {
       type: "product_list",
       header: { 
           type: "text",
-          text: "Lácteos Y Refrigeración🥛🧊"
+          text: "Lácteos Y Refrigeración🥛"
         },
         body: {
           text: "Da clic aquí"
