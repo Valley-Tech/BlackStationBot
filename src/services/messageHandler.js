@@ -146,10 +146,6 @@ class MessageHandler {
                 title: "Carnes frías🥩 y Frutas🍎🍓"
               },
               {
-                id: "option_2",
-                title: "Carnes frías🥩 y Frutas🍎🍓"
-              },
-              {
                 id: "option_3",
                 title: "Lácteos Y Refrigeración🥛🧊"
               },
