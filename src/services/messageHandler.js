@@ -129,7 +129,7 @@ class MessageHandler {
     interactive: {
       type: "list",
       body: {
-        text: "Da clic abajo para ver los productos"
+        text: "Da clic en *Comprar* para ver los productos"
       },
       action: {
         button: "Comprar",
@@ -993,15 +993,6 @@ class MessageHandler {
                 },
                 {
                   "product_retailer_id": "69d9070bb0fb5071dcac759a"
-                },
-                {
-                  "product_retailer_id": "69d904d6695e2ef9f7c5c6a2"
-                },
-                {
-                  "product_retailer_id": "69d90544b0fb5071dcaa21b9"
-                },
-                {
-                  "product_retailer_id": "69d90558531e72507857e11c"
                 }
               ]
           }
