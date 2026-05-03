@@ -418,7 +418,19 @@ class MessageHandler {
                     },
                     {
                       "product_retailer_id": "69d68ecbbedddfd69ad37fe8"
-                    }
+                    },
+                    {
+                      "product_retailer_id": "69d68ebc8ca23c3471c0738b"
+                    },
+                    {
+                      "product_retailer_id": "69d68c4d42a93f3786cf8b94"
+                    },
+                    {
+                      "product_retailer_id": "69d68c23cced254ef43a9cd5"
+                    },
+                    {
+                      "product_retailer_id": "69d68d7c2c4e357a85535971"
+                    },
                   ]
                 }
               ]
