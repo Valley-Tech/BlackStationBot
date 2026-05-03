@@ -182,10 +182,6 @@ class MessageHandler {
               {
                 id: "opt1",
                 title: "Mekatos y confitería🍬🍭"
-              },
-              {
-                id: "opt2",
-                title: "Dulces y Snacks 🍬🍭",
               }
             ]
           }
@@ -596,7 +592,12 @@ class MessageHandler {
                 },
                 {
                   "product_retailer_id": "69d7b1b14dbce094f84bb3f1"
-                },
+                }
+              ]
+            },
+            {
+            "title": "Cuidado del Hogar",
+              "product_items": [
                 {
                   "product_retailer_id": "69d50c45d35d817d1e9466a6"
                 },
@@ -609,8 +610,7 @@ class MessageHandler {
                 {
                   "product_retailer_id": "69d50c2c2440c8c597a71d71"
                 },
-
-            ]
+              ]
           }
         ]
       }
