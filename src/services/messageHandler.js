@@ -363,9 +363,6 @@ class MessageHandler {
                       "product_retailer_id": "69d68b7abedddfd69acb6b68"
                     },
                     {
-                      "product_retailer_id": "69d68bc9cced254ef439f4d7"
-                    },
-                    {
                       "product_retailer_id": "69d68add2c4e357a854d62e2"
                     },
                     {
@@ -394,9 +391,6 @@ class MessageHandler {
                     },
                     {
                       "product_retailer_id": "69d68e242af86b6d19fd552e"
-                    },
-                    {
-                      "product_retailer_id": "69d68e115f0010c7d1f9af40"
                     },
                     {
                       "product_retailer_id": "69d689d82af86b6d19f20b24"
@@ -544,6 +538,15 @@ class MessageHandler {
                 },
                 {
                   "product_retailer_id": "69c213341a3df39f11ff6603"
+                },
+                {
+                  "product_retailer_id": "69c2116a19d90721373a4a40"
+                },
+                {
+                  "product_retailer_id": "69c211401a3df39f11fe31df"
+                },
+                {
+                  "product_retailer_id": "69c2118c7bff33f4a31c8411"
                 }
             ]
           }
