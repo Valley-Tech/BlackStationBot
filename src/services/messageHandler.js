@@ -148,6 +148,10 @@ class MessageHandler {
               {
                 id: "option_3",
                 title: "Bebidas🧃 y Gaseosas🥤"
+              },
+              {
+                id: "option_4",
+                title: "Desechables 🍴🗑️"
               }
             ]
           },
@@ -524,9 +528,9 @@ class MessageHandler {
                 {
                   "product_retailer_id": "69c214907bff33f4a31e2a0c"
                 },
-                {
-                  "product_retailer_id": "69c214069d3d408699643684"
-                },
+                // {
+                //   "product_retailer_id": "69c214069d3d408699643684" //Metronidazol
+                // },
                 {
                   "product_retailer_id": "69c21543335b9ea55febfce1"
                 },
@@ -541,12 +545,6 @@ class MessageHandler {
                 },
                 {
                   "product_retailer_id": "69c2116a19d90721373a4a40"
-                },
-                {
-                  "product_retailer_id": "69c211401a3df39f11fe31df"
-                },
-                {
-                  "product_retailer_id": "69c2118c7bff33f4a31c8411"
                 }
             ]
           }
@@ -699,7 +697,6 @@ class MessageHandler {
         ]
     }
   }
-    
     return await whatsappService.sendProductList(to, template);
   }
 
@@ -1043,6 +1040,121 @@ class MessageHandler {
     return await whatsappService.sendProductList(to, template);
   }
 
+  async catalogoMercado4(to) {
+    const template = { 
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Desechables 🍴🗑️"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "DESECHABLES",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d50c951e65c66f59ba2702"
+                },
+                {
+                  "product_retailer_id": "69d50cd9deafcfb1d180b2e3"
+                },
+                {
+                  "product_retailer_id": "69d50d172440c8c597a86e99"
+                },
+                {
+                  "product_retailer_id": "69d677378ca23c3471951fac"
+                },
+                {
+                  "product_retailer_id": "69d677632c4e357a852bcf5f"
+                },
+                {
+                  "product_retailer_id": "69d6774bcced254ef40ff5a8"
+                },
+                {
+                  "product_retailer_id": "69d676fd8dab334394ca6f98"
+                },
+                {
+                  "product_retailer_id": "69d6770cbedddfd69aa67dff"
+                },
+                {
+                  "product_retailer_id": "69d6777b8dab334394cb2ec0"
+                },
+                {
+                  "product_retailer_id": "69d50ed66e4f7183de842050"
+                },
+                {
+                  "product_retailer_id": "69d677d0cced254ef4109640"
+                },
+                {
+                  "product_retailer_id": "69d677fd2c4e357a852c7ed8"
+                },
+                {
+                  "product_retailer_id": "69d50cafd35d817d1e94e831"
+                },
+                {
+                  "product_retailer_id": "69d50dcb337ef3c0cead1612"
+                },
+                {
+                  "product_retailer_id": "69d50cf5337ef3c0ceac84c8"
+                },
+                {
+                  "product_retailer_id": "69d678638dab334394cc241e"
+                },
+                {
+                  "product_retailer_id": "69d674d52c4e357a8528f30c"
+                },
+                {
+                  "product_retailer_id": "69d67529b1a817c4190456a6"
+                },
+                {
+                  "product_retailer_id": "69d674b22c4e357a852863d6"
+                },
+                {
+                  "product_retailer_id": "69d6748fb1a817c41903407c"
+                },
+                {
+                  "product_retailer_id": "69d674725f0010c7d1cc93ba"
+                },
+                {
+                  "product_retailer_id": "69d5154cdeafcfb1d1892f09"
+                },
+                {
+                  "product_retailer_id": "69d677e742a93f3786a7eaf9"
+                },
+                {
+                  "product_retailer_id": "69d6754dcced254ef40db883"
+                },
+                {
+                  "product_retailer_id": "69d675dccced254ef40e61be"
+                },
+                {
+                  "product_retailer_id": "69d675c65f0010c7d1ce7e41"
+                },
+                {
+                  "product_retailer_id": "69d6756442a93f3786a44867"
+                },
+                {
+                  "product_retailer_id": "69d676d1125e0f80538c8dec"
+                },
+                {
+                  "product_retailer_id": "69d67643bedddfd69aa5608d"
+                },
+                {
+                  "product_retailer_id": "69d675ed8ca23c3471936b2b"
+                },
+              ]
+          }
+        ]
+    }
+  }
+    
+    return await whatsappService.sendProductList(to, template);
+  }
+
   async encuesta(to) {
     const action = {
       name: "flow",
@@ -1088,6 +1200,9 @@ class MessageHandler {
         break;
       case 'option_3':
         this.catalogoSubMercado2(to);
+        break;
+      case 'option_4':
+        this.catalogoMercado4(to);
         break;
       case 'opcion_1':
         this.catalogoSubMercado3(to);
