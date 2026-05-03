@@ -146,11 +146,19 @@ class MessageHandler {
                 title: "Carnes frías🥩 y Frutas🍎🍓"
               },
               {
+                id: "option_2",
+                title: "Carnes frías🥩 y Frutas🍎🍓"
+              },
+              {
                 id: "option_3",
-                title: "Bebidas🧃 y Gaseosas🥤"
+                title: "Lácteos Y Refrigeración 🥛🧊"
               },
               {
                 id: "option_4",
+                title: "Bebidas🧃 y Gaseosas🥤"
+              },
+              {
+                id: "option_5",
                 title: "Desechables 🍴🗑️"
               }
             ]
@@ -700,6 +708,121 @@ class MessageHandler {
     return await whatsappService.sendProductList(to, template);
   }
 
+  async catalogoSubMercado1(to) {
+    const template = { 
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Lácteos Y Refrigeración 🥛🧊"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "LÁCTEOS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d90dbef2b6880f9d976373"
+                },
+                {
+                  "product_retailer_id": "69d90d7ef600f1b5793a1334"
+                },
+                {
+                  "product_retailer_id": "69d90d98f2b6880f9d9731d9"
+                },
+                {
+                  "product_retailer_id": "69d8febd4dbce094f8ef84cf"
+                },
+                {
+                  "product_retailer_id": "69d9083cf600f1b57933e64c"
+                },
+                {
+                  "product_retailer_id": "69d908df2ec32e38346eea3e"
+                },
+                {
+                  "product_retailer_id": "69d9082bdef710fb3c81f282"
+                },
+                {
+                  "product_retailer_id": "69d8f9f6681205cd21d8bbaf"
+                },
+                {
+                  "product_retailer_id": "69d8fa26b36510b69a645b18"
+                },
+                {
+                  "product_retailer_id": "69d8f9dd531e7250784db28f"
+                },
+                {
+                  "product_retailer_id": "69d90a62af2108383d22394c"
+                },
+                {
+                  "product_retailer_id": "69d909bc3393eb999419af14"
+                },
+                {
+                  "product_retailer_id": "69d909c965d4204c37fdd6a0"
+                },
+                {
+                  "product_retailer_id": "69d90adab200cc804d99d6b6"
+                },
+                {
+                  "product_retailer_id": "69d90b2c2ec32e38347174ed"
+                },
+                {
+                  "product_retailer_id": "69d90b1969b309cf44a39ac0"
+                },
+                {
+                  "product_retailer_id": "69d8faeeb36510b69a6511fa"
+                },
+                {
+                  "product_retailer_id": "69d8fb01e4843af3b4f4c89c"
+                },
+                {
+                  "product_retailer_id": "69d8fb5ab36510b69a657b6d"
+                },
+                {
+                  "product_retailer_id": "69d8fa844dbce094f8ec9cbe"
+                },
+                {
+                  "product_retailer_id": "69d8fa9542a93f3786d28315"
+                },
+                {
+                  "product_retailer_id": "69d8fab1376bb5d93eae95db"
+                },
+                {
+                  "product_retailer_id": "69d908eeb200cc804d975c74"
+                },
+                {
+                  "product_retailer_id": "69d8fcaa4dbce094f8ee2454"
+                },
+                {
+                  "product_retailer_id": "69d5198d49248df9f89f4016"
+                },
+                {
+                  "product_retailer_id": "69d5196c337ef3c0ceb9b31f"
+                },
+                {
+                  "product_retailer_id": "69d519269bf0d32ae9bac1cb"
+                },
+                {
+                  "product_retailer_id": "69d51912deafcfb1d18dc905"
+                },
+                {
+                  "product_retailer_id": "69d900755847936101a0b948"
+                },
+                {
+                  "product_retailer_id": "69d90139376bb5d93eb4f576"
+                }
+            ]
+          }
+        ]
+    }
+  }
+    
+    return await whatsappService.sendProductList(to, template);
+  }
+
   async catalogoSubMercado(to) {
     const template = { 
       type: "product_list",
@@ -1116,37 +1239,51 @@ class MessageHandler {
                 {
                   "product_retailer_id": "69d6748fb1a817c41903407c"
                 },
-                {
-                  "product_retailer_id": "69d674725f0010c7d1cc93ba"
-                },
-                {
-                  "product_retailer_id": "69d5154cdeafcfb1d1892f09"
-                },
-                {
-                  "product_retailer_id": "69d677e742a93f3786a7eaf9"
-                },
-                {
-                  "product_retailer_id": "69d6754dcced254ef40db883"
-                },
-                {
-                  "product_retailer_id": "69d675dccced254ef40e61be"
-                },
-                {
-                  "product_retailer_id": "69d675c65f0010c7d1ce7e41"
-                },
-                {
-                  "product_retailer_id": "69d6756442a93f3786a44867"
-                },
-                {
-                  "product_retailer_id": "69d676d1125e0f80538c8dec"
-                },
-                {
-                  "product_retailer_id": "69d67643bedddfd69aa5608d"
-                },
-                {
-                  "product_retailer_id": "69d675ed8ca23c3471936b2b"
-                },
+                // {
+                //   "product_retailer_id": "69d674725f0010c7d1cc93ba"
+                // },
+                // {
+                //   "product_retailer_id": "69d5154cdeafcfb1d1892f09"
+                // },
+                // {
+                //   "product_retailer_id": "69d677e742a93f3786a7eaf9"
+                // },
+                // {
+                //   "product_retailer_id": "69d6754dcced254ef40db883"
+                // },
+                // {
+                //   "product_retailer_id": "69d675dccced254ef40e61be"
+                // },
+                // {
+                //   "product_retailer_id": "69d675c65f0010c7d1ce7e41"
+                // },
+                // {
+                //   "product_retailer_id": "69d6756442a93f3786a44867"
+                // },
+                // {
+                //   "product_retailer_id": "69d676d1125e0f80538c8dec"
+                // },
+                // {
+                //   "product_retailer_id": "69d67643bedddfd69aa5608d"
+                // },
+                // {
+                //   "product_retailer_id": "69d675ed8ca23c3471936b2b"
+                // },
               ]
+          }, 
+          {
+            "title": "PAPELERÍA",
+            "product_items": [
+              {
+                "product_retailer_id": "69d91b9bdef710fb3c98d280"
+              },
+              {
+                "product_retailer_id": "69d91b843393eb99942cf57b"
+              },
+              {
+                "product_retailer_id": "69d91bdc7da5b1ef28c4ba4a"
+              },
+            ]
           }
         ]
     }
@@ -1191,17 +1328,19 @@ class MessageHandler {
     let response;
     switch (option) {
       case 'option_1':
-        idNumber["numero"] = to;
+        // idNumber["numero"] = to;
         this.catalogoMercado(to);
         break;
       case 'option_2':
-        idNumber["numero"] = to;
         this.catalogoSubMercado(to);
         break;
       case 'option_3':
-        this.catalogoSubMercado2(to);
+        this.catalogoSubMercado1(to);
         break;
       case 'option_4':
+        this.catalogoSubMercado2(to);
+        break;
+      case 'option_5':
         this.catalogoMercado4(to);
         break;
       case 'opcion_1':
@@ -1427,9 +1566,9 @@ completeOrder(productos, data) {
 
     const menuMessage = "¿Resolví tu pregunta?";
     const buttons = [
-      { type: 'reply', reply: { id: 'option_4', title: "Si, Gracias 😊" } },
-      { type: 'reply', reply: { id: 'option_3', title: 'Hacer otra pregunta' } },
-      { type: 'reply', reply: { id: 'op_3', title: 'Hablar con asesor 🤵' } }
+      { type: 'reply', reply: { id: '', title: "Si, Gracias 😊" } },
+      { type: 'reply', reply: { id: '', title: 'Hacer otra pregunta' } },
+      { type: 'reply', reply: { id: '', title: 'Hablar con asesor 🤵' } }
     ];
 
     switch (state.step) {
