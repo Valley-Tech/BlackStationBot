@@ -169,6 +169,10 @@ class MessageHandler {
               {
                 id: "opcion_2",
                 title: "Medicamentos 💊",
+              },
+              {
+                id: "opcion_3",
+                title: "Del Hogar 🧤🧼",
               }
             ]
           },
@@ -192,20 +196,6 @@ class MessageHandler {
 
   await whatsappService.sendListMessage(to, listMessage);
 }
-
-  async otrasCategorias(to) {
-    const menuMessage = "Elige la subcategoría: ";
-    const buttons = [
-      {
-        type: 'reply', reply: { id: 'opt1', title: 'Pasabocas🍭y Mekatos🍿' }
-      },
-      {
-        type: 'reply', reply: { id: 'opt2', title: 'Gaseosas🥤' }
-      }
-    ];
-
-    await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
-  }
 
   async menuPedido(to) {
     const action = {
@@ -558,6 +548,76 @@ class MessageHandler {
     return await whatsappService.sendProductList(to, template);
   }
 
+  async catalogoSubMercado5(to) {
+    const template = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Cuidado del Hogar🧤🧼"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "Cuidado del Hogar",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d7b1c995734f580fe64e44"
+                },
+                {
+                  "product_retailer_id": "69d7b1968dab3343945ac8d4"
+                },
+                {
+                  "product_retailer_id": "69d7b006556e9821476a9f1c"
+                },
+                {
+                  "product_retailer_id": "69d7aef6788108078f3f6b2f"
+                },
+                {
+                  "product_retailer_id": "69d7afb94dbce094f848f152"
+                },
+                {
+                  "product_retailer_id": "69d7b17fdde5ad5315a54e60"
+                },
+                {
+                  "product_retailer_id": "69d7afa7788108078f407223"
+                },
+                {
+                  "product_retailer_id": "69d7b01742a93f37862c5a6f"
+                },
+                {
+                  "product_retailer_id": "69d7afcd8dab33439457994c"
+                },
+                {
+                  "product_retailer_id": "69d7aff495734f580fe418ff"
+                },
+                {
+                  "product_retailer_id": "69d7b1b14dbce094f84bb3f1"
+                },
+                {
+                  "product_retailer_id": "69d50c45d35d817d1e9466a6"
+                },
+                {
+                  "product_retailer_id": "69d50c682440c8c597a7976b"
+                },
+                {
+                  "product_retailer_id": "69d50bdcc7687b049a2495be"
+                },
+                {
+                  "product_retailer_id": "69d50c2c2440c8c597a71d71"
+                },
+
+            ]
+          }
+        ]
+      }
+  }
+    return await whatsappService.sendProductList(to, template);
+  }
+
   async catalogoMercado(to) {
     const template = { 
       type: "product_list",
@@ -705,7 +765,7 @@ class MessageHandler {
   }
 
   async catalogoSubMercado1(to) {
-    const template = { 
+    const template = {
       type: "product_list",
       header: { 
           type: "text",
@@ -815,7 +875,6 @@ class MessageHandler {
         ]
     }
   }
-    
     return await whatsappService.sendProductList(to, template);
   }
 
@@ -949,7 +1008,6 @@ class MessageHandler {
         ]
     }
   }
-    
     return await whatsappService.sendProductList(to, template);
   }
   
@@ -1154,8 +1212,7 @@ class MessageHandler {
           }
         ]
     }
-  }
-    
+  }    
     return await whatsappService.sendProductList(to, template);
   }
 
@@ -1284,7 +1341,6 @@ class MessageHandler {
         ]
     }
   }
-    
     return await whatsappService.sendProductList(to, template);
   }
 
@@ -1346,7 +1402,7 @@ class MessageHandler {
         this.catalogoSubMercado4(to);
         break;
       case 'opcion_3':
-        // this.catalogoSubMercado2(to);
+        this.catalogoSubMercado5(to);
         break;
       case 'opt1':
         this.catalogoMercado2(to);
