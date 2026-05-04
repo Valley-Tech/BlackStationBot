@@ -13,7 +13,7 @@ const s3 = new S3Client({
 
 // Sube la imagen a S3 y retorna la URL pública
 export const uploadToPublicStorage = async (buffer, mimeType = "image/jpeg") => {
-  const fileName = `comprobantes/${uuidv4()}.jpg`;
+  const fileName = `comprobante_tienda/${uuidv4()}.jpg`;
   const params = {
     Bucket: config.AWS_BUCKET_NAME,
     Key: fileName,

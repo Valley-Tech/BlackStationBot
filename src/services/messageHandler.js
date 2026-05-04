@@ -59,7 +59,7 @@ class MessageHandler {
         
         // 3. Enviar la imagen al número oficial
         const nombre = datosUsuario.name || "";
-        const celular = datosUsuario.phone || "";
+        const celular = message.from || "";
         const direccion = datosUsuario.address || "";
         const monto = datosUsuario.monto || "";
         const pedido = datosUsuario.pedidoStr || "";
@@ -85,12 +85,12 @@ class MessageHandler {
             templateVars
           );
         }
-        const msg = "Gracias por compartirnos el comprobante de tu pago ✅\n\nPronto nos pondremos en contacto contigo para confirmar tu pedido 😊";
+        const msg = "Gracias por compartirnos el comprobante de tu pago ✅\n\nPronto nos pondremos en contacto contigo para confirmar tu compra 😊";
         await whatsappService.sendMessage(message.from, msg);
-        await this.menuOpcionalHiring(message.from);
+        // await this.menuOpcionalHiring(message.from);
       }
     } catch (error) {
-      printDetailedError(error);
+      console.error(error);
     }
   }
 
@@ -1409,7 +1409,6 @@ class MessageHandler {
     let response;
     switch (option) {
       case 'option_1':
-        // idNumber["numero"] = to;
         this.catalogoMercado(to);
         break;
       case 'option_2':
