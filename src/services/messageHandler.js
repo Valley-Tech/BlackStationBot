@@ -72,25 +72,22 @@ class MessageHandler {
           monto ? monto.toLocaleString('es-CO') : "",
         ];
 
-        const numerosOficiales = [
-          "573161763710",
-          "573162822076"
-        ];
-
-        for (const numero of numerosOficiales) {
-          await whatsappService.sendTemplateMediaMessage(
-            numero, // Número oficial
-            "comprobante_pago", // Nombre de tu plantilla
-            publicUrl,         // URL pública de la imagen en S3
-            templateVars
-          );
-        }
+        console.log("111111111111");
+        await whatsappService.sendTemplateMediaMessage(
+          "573162822076", // Número oficial
+          "comprobante_pago", // Nombre de tu plantilla
+          publicUrl,         // URL pública de la imagen en S3
+          templateVars
+        );
+        
         const msg = "Gracias por compartirnos el comprobante de tu pago ✅\n\nPronto nos pondremos en contacto contigo para confirmar tu compra 😊";
         await whatsappService.sendMessage(message.from, msg);
         // await this.menuOpcionalHiring(message.from);
       }
+      console.log("22222222222222");
     } catch (error) {
-      console.error(error);
+      console.log("33333333333333");
+      console.log(error.response?.data);
     }
   }
 

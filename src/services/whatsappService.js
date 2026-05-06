@@ -92,31 +92,35 @@ class WhatsAppService {
   }
 
   async sendTemplateMediaMessage(to, templateName, imageUrl, variables) {
-    const data = {
-      messaging_product: 'whatsapp',
-      to,
-      type: 'template',
-      template: {
-        name: templateName,
-        language: { code: "es_CO" },
-        components: [
-          {
-            type: "header",
-            parameters: [
-              {
-                type: "image",
-                image: { link: imageUrl }
-              }
-            ]
-          },
-          {
-            type: "body",
-            parameters: variables.map(v => ({ type: "text", text: v }))
-          }
-        ]
-      }
-    };
-    await sendToWhatsApp(data);
+    try {
+      const data = {
+        messaging_product: 'whatsapp',
+        to,
+        type: 'template',
+        template: {
+          name: templateName,
+          language: { code: "es_CO" },
+          components: [
+            {
+              type: "header",
+              parameters: [
+                {
+                  type: "image",
+                  image: { link: imageUrl }
+                }
+              ]
+            },
+            {
+              type: "body",
+              parameters: variables.map(v => ({ type: "text", text: v }))
+            }
+          ]
+        }
+      };
+      await sendToWhatsApp(data);
+    } catch (error) {
+      console.log(error.response?.data);
+    }
   }
   
   async sendFlowReserva(to, action) {
