@@ -17,7 +17,7 @@ function isWithinBusinessHours() {
   const minute = colombiaTime.getMinutes();
 
   // Horario: 12:00 (12 p.m.) a 22:00 (10 p.m.)
-  const opening = 12 * 60; // 12:00 p.m. en minutos
+  const opening = 16 * 60; // 4:00 p.m. en minutos
   const closing = 22 * 60; // 10:00 p.m. en minutos
   const current = hour * 60 + minute;
 
@@ -44,7 +44,7 @@ class MessageHandler {
         const userId = message.from;
         
         // Procesar con Gemini pasando el ID del usuario
-        await this.handleAssistand(userId, incomingMessage);
+        await this.handleAssistant(userId, incomingMessage);
         await whatsappService.markAsRead(message.id);
       }
     } catch (error) {
@@ -1207,7 +1207,7 @@ completeOrder(productos, data) {
     appendToSheet(userData, spreadsheetId);
   }
 
-  async handleAssistandFlow(to, message) {
+  async handleAssistantFlow(to, message) {
     const state = this.assistandState[to];
     let response;
 
@@ -1231,7 +1231,7 @@ completeOrder(productos, data) {
     await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
   }
 
-  async handleAssistand(userId, message) {
+  async handleAssistant(userId, message) {
     try {
       // Obtener respuesta de Gemini con memoria de conversación
       const response = await geminiService(message, userId);
@@ -1239,7 +1239,7 @@ completeOrder(productos, data) {
       // Enviar respuesta al usuario
       await whatsappService.sendMessage(userId, response);
     } catch (error) {
-      console.error("Error en handleAssistand:", error);
+      console.error("Error en handleAssistant:", error);
       printDetailedError(error);
       await whatsappService.sendMessage(userId, "Lo siento, estoy teniendo problemas técnicos. Intenta nuevamente 🔧");
     }
