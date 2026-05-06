@@ -1,5 +1,6 @@
 node_modules/
 .env
-priv.pem
-pub.pem
 README.md
+private_key.pem
+public_key.pem
+private_key_pkcs8.pem

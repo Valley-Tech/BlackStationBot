@@ -8,22 +8,6 @@ import { printDetailedError } from './printDetailError.js';
 import { downloadImageFromMeta } from './httpRequest/sendToWhatsApp.js';
 import { uploadToPublicStorage } from './awsS3Service.js';
 
-function isWithinBusinessHours() {
-  // Hora actual en Colombia (GMT-5)
-  const now = new Date();
-  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-  const colombiaTime = new Date(utc - (5 * 60 * 60000));
-  const hour = colombiaTime.getHours();
-  const minute = colombiaTime.getMinutes();
-
-  // Horario: 12:00 (12 p.m.) a 22:00 (10 p.m.)
-  const opening = 16 * 60; // 4:00 p.m. en minutos
-  const closing = 22 * 60; // 10:00 p.m. en minutos
-  const current = hour * 60 + minute;
-
-  return current >= opening && current < closing;
-}
-
 const transactionToPhoneMap = {}; // Memoria para mapear transactionId a número de teléfono
 const idNumber = {}
 const accion = {}
@@ -37,18 +21,76 @@ class MessageHandler {
     this.assistandState = {};
   }
 
-  async handleIncomingMessage(message) {
+  async handleIncomingMessage(message, senderInfo, screen, datosPedido, pedidoStr) {
     try {
       if (message?.type === 'text') {
         const incomingMessage = message.text.body.toLowerCase().trim();
         const userId = message.from;
-        
-        // Procesar con Gemini pasando el ID del usuario
-        await this.handleAssistant(userId, incomingMessage);
+        if (this.isGreeting(incomingMessage)) {
+          await this.sendWelcomeMessage(userId, senderInfo);
+          await this.sendWelcomeMenu(userId);
+        } else if (this.isQuestion(incomingMessage)) {
+          await this.handleAssistant(userId, incomingMessage);
+        } else {
+          await this.handleMenuOption(message.from, incomingMessage);
+        }
         await whatsappService.markAsRead(message.id);
+      } else if (message?.type === 'interactive') {
+        if (message?.interactive.type === 'nfm_reply') {
+          await this.respFlow(message.from, screen, datosPedido, pedidoStr);
+          await whatsappService.markAsRead(message.id);
+          accion["pantalla"] = screen;
+        } else if (message?.interactive.type === 'list_reply') {
+          // <-- Aquí manejas la respuesta de la lista
+          const option = message?.interactive?.list_reply?.id;
+          await this.handleMenuOption(message.from, option);
+          await whatsappService.markAsRead(message.id);
+        } else {
+          const option = message?.interactive?.button_reply?.id;
+          await this.handleMenuOption(message.from, option);
+          await whatsappService.markAsRead(message.id);
+        }        
+      } else if (message?.type === 'image' && accion["pantalla"] === 'SUMMARY') {
+        const datosUsuario = userOrderDataMap[message.from] || {};
+        const imageBuffer = await downloadImageFromMeta(message.image.url);
+        
+        // 2. Subir a S3
+        const publicUrl = await uploadToPublicStorage(imageBuffer, message.image.mime_type);
+        
+        // 3. Enviar la imagen al número oficial
+        const nombre = datosUsuario.name || "";
+        const celular = message.from || "";
+        const direccion = datosUsuario.address || "";
+        const monto = datosUsuario.monto || "";
+        const pedido = datosUsuario.pedidoStr || "";
+
+        const templateVars = [
+          nombre,
+          celular,
+          direccion,
+          pedido,
+          monto ? monto.toLocaleString('es-CO') : "",
+        ];
+
+        const numerosOficiales = [
+          "573161763710",
+          "573162822076"
+        ];
+
+        for (const numero of numerosOficiales) {
+          await whatsappService.sendTemplateMediaMessage(
+            numero, // Número oficial
+            "comprobante_pago", // Nombre de tu plantilla
+            publicUrl,         // URL pública de la imagen en S3
+            templateVars
+          );
+        }
+        const msg = "Gracias por compartirnos el comprobante de tu pago ✅\n\nPronto nos pondremos en contacto contigo para confirmar tu compra 😊";
+        await whatsappService.sendMessage(message.from, msg);
+        // await this.menuOpcionalHiring(message.from);
       }
     } catch (error) {
-      printDetailedError(error);
+      console.error(error);
     }
   }
 
@@ -73,16 +115,6 @@ class MessageHandler {
       lower.includes('pedido') ||
       lower.includes('orden') ||
       lower.includes('comprar')
-    );
-  }
-
-  isReservation(message) {
-    const lower = message.toLowerCase();
-    return (
-      lower.includes('reservar') ||
-      lower.includes('reserva') ||
-      lower.includes('reservacion') ||
-      lower.includes('reservación')
     );
   }
 
@@ -119,84 +151,96 @@ class MessageHandler {
     return senderInfo.profile?.name || senderInfo.wa_id || "Cliente";
   }
 
-  async sendWelcomeMessage(to, messageId, senderInfo) {
+  async sendWelcomeMessage(to, senderInfo) {
     try {
         const name = this.getSenderName(senderInfo).match(/^(\w+)/)?.[1];
-        const welcomeMessage = `¡Hola 👋 ${name}!\nBienvenid@ a *La Estación*🌭🍔🍟🍕\n\n¿Qué deseas disfrutar hoy? 😊\n\nEscribe *ayuda* si la necesitas`;
-        await whatsappService.sendMessage(to, welcomeMessage, messageId);
+        const welcomeMessage = `¡Hola 👋 ${name}!\nBienvenid@ a *MerkaCentro 24 Horas*🏪🛒\n\n¿Qué deseas comprar hoy?`;
+        await whatsappService.sendMessage(to, welcomeMessage);
     } catch (error) {
       printDetailedError(error);
     }
   }
 
   async sendWelcomeMenu(to) {
-    const menuMessage = "¿Qué deseas hacer?";
-    const buttons = [
-      {
-        type: 'reply', reply: { id: 'option_1', title: 'Pedir 🛒' }
+  const listMessage = {
+    type: "interactive",
+    interactive: {
+      type: "list",
+      body: {
+        text: "Da clic en *Comprar* para ver los productos"
       },
-      // {
-      //   type: 'reply', reply: { id: 'option_2', title: 'Reservar 📋' }
-      // },
-      // {
-      //   type: 'reply', reply: { id: 'option_3', title: 'Preguntar 🤖' }
-      // }
-    ];
-
-    await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
-  }
-
-  async menuOpcional(to) {
-    const menuMessage = "Elige la categoría:";
-    const buttons = [
-      {
-        type: 'reply', reply: { id: 'opt1', title: 'Comidas Rápidas🍔' }
-      },
-      {
-        type: 'reply', reply: { id: 'opt2', title: 'Blacks Pizzas🍕' }
-      },
-      {
-        type: 'reply', reply: { id: 'opt3', title: 'Heladería Yellow🍦' }
+      action: {
+        button: "Comprar",
+        sections: [
+          {
+            title: "Mercado 🛒🛍️",
+            rows: [
+              {
+                id: "option_1",
+                title: "Salsas🥫 y Condimentos🧂"
+              },
+              {
+                id: "option_2",
+                title: "Carnes frías🥩 y Frutas🍎🍓"
+              },
+              {
+                id: "option_3",
+                title: "Lácteos Y Refrigeración🥛"
+              },
+              {
+                id: "option_4",
+                title: "Bebidas🧃 y Gaseosas🥤"
+              },
+              {
+                id: "option_5",
+                title: "Desechables 🍴🗑️"
+              }
+            ]
+          },
+          {
+            title: "Cuidado Personal🧴y Hogar",
+            rows: [
+              {
+                id: "opcion_1",
+                title: "Personal🧴🧼"
+              },
+              {
+                id: "opcion_2",
+                title: "Medicamentos 💊",
+              },
+              {
+                id: "opcion_3",
+                title: "Del Hogar 🧤🧼",
+              }
+            ]
+          },
+          {
+            title: "Dulces, Mekatos y Snacks",
+            rows: [
+              {
+                id: "opt1",
+                title: "Mekatos y confitería🍬🍭"
+              }
+            ]
+          }
+        ]
       }
-    ];
+    }
+  };
 
-    await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
-  }
-
-  async botonSi(to) {
-    const menuMessage = "¿Deseas bebida🍹🍸 o postre? 🍨🥞 ";
-    const buttons = [
-      {
-        type: 'reply', reply: { id: 'si', title: 'Sí ✅' }
-      }
-    ];
-
-    await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
-  }
+  await whatsappService.sendListMessage(to, listMessage);
+}
 
   async menuPedido(to) {
     const action = {
       name: "flow",
       parameters: {
         "flow_message_version": "3",
-        "flow_id": "992235826682822",
-        "flow_cta": "Pedido"
+        "flow_id": "1293383568429390",
+        "flow_cta": "Enviar datos"
       },
     }
     return await whatsappService.sendFlow(to, action);
-  }
-  
-  async menuReserva(to) {
-    idNumber["numero"] = to;
-    const action = {
-      name: "flow",
-      parameters: {
-        "flow_message_version": "3",
-        "flow_id": "2158370944705175",
-        "flow_cta": "Reserva"
-      },
-    }
-    return await whatsappService.sendFlowReserva(to, action);
   }
 
   async getDia() {
@@ -208,538 +252,1125 @@ class MessageHandler {
   return diaSemana
   }
   
-async menuCarta(to) {
-  let template;
-  if (await this.getDia()==="Domingo") {
-    template = { 
-      name: "catalogo",
-      language: { 
-          code: "Es_Co" },
-      components: [
-          {
-            type: "button",
-            sub_type: "MPM",
-            index: 0,
-            "parameters": [
-          {
-            "type": "action",
-            "action": {
-              "sections": [
-                {
-                  "title": "ASADOS AL BARRIL",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "6133f09d5af774183ce25e0f"
-                    },
-                    {
-                      "product_retailer_id": "6133e891d145504ca38cbeeb"
-                    },
-                    {
-                      "product_retailer_id": "6133f070d145504ca38cbf3a"
-                    }
-                  ]
-                },
-                {
-                  "title": "PARA PICAR",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "5de86e87205aba0e1c990910"
-                    },
-                    {
-                      "product_retailer_id": "654ffcee0779b105ec6ac3bd"
-                    },
-                    {
-                      "product_retailer_id": "5dbcae51c557e50e67febfcc"
-                    },
-                    {
-                      "product_retailer_id": "5dbcad3fc557e50e67febfac"
-                    },
-                    {
-                      "product_retailer_id": "5dbcae00c557e50e67febfc0"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb083c557e50e67febfdb"
-                    },
-                  ]
-                },
-                {
-                  "title": "PLATOS FUERTES",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "67981c57bd2f74e33cfce707"
-                    },
-                    {
-                      "product_retailer_id": "66ef02fa4ff68adb785f09f8"
-                    },
-                    {
-                      "product_retailer_id": "619e8bd01880235f6d5b27e5"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb308c557e50e67febff9"
-                    },
-                    {
-                      "product_retailer_id": "5dc733ad7c14810dfd3fec3f"
-                    },
-                    {
-                      "product_retailer_id": "6311736932c31c05fbf10f89"
-                    },
-                    {
-                      "product_retailer_id": "68203e8d7f735e5e48b7ec3b"
-                    },
-                    {
-                      "product_retailer_id": "5e5ae290338d200e065c3577"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb3d9c557e50e67fec005"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb5a6c557e50e67fec022"
-                    },
-                    {
-                      "product_retailer_id": "5de84c6e205aba0e1c9907d0"
-                    },
-                    {
-                      "product_retailer_id": "68203ef70ae0923d28d06765"
-                    },
-                    {
-                      "product_retailer_id": "667f06fe23caaaaf0451a641"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb57ec557e50e67fec01f"
-                    },
-                    {
-                      "product_retailer_id": "654ff6380779b105ec6ac20a"
-                    },
-                    {
-                      "product_retailer_id": "654ff7ba33294a05ef9f32f7"
-                    },
-                    {
-                      "product_retailer_id": "61a10ddf1fd14430485f8cb9"
-                    },
-                    {
-                      "product_retailer_id": "61a2657c1fd14430485f9f0e"
-                    },
-                  ],
-                },
-                {
-                  "title": "MENÚ INFANTIL",
-                  "product_items": [ 
-                    {
-                      "product_retailer_id": "6550028ec2087c73f3b7775e"
-                    },
-                    {
-                      "product_retailer_id": "61a118171fd14430485f8d78"
-                    },
-                  ]
-                }
-              ]
-            }
-          }
-        ]
-          }
-      ] 
-  }
-}
-else {
-    template = { 
-      name: "catalogo",
-      language: { 
-          code: "Es_Co" },
-      components: [
-          {
-            type: "button",
-            sub_type: "MPM",
-            index: 0,
-            "parameters": [
-          {
-            "type": "action",
-            "action": {
-              "sections": [
-                {
-                  "title": "PARA PICAR",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "5de86e87205aba0e1c990910"
-                    },
-                    {
-                      "product_retailer_id": "654ffcee0779b105ec6ac3bd"
-                    },
-                    {
-                      "product_retailer_id": "5dbcae51c557e50e67febfcc"
-                    },
-                    {
-                      "product_retailer_id": "5dbcad3fc557e50e67febfac"
-                    },
-                    {
-                      "product_retailer_id": "5dbcae00c557e50e67febfc0"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb083c557e50e67febfdb"
-                    },
-                  ]
-                },
-                {
-                  "title": "PLATOS FUERTES",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "67981c57bd2f74e33cfce707"
-                    },
-                    {
-                      "product_retailer_id": "66ef02fa4ff68adb785f09f8"
-                    },
-                    {
-                      "product_retailer_id": "619e8bd01880235f6d5b27e5"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb308c557e50e67febff9"
-                    },
-                    {
-                      "product_retailer_id": "5dc733ad7c14810dfd3fec3f"
-                    },
-                    {
-                      "product_retailer_id": "6311736932c31c05fbf10f89"
-                    },
-                    {
-                      "product_retailer_id": "68203e8d7f735e5e48b7ec3b"
-                    },
-                    {
-                      "product_retailer_id": "5e5ae290338d200e065c3577"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb3d9c557e50e67fec005"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb5a6c557e50e67fec022"
-                    },
-                    {
-                      "product_retailer_id": "5de84c6e205aba0e1c9907d0"
-                    },
-                    {
-                      "product_retailer_id": "68203ef70ae0923d28d06765"
-                    },
-                    {
-                      "product_retailer_id": "667f06fe23caaaaf0451a641"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb57ec557e50e67fec01f"
-                    },
-                    {
-                      "product_retailer_id": "654ff6380779b105ec6ac20a"
-                    },
-                    {
-                      "product_retailer_id": "654ff7ba33294a05ef9f32f7"
-                    },
-                    {
-                      "product_retailer_id": "61a10ddf1fd14430485f8cb9"
-                    },
-                    {
-                      "product_retailer_id": "61a2657c1fd14430485f9f0e"
-                    },
-                  ],
-                },
-                {
-                  "title": "MENÚ INFANTIL",
-                  "product_items": [ 
-                    {
-                      "product_retailer_id": "6550028ec2087c73f3b7775e"
-                    },
-                    {
-                      "product_retailer_id": "61a118171fd14430485f8d78"
-                    },
-                  ]
-                }
-              ]
-            }
-          }
-        ]
-          }
-      ] 
-  }
-}
-  return await whatsappService.sendMenu(to, template);
-}
-
-  async menuCarta2(to) {
-    try {
-      const template = {
-        name: "menucarta",
-        language: {
-          code: "Es_Co"
+  async catalogoSubMercado3(to) {
+    const template = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Cuidado Personal 🧴🧼"
         },
-        components: [
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
           {
-            type: "button",
-            sub_type: "MPM",
-            index: 0,
-            "parameters": [
-          {
-            "type": "action",
-            "action": {
-              "sections": [
-                {
-                  "title": "PASTAS",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "67967092084e176a7d5855ba"
-                    },
-                    {
-                      "product_retailer_id": "632df4983bcfe31bedde0e45"
-                    },
-                    {
-                      "product_retailer_id": "5dd9dc26b928d20df3b63e49"
-                    },
-                  ]
-                },
-                {
-                  "title": "PESCADOS Y MARISCOS",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "619d6d801880235f6d5b1c36"
-                    },
-                    {
-                      "product_retailer_id": "5dcf187deea63f0df843be1e"
-                    },
-                    {
-                      "product_retailer_id": "5e34ebb51ffca60e28d763ef"
-                    },
-                  ]
-                },
-                {
-                  "title": "ARROCES",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "61a110b91880235f6d5b45a3"
-                    },
-                    {
-                      "product_retailer_id": "5f9b5233ef1e265d296b0f8d"
-                    },
-                  ]
-                },
-                {
-                  "title": "SÁNDWICHES",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "6796793106b0703ef18a9f72"
-                    },
-                  ]
-                },
-                {
-                  "title": "ENSALADAS",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "61a119621880235f6d5b4644"
-                    },
-                    {
-                      "product_retailer_id": "61a119421fd14430485f8d96"
-                    },
-                  ]
-                },
-                {
-                  "title": "SUSHI",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "618b0decad2f690565ff0342"
-                    },
-                  ]
-                },
-                {
-                  "title": "COMIDAS RÁPIDAS",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "67981d4d8460dcaf720f2284"
-                    },
-                    {
-                      "product_retailer_id": "67981a7ca9cfd2df9753864e"
-                    },
-                    {
-                      "product_retailer_id": "5f9b5636ef1e265d296b0fd3"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb612c557e50e67fec02b"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb645c557e50e67fec02e"
-                    },
-                    {
-                      "product_retailer_id": "67981bf757fc699d06fbe11c"
-                    },
-                    {
-                      "product_retailer_id": "5ef55e5619721c49eb8bb24a"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb6a5c557e50e67fec03e"
-                    },
-                    {
-                      "product_retailer_id": "5dbcb67cc557e50e67fec031"
-                    },
-                    {
-                      "product_retailer_id": "5dc7332e7c14810dfd3fec34"
-                    },
-                    {
-                      "product_retailer_id": "5f9b3922ef1e265d296b0d95"
-                    },
-                    {
-                      "product_retailer_id": "5dc7337b7c14810dfd3fec38"
-                    },
-                  ]
-                },
-                {
-                  "title": "CAFÉS",
-                  "product_items": [
-                    {
-                      "product_retailer_id": "62b0b0e63996f328856ad5c3",
-                    },
-                    {
-                      "product_retailer_id": "62b0b10f3996f328856ad5c6"
-                    },
-                    {
-                      "product_retailer_id": "66f990de998c13da021a89ac"
-                    },
-                    {
-                      "product_retailer_id": "62b0b16b3996f328856ad5d1"
-                    },
-                  ]
-                }
-              ]
-            }
-          }
+            "title": "CUIDADO PERSONAL",
+            "product_items": [
+              {
+                "product_retailer_id": "69c4ba6e7362d1fe0b8a9408"
+              },
+              {
+                "product_retailer_id": "69c4b9b91dcfb49c18acc596"
+              },
+              {
+                "product_retailer_id": "69c4b93b1b70fbcf1b6f323e"
+              },
+              {
+                "product_retailer_id": "69c4b89406882b0566570039"
+              },
+              {
+                "product_retailer_id": "69c4b8d3e61fb4357fc253fc"
+              },
+              {
+                "product_retailer_id": "69c4b96a1b70fbcf1b6f3c1d"
+              },
+              {
+                "product_retailer_id": "69c4b999e61fb4357fc29a84"
+              },
+              {
+                "product_retailer_id": "69c4b8bd1b70fbcf1b6edcfe"
+              },
+              {
+                "product_retailer_id": "69c4b95106882b0566575551"
+              },
+              {
+                "product_retailer_id": "69d3bbf86b3269bbe44811f2"
+              },
+              {
+                "product_retailer_id": "69d3bc615e7da3a2f6073e2c"
+              },
+              {
+                "product_retailer_id": "69d3bc73524001f94eca0054"
+              },
+              {
+                "product_retailer_id": "69d3bc9a5e7da3a2f607a8be"
+              },
+              {
+                "product_retailer_id": "69d3bcbbdeafcfb1d1ed53eb"
+              },
+              {
+                "product_retailer_id": "69d3ba66deafcfb1d1ea89a9"
+              },
+              {
+                "product_retailer_id": "69d3ba836b3269bbe4465231"
+              },
+              {
+                "product_retailer_id": "69c4bd58cfdc708e2023ee39"
+              },
+              {
+                "product_retailer_id": "69c4bd35e61fb4357fc405b8"
+              },
+              {
+                "product_retailer_id": "69c4bcde126013bf1f5a1ff4"
+              },
+              {
+                "product_retailer_id": "69c4bd1f126013bf1f5a34a8"
+              },
+              {
+                "product_retailer_id": "69c4bdb0309b847b30a48d28"
+              },
+              {
+                "product_retailer_id": "69c4bd88fd71b5f79fb212f6"
+              },
+              {
+                "product_retailer_id": "69d3b73d719c4da024d31223"
+              },
+              {
+                "product_retailer_id": "69d3b4e25e7da3a2f6ffdf8a"
+              },
+              {
+                "product_retailer_id": "69d3b61cdeafcfb1d1e78e37"
+              },
+              {
+                "product_retailer_id": "69d3b38bdeafcfb1d1e4e15d"
+              },
+            ]
+          },
         ]
-          }
-      ] 
+      }
   }
-    return await whatsappService.sendMenu(to, template);
+    return await whatsappService.sendProductList(to, template);
   }
-  catch (error) {
-      printDetailedError(error);
-    }
-}
 
-  async menuCarta3(to) {
-    const template = { 
-      name: "nuevomenu",
-      language: { 
-          code: "Es_Co" },
-      components: [
+  async catalogoMercado2(to) {
+    const template = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Mekatos y confitería🍬🍭"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
           {
-            type: "button",
-            sub_type: "MPM",
-            index: 0,
-            "parameters": [
-          {
-            "type": "action",
-            "action": {
-              "sections": [
-                {
-                  "title": "JUGOS NATURALES",
-                    "product_items": [
-                      {
-                        "product_retailer_id": "5dc099e151aceb0dd757c620"
-                      },
-                      {
-                        "product_retailer_id": "5dbe24b354eef30e209928e8"
-                      },
-                      {
-                        "product_retailer_id": "624a2d5d07147a05f0bdab13"
-                      },
-                      {
-                        "product_retailer_id": "5dc0a48751aceb0dd757c6fa"
-                      },
-                      {
-                        "product_retailer_id": "5dc0a48751aceb0dd757c6fb"
-                      },
-                      {
-                        "product_retailer_id": "5dc0a48751aceb0dd757c6fc"
-                      },
-                      {
-                        "product_retailer_id": "5dc0a60f51aceb0dd757c70f"
-                      },
-                      {
-                        "product_retailer_id": "5f6aafb5456d7550eef4510a"
-                      },
-                      {
-                        "product_retailer_id": "5f9b4bb3ef1e265d296b0f1a"
-                      },
-                  ]
-                },
-                {
-                  "title": "CÓCTELES",
-                    "product_items": [
-                      {
-                        "product_retailer_id": "5e226a93641dd30e29531e11"
-                      },
-                      {
-                        "product_retailer_id": "5dbcbb91c557e50e67fec108"
-                      },
-                      {
-                        "product_retailer_id": "5dbcbb4ec557e50e67fec0ff"
-                      },
-                      {
-                        "product_retailer_id": "5f836639e5d38924870320a5"
-                      },
-                      {
-                        "product_retailer_id": "639c9ea052617c1b981ee5f4"
-                      },
-                      {
-                        "product_retailer_id": "639c9e7352617c1b981ee5e1"
-                      },
-                      {
-                        "product_retailer_id": "639c9e7352617c1b981ee5e4"
-                      },
-                      {
-                        "product_retailer_id": "639c9e7352617c1b981ee5e2"
-                      },
-                      {
-                        "product_retailer_id": "653859e9dc0e3f05d9fd5ccd"
-                      },
-                      {
-                        "product_retailer_id": "639c9ef852617c1b981ee604"
-                      },
-                      {
-                        "product_retailer_id": "639c9ef852617c1b981ee605"
-                      },
-                      {
-                        "product_retailer_id": "64a1d25d9c7cb205f4f48a23"
-                      },
-                      {
-                        "product_retailer_id": "639c9ef852617c1b981ee606"
-                      },
-                  ]
-                },
-                {
-                  "title": "POSTRES",
-                    "product_items": [
-                      {
-                        "product_retailer_id": "5dc4ce4651aceb0dd757e786"
-                      },
-                      {
-                        "product_retailer_id": "639c9b7d3c1b5a05f0d8fb97"
-                      },
-                      {
-                        "product_retailer_id": "5f9b455cef1e265d296b0eab"
-                      },
-                      {
-                        "product_retailer_id": "639c9ba452617c1b981ee446"
-                      },
-                      {
-                        "product_retailer_id": "65500860c2087c73f3b778a3"
-                      },
-                      {
-                        "product_retailer_id": "6133e235d145504ca38cbd7e"
-                      },
-                      {
-                        "product_retailer_id": "65550a945e11f905f75326f5"
-                      },
+                  "title": "CONFITERÍA",
+                  "product_items": [
+                    {
+                      "product_retailer_id": "69d689605f0010c7d1ee7582"
+                    },
+                    {
+                      "product_retailer_id": "69d6896d8ca23c3471b2a72c"
+                    },
+                    {
+                      "product_retailer_id": "69d686bb8ca23c3471add12a"
+                    },
+                    {
+                      "product_retailer_id": "69d686a38dab334394e4e803"
+                    },
+                    {
+                      "product_retailer_id": "69d687e08ca23c3471b027e6"
+                    },
+                    {
+                      "product_retailer_id": "69d68ef98dab334394f962f8"
+                    },
+                    {
+                      "product_retailer_id": "69d68ee5125e0f8053baedb5"
+                    },
+                    {
+                      "product_retailer_id": "69d68b7abedddfd69acb6b68"
+                    },
+                    {
+                      "product_retailer_id": "69d68add2c4e357a854d62e2"
+                    },
+                    {
+                      "product_retailer_id": "69d68a27125e0f8053ae7179"
+                    },
+                    {
+                      "product_retailer_id": "69d68ba88dab334394f20308"
+                    },
+                    {
+                      "product_retailer_id": "69d68fe9b1a817c419383c1d"
+                    },
+                    {
+                      "product_retailer_id": "69d68fd4bedddfd69ad5bdb5"
+                    },
+                    {
+                      "product_retailer_id": "69d68dd8b1a817c419332d5f"
+                    },
+                    {
+                      "product_retailer_id": "69d686f9cced254ef42d1e3d"
+                    },
+                    {
+                      "product_retailer_id": "69d686e242a93f3786c1a735"
+                    },
+                    {
+                      "product_retailer_id": "69d68e002af86b6d19fd009f"
+                    },
+                    {
+                      "product_retailer_id": "69d68e242af86b6d19fd552e"
+                    },
+                    {
+                      "product_retailer_id": "69d689d82af86b6d19f20b24"
+                    },
+                    {
+                      "product_retailer_id": "69d689c0b1a817c41928605d"
+                    },
+                    {
+                      "product_retailer_id": "69d68de6bedddfd69ad1df84"
+                    },
+                    {
+                      "product_retailer_id": "69d6891e42a93f3786c68848"
+                    },
+                    {
+                      "product_retailer_id": "69d68a0ecced254ef4334c43"
+                    },
+                    {
+                      "product_retailer_id": "69d689f82c4e357a854b2186"
+                    },
+                    {
+                      "product_retailer_id": "69d68ecbbedddfd69ad37fe8"
+                    },
+                    {
+                      "product_retailer_id": "69d68ebc8ca23c3471c0738b"
+                    },
+                    {
+                      "product_retailer_id": "69d68c4d42a93f3786cf8b94"
+                    },
+                    {
+                      "product_retailer_id": "69d68c23cced254ef43a9cd5"
+                    },
+                    {
+                      "product_retailer_id": "69d68d7c2c4e357a85535971"
+                    },
                   ]
                 }
               ]
             }
           }
-        ]
-          }
-      ] 
+    return await whatsappService.sendProductList(to, template);
   }
-    
-    return await whatsappService.sendMenu(to, template);
+
+  async catalogoSubMercado4(to) {
+    const template = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Medicamentos"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "MEDICAMENTOS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69c218e91a3df39f11010adb"
+                },
+                {
+                  "product_retailer_id": "69c21386f055928f6ddab2eb"
+                },
+                {
+                  "product_retailer_id": "69c2104f817aaac0ae5feb60"
+                },
+                {
+                  "product_retailer_id": "69c218ba7bff33f4a31fd7c5"
+                },
+                {
+                  "product_retailer_id": "69c217e1335b9ea55fece1cf"
+                },
+                {
+                  "product_retailer_id": "69c2134b7896dea20a6de140"
+                },
+                {
+                  "product_retailer_id": "69c212467bff33f4a31d16ef"
+                },
+                {
+                  "product_retailer_id": "69c2146919d90721373bacdd"
+                },
+                {
+                  "product_retailer_id": "69c211a7b5b1d14e317d0743"
+                },
+                {
+                  "product_retailer_id": "69c21021fd71b5f79f5bc57a"
+                },
+                {
+                  "product_retailer_id": "69c212f5b5b1d14e317dbf5e"
+                },
+                {
+                  "product_retailer_id": "69c21359b5b1d14e317df5f1"
+                },
+                {
+                  "product_retailer_id": "69c2129efd71b5f79f5d45eb"
+                },
+                {
+                  "product_retailer_id": "69c2152bb5b1d14e317ea6b1"
+                },
+                {
+                  "product_retailer_id": "69c213199d3d40869963b864"
+                },
+                {
+                  "product_retailer_id": "69c21443817aaac0ae61faef"
+                },
+                {
+                  "product_retailer_id": "69c212cef055928f6dda5831"
+                },
+                {
+                  "product_retailer_id": "69c2155a7bff33f4a31e5b16"
+                },
+                {
+                  "product_retailer_id": "69c2103d7896dea20a6c422c"
+                },
+                {
+                  "product_retailer_id": "69c2142019d90721373b83f2"
+                },
+                {
+                  "product_retailer_id": "69c2160a19d90721373c246e"
+                },
+                {
+                  "product_retailer_id": "69c215d5b5b1d14e317ede7d"
+                },
+                {
+                  "product_retailer_id": "69c2136c335b9ea55feb5687"
+                },
+                {
+                  "product_retailer_id": "69c2139c1a3df39f11ff88f1"
+                },
+                {
+                  "product_retailer_id": "69c214907bff33f4a31e2a0c"
+                },
+                // {
+                //   "product_retailer_id": "69c214069d3d408699643684" //Metronidazol
+                // },
+                {
+                  "product_retailer_id": "69c21543335b9ea55febfce1"
+                },
+                {
+                  "product_retailer_id": "69c21122fd71b5f79f5c5747"
+                },
+                {
+                  "product_retailer_id": "69c213d47896dea20a6e041f"
+                },
+                {
+                  "product_retailer_id": "69c213341a3df39f11ff6603"
+                },
+                {
+                  "product_retailer_id": "69c2116a19d90721373a4a40"
+                }
+            ]
+          }
+        ]
+      }
+  }
+    return await whatsappService.sendProductList(to, template);
+  }
+
+  async catalogoSubMercado5(to) {
+    const template = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Cuidado del Hogar🧤🧼"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "Cuidado del Hogar",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d7b1c995734f580fe64e44"
+                },
+                {
+                  "product_retailer_id": "69d7b1968dab3343945ac8d4"
+                },
+                {
+                  "product_retailer_id": "69d7b006556e9821476a9f1c"
+                },
+                {
+                  "product_retailer_id": "69d7aef6788108078f3f6b2f"
+                },
+                {
+                  "product_retailer_id": "69d7afb94dbce094f848f152"
+                },
+                {
+                  "product_retailer_id": "69d7b17fdde5ad5315a54e60"
+                },
+                {
+                  "product_retailer_id": "69d7afa7788108078f407223"
+                },
+                {
+                  "product_retailer_id": "69d7b01742a93f37862c5a6f"
+                },
+                {
+                  "product_retailer_id": "69d7afcd8dab33439457994c"
+                },
+                {
+                  "product_retailer_id": "69d7aff495734f580fe418ff"
+                },
+                {
+                  "product_retailer_id": "69d7b1b14dbce094f84bb3f1"
+                }
+              ]
+            },
+            {
+            "title": "Cuidado del Hogar",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d50c45d35d817d1e9466a6"
+                },
+                {
+                  "product_retailer_id": "69d50c682440c8c597a7976b"
+                },
+                {
+                  "product_retailer_id": "69d50bdcc7687b049a2495be"
+                },
+                {
+                  "product_retailer_id": "69d50c2c2440c8c597a71d71"
+                },
+              ]
+          }
+        ]
+      }
+  }
+    return await whatsappService.sendProductList(to, template);
+  }
+
+  async catalogoMercado(to) {
+    const template = { 
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Salsas🥫 y Condimentos🧂"
+        },
+        body: {
+          text: "da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "SALSAS",
+            "product_items": [
+              {
+                "product_retailer_id": "69c3661cbfb27e5db666ad95"
+              },
+              {
+                "product_retailer_id": "69c369da3cce32fbe56bf103"
+              },
+              {
+                "product_retailer_id": "69c3698cfd71b5f79f0473f8"
+              },
+              {
+                "product_retailer_id": "69c36adc7896dea20a07a0f2"
+              },
+              {
+                "product_retailer_id": "69c366e63cce32fbe56b2d46"
+              },
+              // {
+              //   "product_retailer_id": "69c3699e872399ad6473ba11"
+              // },
+              // {
+              //   "product_retailer_id": "69c36708bfb27e5db666e687"
+              // },
+              // {
+              //   "product_retailer_id": "69c36a71872399ad6473e5ee"
+              // },
+              // {
+              //   "product_retailer_id": "69c36a25872399ad6473d106"
+              // },
+              // {
+              //   "product_retailer_id": "69c369c31b70fbcf1bc4a8a7"
+              // },
+              // {
+              //   "product_retailer_id": "69c36a391b70fbcf1bc4c1e1"
+              // },
+              // {
+              //   "product_retailer_id": "69c36981bfb27e5db6675521"
+              // },
+              {
+                "product_retailer_id": "69c36acdfd71b5f79f04cfe9"
+              },
+              {
+                "product_retailer_id": "69c36a046a7528a70c1d3960"
+              },
+              {
+                "product_retailer_id": "69c366a620de4f254d3081e4"
+              },
+              {
+                "product_retailer_id": "69c365f7872399ad6472c350"
+              },
+              {
+                "product_retailer_id": "69c36b92a88b9bc519bcfa4a"
+              },
+              {
+                "product_retailer_id": "69c36ba5bfb27e5db667aa24"
+              }
+            ]
+          },
+          {
+            "title": "CONDIMENTOS",
+              "product_items": [
+                {
+                "product_retailer_id": "69c36847fd71b5f79f0423f2"
+              },
+              {
+                "product_retailer_id": "69c36b2420de4f254d316291"
+              },
+              {
+                "product_retailer_id": "69c36b146a7528a70c1d8a3c"
+              },
+              {
+                "product_retailer_id": "69c3677ffd71b5f79f040165"
+              },
+              {
+                "product_retailer_id": "69c3676dbfb27e5db666fa9a"
+              },
+              {
+                "product_retailer_id": "69c3682675e6fcf877e21b7a"
+              },
+              {
+                "product_retailer_id": "69c36801a88b9bc519bbc966"
+              },
+              {
+                "product_retailer_id": "69c368a07896dea20a07269e"
+              },
+              {
+                "product_retailer_id": "69c36812bfb27e5db6671111"
+              },
+              {
+                "product_retailer_id": "69c367f07896dea20a0714a5"
+              },
+              {
+                "product_retailer_id": "69c36c7c6a7528a70c1df41d"
+              },
+              {
+                "product_retailer_id": "69c36c4c872399ad64747ae6"
+              },
+              {
+                "product_retailer_id": "69c36c591b70fbcf1bc535dc"
+              },
+              // {
+              //   "product_retailer_id": "69c36c6f3cce32fbe56caa6c"
+              // },
+              {
+                "product_retailer_id": "69c368367896dea20a071cd7"
+              },
+              {
+                "product_retailer_id": "69c36793872399ad64732db2"
+              },
+              // {
+              //   "product_retailer_id": "69c36c23bfb27e5db667eadb"
+              // },
+              {
+                "product_retailer_id": "69c36c32fd71b5f79f05681c"
+              },
+              {
+                "product_retailer_id": "69c36c8f872399ad64748db7"
+              },
+              {
+                "product_retailer_id": "69c36b6d7896dea20a07c555"
+              },
+              {
+                "product_retailer_id": "69c36b5175e6fcf877e2d105"
+              }
+            ]
+          }
+        ]
+    }
+  }
+    return await whatsappService.sendProductList(to, template);
+  }
+
+  async catalogoSubMercado1(to) {
+    const template = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Lácteos Y Refrigeración🥛"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "LÁCTEOS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d90dbef2b6880f9d976373"
+                },
+                {
+                  "product_retailer_id": "69d90d7ef600f1b5793a1334"
+                },
+                {
+                  "product_retailer_id": "69d90d98f2b6880f9d9731d9"
+                },
+                {
+                  "product_retailer_id": "69d8febd4dbce094f8ef84cf"
+                },
+                {
+                  "product_retailer_id": "69d9083cf600f1b57933e64c"
+                },
+                {
+                  "product_retailer_id": "69d908df2ec32e38346eea3e"
+                },
+                {
+                  "product_retailer_id": "69d9082bdef710fb3c81f282"
+                },
+                {
+                  "product_retailer_id": "69d8f9f6681205cd21d8bbaf"
+                },
+                {
+                  "product_retailer_id": "69d8fa26b36510b69a645b18"
+                },
+                {
+                  "product_retailer_id": "69d8f9dd531e7250784db28f"
+                },
+                {
+                  "product_retailer_id": "69d90a62af2108383d22394c"
+                },
+                {
+                  "product_retailer_id": "69d909bc3393eb999419af14"
+                },
+                {
+                  "product_retailer_id": "69d909c965d4204c37fdd6a0"
+                },
+                {
+                  "product_retailer_id": "69d90adab200cc804d99d6b6"
+                },
+                {
+                  "product_retailer_id": "69d90b2c2ec32e38347174ed"
+                },
+                {
+                  "product_retailer_id": "69d90b1969b309cf44a39ac0"
+                },
+                {
+                  "product_retailer_id": "69d8faeeb36510b69a6511fa"
+                },
+                {
+                  "product_retailer_id": "69d8fb01e4843af3b4f4c89c"
+                },
+                {
+                  "product_retailer_id": "69d8fb5ab36510b69a657b6d"
+                },
+                {
+                  "product_retailer_id": "69d8fa844dbce094f8ec9cbe"
+                },
+                {
+                  "product_retailer_id": "69d8fa9542a93f3786d28315"
+                },
+                {
+                  "product_retailer_id": "69d8fab1376bb5d93eae95db"
+                },
+                {
+                  "product_retailer_id": "69d908eeb200cc804d975c74"
+                },
+                {
+                  "product_retailer_id": "69d8fcaa4dbce094f8ee2454"
+                },
+                {
+                  "product_retailer_id": "69d5198d49248df9f89f4016"
+                },
+                {
+                  "product_retailer_id": "69d5196c337ef3c0ceb9b31f"
+                },
+                {
+                  "product_retailer_id": "69d519269bf0d32ae9bac1cb"
+                },
+                {
+                  "product_retailer_id": "69d51912deafcfb1d18dc905"
+                },
+                {
+                  "product_retailer_id": "69d900755847936101a0b948"
+                },
+                {
+                  "product_retailer_id": "69d90139376bb5d93eb4f576"
+                }
+            ]
+          }
+        ]
+    }
+  }
+    return await whatsappService.sendProductList(to, template);
+  }
+
+  async catalogoSubMercado(to) {
+    const template = { 
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Carnes Frías🥩 y Frutas🍎🍓"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "CARNES FRÍAS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d9139f69b309cf44adc8b4"
+                },
+                {
+                  "product_retailer_id": "69d912def2b6880f9d9d4771"
+                },
+                {
+                  "product_retailer_id": "69d913703393eb999423cfc9"
+                },
+                {
+                  "product_retailer_id": "69d90f0fb200cc804d9de1a6"
+                },
+                {
+                  "product_retailer_id": "69d90efd69b309cf44a7b8cb"
+                },
+                {
+                  "product_retailer_id": "69d90ec7af2108383d2710a6"
+                },
+                {
+                  "product_retailer_id": "69d90eda65d4204c37031c2d"
+                },
+                {
+                  "product_retailer_id": "69d90f8bdef710fb3c89d069"
+                },
+                {
+                  "product_retailer_id": "69d90f2cf600f1b5793c17f3"
+                },
+                {
+                  "product_retailer_id": "69d911cd65d4204c3706ccdf"
+                },
+                {
+                  "product_retailer_id": "69d90f71f2b6880f9d996971"
+                },
+                {
+                  "product_retailer_id": "69d90eb7f2b6880f9d9882fb"
+                },
+                {
+                  "product_retailer_id": "69d912482ec32e3834785f6c"
+                },
+                {
+                  "product_retailer_id": "69d911f77da5b1ef28b7e997"
+                },
+                {
+                  "product_retailer_id": "69d9128765d4204c3707b9c3"
+                },
+                {
+                  "product_retailer_id": "69d912713393eb999422d717"
+                },
+            ]
+          },
+          {
+            "title": "FRUTAS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d8ff7d42a93f3786d6c182"
+                },
+                {
+                  "product_retailer_id": "69d8ff93695e2ef9f7c05ffb"
+                },
+                {
+                  "product_retailer_id": "69d90a85af2108383d22ab9b"
+                },
+                {
+                  "product_retailer_id": "69d90a75f2b6880f9d93c142"
+                },
+                {
+                  "product_retailer_id": "69d8feea681205cd21dd39f2"
+                },
+                {
+                  "product_retailer_id": "69d8ff0442a93f3786d66d24"
+                },
+                {
+                  "product_retailer_id": "69d8ff1858479361019fd609"
+                }
+              ]
+          },
+          {
+            "title": "CHOCOLATES",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d90bfe7da5b1ef28b1fb68"
+                },
+                {
+                  "product_retailer_id": "69d9062e681205cd21e472e1"
+                },
+                {
+                  "product_retailer_id": "69d90b9df600f1b57937fecf"
+                },
+                {
+                  "product_retailer_id": "69d90be065d4204c37004155"
+                },
+                {
+                  "product_retailer_id": "69d90b51def710fb3c858ed7"
+                },
+                {
+                  "product_retailer_id": "69d906bee4843af3b4ff5d2b"
+                },
+                {
+                  "product_retailer_id": "69d9070bb0fb5071dcac759a"
+                }
+              ]
+          }
+        ]
+    }
+  }
+    return await whatsappService.sendProductList(to, template);
+  }
+  
+  async catalogoSubMercado2(to) {
+    const template = { 
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Bebidas y Gaseosas"
+        },
+        body: {
+          text: "Gaseosas"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "Gaseosas",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d7abe5788108078f3bccc2"
+                },
+                {
+                  "product_retailer_id": "69d8f716e4843af3b4f20bb4"
+                },
+                {
+                  "product_retailer_id": "69d8f8484dbce094f8ea6794"
+                },
+                {
+                  "product_retailer_id": "69d8f51642a93f3786ce4dad"
+                },
+                {
+                  "product_retailer_id": "69d8f43a42a93f3786cda868"
+                },
+                {
+                  "product_retailer_id": "69d8f4224dbce094f8e6e87a"
+                },
+                {
+                  "product_retailer_id": "69d8f4634dbce094f8e74bd7"
+                },
+                {
+                  "product_retailer_id": "69d8f409681205cd21d38f87"
+                },
+                {
+                  "product_retailer_id": "69d7aba3dde5ad53159e73d7"
+                },
+                {
+                  "product_retailer_id": "69d7c00a42a93f37863d02b2"
+                },
+                {
+                  "product_retailer_id": "69d7dc3e42a93f378669a0b2"
+                },
+                {
+                  "product_retailer_id": "69d7dc3142a93f3786697f27"
+                },
+                {
+                  "product_retailer_id": "69d7dc4b05edc105d4932f51"
+                },
+                {
+                  "product_retailer_id": "69d7c07e05edc105d4689411"
+                },
+                {
+                  "product_retailer_id": "69d8f69e58479361019907df"
+                },
+                {
+                  "product_retailer_id": "69d7c025dde5ad5315b2ea90"
+                },
+                {
+                  "product_retailer_id": "69d8f34bb0fb5071dc9991f5"
+                },
+                {
+                  "product_retailer_id": "69d7aec04dbce094f8484472"
+                },
+                {
+                  "product_retailer_id": "69d7ae70dde5ad5315a0fcf2"
+                },
+                {
+                  "product_retailer_id": "69d7ae997a48182babee925f"
+                },
+                {
+                  "product_retailer_id": "69d8f48d681205cd21d4526c"
+                },
+                {
+                  "product_retailer_id": "69d7d9fa8dab33439493075e"
+                },
+                {
+                  "product_retailer_id": "69d7c09f788108078f540a43"
+                },
+                {
+                  "product_retailer_id": "69d8f5ec695e2ef9f7b7009f"
+                },
+                {
+                  "product_retailer_id": "69d8f254b0fb5071dc990c2f"
+                },
+                {
+                  "product_retailer_id": "69d8f303584793610195e4bf"
+                },
+                {
+                  "product_retailer_id": "69d8f59f695e2ef9f7b6bd98"
+                },
+                {
+                  "product_retailer_id": "69d8f26942a93f3786cc0340"
+                },
+                {
+                  "product_retailer_id": "69d8f2a0681205cd21d2565d"
+                },
+                {
+                  "product_retailer_id": "69d8f56f42a93f3786cebf3c"
+                },
+                // MEKATOS 
+                // {
+                //   "product_retailer_id": "69c21a36817aaac0ae64710f"
+                // },
+                // {
+                //   "product_retailer_id": "69c22941f055928f6dde94a6"
+                // },
+                // {
+                //   "product_retailer_id": "69c2292d335b9ea55ff03f29"
+                // },
+                // {
+                //   "product_retailer_id": "69c229861a3df39f1103940a"
+                // },
+                // {
+                //   "product_retailer_id": "69c22974f055928f6ddeaf79"
+                // },
+                // {
+                //   "product_retailer_id": "69c229c17bff33f4a3236ae3"
+                // },
+                // {
+                //   "product_retailer_id": "69c229591a3df39f11038692"
+                // },
+                // {
+                //   "product_retailer_id": "69c2299a7896dea20a720b75"
+                // },
+                // {
+                //   "product_retailer_id": "69c229aefd71b5f79f6223dc"
+                // },
+                // {
+                //   "product_retailer_id": "69c2272d335b9ea55ff00c70"
+                // },
+                // {
+                //   "product_retailer_id": "69c227447bff33f4a3232346"
+                // },
+                // {
+                //   "product_retailer_id": "69c22759fd71b5f79f61eb82"
+                // },
+                // {
+                //   "product_retailer_id": "69c2277ab5b1d14e3182ae9e"
+                // },
+                // {
+                //   "product_retailer_id": "69c2212a9d3d408699676377"
+                // },
+                // {
+                //   "product_retailer_id": "69c220e8b5b1d14e31816ce2"
+                // },
+                // {
+                //   "product_retailer_id": "69c22138817aaac0ae65a6e3"
+                // },
+                // {
+                //   "product_retailer_id": "69c226a1335b9ea55feff903"
+                // },
+                // {
+                //   "product_retailer_id": "69c226fbf055928f6dde602b"
+                // },
+                // {
+                //   "product_retailer_id": "69c229007896dea20a71ff28"
+                // },
+                // {
+                //   "product_retailer_id": "69c21ec7fd71b5f79f60e11d"
+                // },
+                // {
+                //   "product_retailer_id": "69c21a8c1a3df39f110186d9"
+                // },
+                // {
+                //   "product_retailer_id": "69c21aa1f055928f6ddccea7"
+                // },
+                // {
+                //   "product_retailer_id": "69c21cf419d90721373dff0d"
+                // },
+                // {
+                //   "product_retailer_id": "69c219c37896dea20a6ff600"
+                // },
+                // {
+                //   "product_retailer_id": "69c21ca57896dea20a707d24"
+                // },
+                // {
+                //   "product_retailer_id": "69c21cce19d90721373dfa55"
+                // },
+                // {
+                //   "product_retailer_id": "69c21a0419d90721373d56d4"
+                // },
+                // {
+                //   "product_retailer_id": "69c21c7af055928f6ddd2b44"
+                // },
+                // {
+                //   "product_retailer_id": "69c21d06817aaac0ae64ef6d"
+                // },
+                // {
+                //   "product_retailer_id": "69c21cbb9d3d40869966cedb"
+                // }
+            ]
+          }
+        ]
+    }
+  }    
+    return await whatsappService.sendProductList(to, template);
+  }
+
+  async catalogoMercado4(to) {
+    const template = { 
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Desechables 🍴🗑️"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "DESECHABLES",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d50c951e65c66f59ba2702"
+                },
+                {
+                  "product_retailer_id": "69d50cd9deafcfb1d180b2e3"
+                },
+                {
+                  "product_retailer_id": "69d50d172440c8c597a86e99"
+                },
+                {
+                  "product_retailer_id": "69d677378ca23c3471951fac"
+                },
+                {
+                  "product_retailer_id": "69d677632c4e357a852bcf5f"
+                },
+                {
+                  "product_retailer_id": "69d6774bcced254ef40ff5a8"
+                },
+                {
+                  "product_retailer_id": "69d676fd8dab334394ca6f98"
+                },
+                {
+                  "product_retailer_id": "69d6770cbedddfd69aa67dff"
+                },
+                {
+                  "product_retailer_id": "69d6777b8dab334394cb2ec0"
+                },
+                {
+                  "product_retailer_id": "69d50ed66e4f7183de842050"
+                },
+                {
+                  "product_retailer_id": "69d677d0cced254ef4109640"
+                },
+                {
+                  "product_retailer_id": "69d677fd2c4e357a852c7ed8"
+                },
+                {
+                  "product_retailer_id": "69d50cafd35d817d1e94e831"
+                },
+                {
+                  "product_retailer_id": "69d50dcb337ef3c0cead1612"
+                },
+                {
+                  "product_retailer_id": "69d50cf5337ef3c0ceac84c8"
+                },
+                {
+                  "product_retailer_id": "69d678638dab334394cc241e"
+                },
+                {
+                  "product_retailer_id": "69d674d52c4e357a8528f30c"
+                },
+                {
+                  "product_retailer_id": "69d67529b1a817c4190456a6"
+                },
+                {
+                  "product_retailer_id": "69d674b22c4e357a852863d6"
+                },
+                {
+                  "product_retailer_id": "69d6748fb1a817c41903407c"
+                },
+                // {
+                //   "product_retailer_id": "69d674725f0010c7d1cc93ba"
+                // },
+                // {
+                //   "product_retailer_id": "69d5154cdeafcfb1d1892f09"
+                // },
+                // {
+                //   "product_retailer_id": "69d677e742a93f3786a7eaf9"
+                // },
+                // {
+                //   "product_retailer_id": "69d6754dcced254ef40db883"
+                // },
+                // {
+                //   "product_retailer_id": "69d675dccced254ef40e61be"
+                // },
+                // {
+                //   "product_retailer_id": "69d675c65f0010c7d1ce7e41"
+                // },
+                // {
+                //   "product_retailer_id": "69d6756442a93f3786a44867"
+                // },
+                // {
+                //   "product_retailer_id": "69d676d1125e0f80538c8dec"
+                // },
+                // {
+                //   "product_retailer_id": "69d67643bedddfd69aa5608d"
+                // },
+                // {
+                //   "product_retailer_id": "69d675ed8ca23c3471936b2b"
+                // },
+              ]
+          }, 
+          {
+            "title": "PAPELERÍA",
+            "product_items": [
+              {
+                "product_retailer_id": "69d91b9bdef710fb3c98d280"
+              },
+              {
+                "product_retailer_id": "69d91b843393eb99942cf57b"
+              },
+              {
+                "product_retailer_id": "69d91bdc7da5b1ef28c4ba4a"
+              },
+            ]
+          }
+        ]
+    }
+  }
+    return await whatsappService.sendProductList(to, template);
   }
 
   async encuesta(to) {
@@ -778,34 +1409,34 @@ else {
     let response;
     switch (option) {
       case 'option_1':
-        this.menuOpcional(to);
-        idNumber["numero"] = to;
+        this.catalogoMercado(to);
         break;
       case 'option_2':
-        idNumber["numero"] = to;
-        await this.sendMediaEvento(to);
-        await this.menuReserva(to);
+        this.catalogoSubMercado(to);
         break;
       case 'option_3':
-        this.assistandState[to] = { step: 'question' };
-        response = 'Realiza tu pregunta: ';
+        this.catalogoSubMercado1(to);
         break;
       case 'option_4':
-        response = "Te esperamos en nuestro restaurante! 📍";
-        await this.sendLocation(to);
+        this.catalogoSubMercado2(to);
         break;
       case 'option_5':
-        response = "Es un placer para nosotros servirte, que disfrutes de tu pedido 😊👩‍🍳\nVuelve pronto!";
+        this.catalogoMercado4(to);
         break;
-      case 'op_3':
-        response = 'Escribe a nuestro Whatsapp personal🤗';
-        await this.sendContact(to);
+      case 'opcion_1':
+        this.catalogoSubMercado3(to);
+        break;
+      case 'opcion_2':
+        this.catalogoSubMercado4(to);
+        break;
+      case 'opcion_3':
+        this.catalogoSubMercado5(to);
         break;
       case 'opt1':
-        await this.encuesta(to);
+        this.catalogoMercado2(to);
         break;
-      case 'si':
-        await this.menuCarta3(to);
+      case 'opt2':
+        this.catalogoGaseosas(to);
         break;
       default:
         response = "Oops😔\nPorfa, elige una de las opciones del menú o escribe *Hola* para volver a empezar\nTambién, escribe *Carta* para verla.";
@@ -815,35 +1446,19 @@ else {
     }
   }
 
-  async handleAppointmentFlow(to, message) {
-    const state = this.appointmentState[to];
-    delete this.appointmentState[to];
-    let response;
-  
-    switch (state.step) {
-      case 'reserva':
-        await this.menuReserva(to);
-        break;
-      default:
-        response = "Lo siento 😔 no entendí tu respuesta\nPor Favor, elige una de las opciones del menú.";
-        await whatsappService.sendMessage(to, response);
-      }
-  }
-
   async handleHiringFlow(to, pedido, datosPedido) {
     let response;
 
-    response = `*Pedido:*
+    response = `*Tu compra:*
 
 ${pedido}
 
 Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
-    await this.menuPedido(to);
-
-      await whatsappService.sendMessage(to, response);
+  await this.menuPedido(to);
+  await whatsappService.sendMessage(to, response);
   }
 
-  async respFlow(to, screen, datosReserva, datosPedido, pedidoStr) {
+  async respFlow(to, screen, datosPedido, pedidoStr) {
     let response;
     if (screen === "SUMMARY") {
       if (datosPedido.datos.address) {
@@ -851,7 +1466,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
       }
       if (datosPedido.datos.pago === "Efectivo") {
         response = "✅¡Pedido recibido!\nPronto nos pondremos en contacto contigo! 🤗";
-        await this.menuOpcionalHiring(to);
+        // await this.menuOpcionalHiring(to);
       } else if (datosPedido.datos.pago === "PSE") {
         try {
           // Generar enlace de pago WOMPi
@@ -862,7 +1477,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
           );
           transactionToPhoneMap[idlink] = to;
           // Enviar mensaje con el enlace de pago
-          response = `*Resumen de tu pedido*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\nUtiliza el siguiente *link de pago*:\n\nhttps://checkout.wompi.co/l/${idlink}\n\nLuego, al realizar el pago automáticamente te lo confirmamos! 😊`;
+          response = `*Resumen de tu compra*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\nUtiliza el siguiente *link de pago*:\n\nhttps://checkout.wompi.co/l/${idlink}\n\nLuego, al realizar el pago automáticamente te lo confirmamos! 😊`;
         } catch (error) {
           response = "Hubo un problema al generar el enlace de pago. Por favor, intenta nuevamente.";
         }
@@ -872,49 +1487,9 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
         monto: datosPedido.monto,
         pedidoStr
       };
-        response = `*Resumen de tu pedido*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\n🏦Cuentas bancarias:\n\n*Nequi:* 3117445749\n*Mar** Ari***\n\n*Bancolombia Ahorros:* 70423175395\nMar** Pat** Ari**\n\n*Banco BBVA:* 0614001209\n\nLuego, envíanos el comprobante de la transferencia (captura) para confirmar tu pedido 😊`;
+        response = `*Resumen de tu compra*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\n🏦Cuentas bancarias:\n\n*Nequi/Daviplata:* 3233082273\n\n*Bancolombia Ahorros:* 70416357747\n\n🚨 Luego, envíanos el comprobante de la transferencia (captura) para confirmar tu pago 😊`;
       }
-   } else if (screen === "RESUMEN") {
-    const horario = datosReserva.evento === "Festival Gastronomico" 
-      ? 'hora' 
-      : datosReserva.evento === "Cumpleaños" 
-        ? 'horario'
-        : datosReserva.evento === "Reserva normal"
-        ? 'horanormal'
-        : "";
-    
-        const calendario = datosReserva.evento === "Festival Gastronomico" 
-      ? 'fechafestival' 
-      : datosReserva.evento === "Cumpleaños" 
-        ? 'fecha'
-        : datosReserva.evento === "Reserva normal"
-        ? 'fechanormal'
-        : "";
-
-    // Variables para la plantilla (en el orden del body)
-  const templateVars = [
-    datosReserva.nombre,
-    datosReserva.celular,
-    datosReserva.evento,
-    datosReserva[calendario],
-    datosReserva[horario],
-    datosReserva.cuantos,
-    datosReserva.donde
-  ];
-  
-  const publicUrl = "https://micarta.s3.us-east-1.amazonaws.com/confirmacion_reserva.jpeg";
-  const numerosOficiales = [
-    to,
-    "573153652520",
-    "573137517489"
-  ];
-  
-  for (const numero of numerosOficiales) {
-    await whatsappService.sendTemplateMediaMessage(numero, "confirmacion_reserva", publicUrl, templateVars);
-  }
-  this.sendLocation(to);
-
-  } else if (screen === "RATE") {
+   } else if (screen === "RATE") {
     response = "¡Recibido!\nMuchas gracias por tu opinión! 🤗";
   }
   if (response) {
@@ -998,18 +1573,19 @@ async handleWompiEvent(transaction) {
     await whatsappService.sendMediaMessage(to, type, mediaUrl);
   }
 
-  completeHiring(productos, data) {
+  completeHiring(productos, data, total) {
     let fechayhora = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
     let userData;
     const spreadsheetId = process.env.SPREADSHEETID_PEDIDO;
     const numero = idNumber["numero"] || "No disponible";
+    (total += 3000).toLocaleString('es-CO');
       userData = [
         numero,
         data.name,
         productos,
         data.address,
-        data.phone,
         data.pago,
+        total.toLocaleString('es-CO'),
         data.recomendacion,
         fechayhora,
       ]
@@ -1018,138 +1594,28 @@ async handleWompiEvent(transaction) {
   }
   
 completeOrder(productos, data) {
-  const waiterOrderArea = {
-    // Barril
-    "6134f560fd56a10e49c4f666": [
-      "6133f09d5af774183ce25e0f",
-      "6133e891d145504ca38cbeeb",
-      "6133f070d145504ca38cbf3a",
-    ],
-    // Cocina
-    "5da0e17b86a93953dd2763bc": [
-      "5de86e87205aba0e1c990910",
-      "654ffcee0779b105ec6ac3bd",
-      "5dbcae51c557e50e67febfcc",
-      "5dbcad3fc557e50e67febfac",
-      "5dbcae00c557e50e67febfc0",
-      "5dbcb083c557e50e67febfdb",
-      "67981c57bd2f74e33cfce707",
-      "66ef02fa4ff68adb785f09f8",
-      "619e8bd01880235f6d5b27e5",
-      "5dbcb308c557e50e67febff9",
-      "5dc733ad7c14810dfd3fec3f",
-      "68203e8d7f735e5e48b7ec3b",
-      "5e5ae290338d200e065c3577",
-      "67981d4d8460dcaf720f2284",
-      "5dcf187deea63f0df843be1e",
-      "5dbcb3d9c557e50e67fec005",
-      "6311736932c31c05fbf10f89",
-      "5dbcb5a6c557e50e67fec022",
-      "5de84c6e205aba0e1c9907d0",
-      "68203ef70ae0923d28d06765",
-      "667f06fe23caaaaf0451a641",
-      "5dbcb57ec557e50e67fec01f",
-      "654ff6380779b105ec6ac20a",
-      "654ff7ba33294a05ef9f32f7",
-      "61a10ddf1fd14430485f8cb9",
-      "61a2657c1fd14430485f9f0e",
-      "6550028ec2087c73f3b7775e",
-      "61a118171fd14430485f8d78",
-      "67967092084e176a7d5855ba",
-      "619d6d801880235f6d5b1c36",
-      "632df4983bcfe31bedde0e45",
-      "5dd9dc26b928d20df3b63e49",
-      "5e34ebb51ffca60e28d763ef",
-      "61a110b91880235f6d5b45a3",
-      "5f9b5233ef1e265d296b0f8d",
-      "6796793106b0703ef18a9f72",
-      "61a119621880235f6d5b4644",
-      "61a119421fd14430485f8d96",
-      "618b0decad2f690565ff0342",
-      "67981a7ca9cfd2df9753864e",
-      "5f9b5636ef1e265d296b0fd3",
-      "5dbcb612c557e50e67fec02b",
-      "5dbcb645c557e50e67fec02e",
-      "67981bf757fc699d06fbe11c",
-      "5ef55e5619721c49eb8bb24a",
-      "5dbcb6a5c557e50e67fec03e",
-      "5dbcb67cc557e50e67fec031",
-      "5dc7332e7c14810dfd3fec34",
-      "5f9b3922ef1e265d296b0d95",
-      "5dc7337b7c14810dfd3fec38",
-
-    ],
-    // Bar
-    "5da0e1817511f32c929a0078": [
-      "5dc099e151aceb0dd757c620",
-      "5dbe24b354eef30e209928e8",
-      "624a2d5d07147a05f0bdab13",
-      "5dc0a48751aceb0dd757c6fa",
-      "5dc0a48751aceb0dd757c6fb",
-      "5dc0a48751aceb0dd757c6fc",
-      "5dc0a60f51aceb0dd757c70f",
-      "5f6aafb5456d7550eef4510a",
-      "5f9b4bb3ef1e265d296b0f1a",
-      "5e226a93641dd30e29531e11",
-      "5dbcbb91c557e50e67fec108",
-      "5dbcbb4ec557e50e67fec0ff",
-      "5f836639e5d38924870320a5",
-      "639c9ea052617c1b981ee5f4",
-      "639c9e7352617c1b981ee5e1",
-      "639c9e7352617c1b981ee5e4",
-      "639c9e7352617c1b981ee5e2",
-      "653859e9dc0e3f05d9fd5ccd",
-      "639c9ef852617c1b981ee604",
-      "639c9ef852617c1b981ee605",
-      "64a1d25d9c7cb205f4f48a23",
-      "639c9ef852617c1b981ee606",
-      "5dc4ce4651aceb0dd757e786",
-      "639c9b7d3c1b5a05f0d8fb97",
-      "5f9b455cef1e265d296b0eab",
-      "639c9ba452617c1b981ee446",
-      "65500860c2087c73f3b778a3",
-      "6133e235d145504ca38cbd7e",
-      "65550a945e11f905f75326f5",
-      "62b0b0e63996f328856ad5c3",
-      "62b0b10f3996f328856ad5c6",
-      "66f990de998c13da021a89ac",
-      "62b0b16b3996f328856ad5d1"
-    ]
-  };
-
-  function getWaiterOrderArea(productId) {
-    for (const [areaId, productIds] of Object.entries(waiterOrderArea)) {
-      if (productIds.includes(productId)) {
-        return areaId;
-      }
-    }
-    return null;
-  }
-
-  // Construye el array de orders con waiterOrderArea y solo la recomendación del cliente
   const orders = productos.map(item => ({
     product: item.product_retailer_id,
-    locationStock: "5d4619b4a8337b56866de6ff",
-    waiterOrderArea: getWaiterOrderArea(item.product_retailer_id),
+    locationStock: "69c0dcf5e903bd1b34167345",
     quantity: item.quantity,
     unit_price: item.item_price,
     notes: data.recomendacion || ""
   }));
 
   // Si hay domicilio, agrégalo como un producto más (puedes asignar área si lo deseas)
-  if (data.address) {
-    orders.push({
-      product: "677ad5b1b4797f0dcba09e41",
-      locationStock: "5d4619b4a8337b56866de6ff",
-      quantity: 1,
-      unit_price: 3000,
-      notes: "Domicilio"
-    });
-  }
+  // if (data.address) {
+  //   orders.push({
+  //     product: "677ad5b1b4797f0dcba09e41",
+  //     locationStock: "5d4619b4a8337b56866de6ff",
+  //     quantity: 1,
+  //     unit_price: 3000,
+  //     notes: "Domicilio"
+  //   });
+  // }
 
   const pedidoLoggro = {
-    table: "6939640ddf7998fb29e63fab",
-    groupName: `Nombre: ${data.name}\nTeléfono: ${data.phone}\nDirección: ${data.address}`,
+    table: "69d2d1a47647733152bb5d48",
+    groupName: `Nombre: ${data.name}\nDirección: ${data.address}\n`,
     orders
   };
 
@@ -1174,48 +1640,15 @@ completeOrder(productos, data) {
     appendToSheet(userData, spreadsheetId);
   }
 
-  completeAppointment(data) {
-    let fechayhora = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
-    const spreadsheetId = process.env.SPREADSHEETID_RESERVA;
-    const number = idNumber["numero"] || "No disponible";
-    const horario = data.evento === "Festival Gastronomico" 
-      ? 'hora' 
-      : data.evento === "Cumpleaños" 
-        ? 'horario'
-        : data.evento === "Reserva normal"
-        ? 'horanormal'
-        : "";
-    const calendario = data.evento === "Festival Gastronomico" 
-      ? 'fechafestival' 
-      : data.evento === "Cumpleaños" 
-        ? 'fecha'
-        : data.evento === "Reserva normal"
-        ? 'fechanormal'
-        : "";
-    const userData = [
-      number,
-      data.nombre,
-      data.celular,
-      data.evento,
-      data[calendario],
-      data[horario],
-      data.cuantos,
-      data.donde,
-      fechayhora
-    ]
-
-    appendToSheet(userData, spreadsheetId);
-  }
-
   async handleAssistantFlow(to, message) {
     const state = this.assistandState[to];
     let response;
 
     const menuMessage = "¿Resolví tu pregunta?";
     const buttons = [
-      { type: 'reply', reply: { id: 'option_4', title: "Si, Gracias 😊" } },
-      { type: 'reply', reply: { id: 'option_3', title: 'Hacer otra pregunta' } },
-      { type: 'reply', reply: { id: 'op_3', title: 'Hablar con asesor 🤵' } }
+      { type: 'reply', reply: { id: '', title: "Si, Gracias 😊" } },
+      { type: 'reply', reply: { id: '', title: 'Hacer otra pregunta' } },
+      { type: 'reply', reply: { id: '', title: 'Hablar con asesor 🤵' } }
     ];
 
     switch (state.step) {

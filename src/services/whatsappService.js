@@ -2,7 +2,7 @@ import sendToWhatsApp from "../services/httpRequest/sendToWhatsApp.js";
 import { printDetailedError } from './printDetailError.js';
 
 class WhatsAppService {
-  async sendMessage(to, body, messageId) {
+  async sendMessage(to, body) {
     try {
       const data = {
         messaging_product: 'whatsapp',
@@ -27,6 +27,20 @@ class WhatsAppService {
       await sendToWhatsApp(data);
     } catch (error) {
       console.error('Error marking message as read:', error);
+    }
+  }
+
+  async sendListMessage(to, listMessage) {
+    try {
+      const data = {
+        messaging_product: 'whatsapp',
+        to,
+        type: 'interactive',
+        interactive: listMessage.interactive ? listMessage.interactive : listMessage
+      };
+      await sendToWhatsApp(data);
+    } catch (error) {
+      console.log("Error: ", error);
     }
   }
 
@@ -62,7 +76,7 @@ class WhatsAppService {
           type: "flow",
           header: {
             type: "text",
-            text: "Datos de envío:"
+            text: "Dame tus datos: "
           },
           body: { 
             text: "Haz clic aquí 👇" 
@@ -139,6 +153,22 @@ class WhatsAppService {
         to,
         type: 'template',
         template: template
+      };
+  
+    await sendToWhatsApp(data);
+    } catch (error) {
+      printDetailedError(error);
+    }
+  }
+
+  async sendProductList(to, template) {
+    try {
+      const data = {
+        recipient_type: 'individual',
+        messaging_product: 'whatsapp',
+        to,
+        type: 'interactive',
+        interactive: template
       };
   
     await sendToWhatsApp(data);

@@ -12,7 +12,7 @@ const SCREEN_RESPONSES = {
 };
 
 export const getNextScreen = async (decryptedBody, productos, total, pedidoStr) => {
-  const { screen, data, version, action, flow_token } = decryptedBody;
+  const { screen, data, action, flow_token } = decryptedBody;
   // handle health check request
   if (action === "ping") {
     return {
@@ -37,42 +37,19 @@ export const getNextScreen = async (decryptedBody, productos, total, pedidoStr) 
     let details;
     switch (screen) {
       case "DETAILS":
-        if (data.recomendacion && data.address) {
-          (total += 3000).toLocaleString('es-CO');
+        (total += 3000).toLocaleString('es-CO');
+        if (data.recomendacion) {
           details = `Nombre:    ${data.name}\n
 Pedido: 
 ${pedidoStr}\n
 Total: $${total} (Domicilio: $3.000)\n
-Dirección:    ${data.address}\n
-Celular de contacto:    ${data.phone}\n
 Medio de pago:    ${data.pago}\n
 Recomendaciones:    ${data.recomendacion}`;
-        }
-        else if (data.address) {
-          (total += 3000).toLocaleString('es-CO');
+        } else {
           details = `Nombre:    ${data.name}\n
 Pedido: 
 ${pedidoStr}\n
 Total: $${total} (Domicilio: $3.000)\n
-Dirección:    ${data.address}\n
-Celular de contacto:    ${data.phone}\n
-Medio de pago:    ${data.pago}`;
-        }
-        else if (data.recomendacion) {
-          details = `Nombre:    ${data.name}\n
-Pedido: 
-${pedidoStr}\n
-Total: $${total.toLocaleString('es-CO')}\n
-Celular de contacto:    ${data.phone}\n
-Medio de pago:    ${data.pago}\n
-Recomendaciones:    ${data.recomendacion}`;
-        }
-         else {
-          details = `Nombre:    ${data.name}\n
-Pedido: 
-${pedidoStr}\n
-Total: $${total.toLocaleString('es-CO')}\n
-Celular de contacto:    ${data.phone}\n
 Medio de pago:    ${data.pago}`;
         }
         result = {
@@ -85,7 +62,7 @@ Medio de pago:    ${data.pago}`;
         };
         break;
       case "SUMMARY":
-        messageHandler.completeHiring(pedidoStr, data);
+        // messageHandler.completeHiring(pedidoStr, data, total);
         messageHandler.completeOrder(productos, data);
         result = {
           ...SCREEN_RESPONSES.SUCCESS,
