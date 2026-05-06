@@ -59,22 +59,19 @@ class MessageHandler {
         
         // 3. Enviar la imagen al número oficial
         const nombre = datosUsuario.name || "";
-        const celular = message.from || "";
         const direccion = datosUsuario.address || "";
         const monto = datosUsuario.monto || "";
         const pedido = datosUsuario.pedidoStr || "";
 
         const templateVars = [
           nombre,
-          celular,
           direccion,
           pedido,
           monto ? monto.toLocaleString('es-CO') : "",
         ];
 
-        console.log("111111111111");
         await whatsappService.sendTemplateMediaMessage(
-          "573162822076", // Número oficial
+          "573233082273", // Número oficial
           "comprobante_pago", // Nombre de tu plantilla
           publicUrl,         // URL pública de la imagen en S3
           templateVars
@@ -84,9 +81,8 @@ class MessageHandler {
         await whatsappService.sendMessage(message.from, msg);
         // await this.menuOpcionalHiring(message.from);
       }
-      console.log("22222222222222");
+      
     } catch (error) {
-      console.log("33333333333333");
       console.log(error.response?.data);
     }
   }
