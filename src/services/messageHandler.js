@@ -791,122 +791,104 @@ class MessageHandler {
           }
         ]
     }
-  }
-    return await whatsappService.sendProductList(to, template);
-  }
-
-  async catalogoSubMercado1(to) {
-    const template = {
+    }
+    const template1 = { 
       type: "product_list",
       header: { 
           type: "text",
-          text: "Lácteos Y Refrigeración🥛"
+          text: "Despensa 🍚🥚"
         },
         body: {
-          text: "Da clic aquí"
+          text: "da clic aquí"
         },
         action: {
           catalog_id: "2277977052727019",
           sections: [
           {
-            "title": "LÁCTEOS",
-              "product_items": [
+            "title": "DESPENSA",
+            "product_items": [
                 {
-                  "product_retailer_id": "69d90dbef2b6880f9d976373"
+                  "product_retailer_id": "69d5082a9bf0d32ae9a89dd9"
                 },
                 {
-                  "product_retailer_id": "69d90d7ef600f1b5793a1334"
+                  "product_retailer_id": "69d54fc5c7687b049a9ab2a3"
                 },
                 {
-                  "product_retailer_id": "69d90d98f2b6880f9d9731d9"
+                  "product_retailer_id": "69d51489d35d817d1e9d375b"
                 },
                 {
-                  "product_retailer_id": "69d8febd4dbce094f8ef84cf"
+                  "product_retailer_id": "69d52151d35d817d1eadacb0"
                 },
                 {
-                  "product_retailer_id": "69d9083cf600f1b57933e64c"
+                  "product_retailer_id": "69d521c46e4f7183de98964f"
                 },
                 {
-                  "product_retailer_id": "69d908df2ec32e38346eea3e"
+                  "product_retailer_id": "69d54debc7687b049a962f65"
                 },
                 {
-                  "product_retailer_id": "69d9082bdef710fb3c81f282"
+                  "product_retailer_id": "69d66ae82af86b6d19bdb6d0"
                 },
                 {
-                  "product_retailer_id": "69d8f9f6681205cd21d8bbaf"
+                  "product_retailer_id": "69d66c31bedddfd69a983531"
                 },
                 {
-                  "product_retailer_id": "69d8fa26b36510b69a645b18"
+                  "product_retailer_id": "69d66c4e8ca23c347187357b"
                 },
                 {
-                  "product_retailer_id": "69d8f9dd531e7250784db28f"
+                  "product_retailer_id": "69d51bd0c7687b049a355544"
                 },
                 {
-                  "product_retailer_id": "69d90a62af2108383d22394c"
+                  "product_retailer_id": "69d66c848dab334394bd56ef"
                 },
                 {
-                  "product_retailer_id": "69d909bc3393eb999419af14"
+                  "product_retailer_id": "69d3c3a5524001f94ed19b3b"
                 },
                 {
-                  "product_retailer_id": "69d909c965d4204c37fdd6a0"
+                  "product_retailer_id": "69d66b9d2af86b6d19be9c3a"
                 },
                 {
-                  "product_retailer_id": "69d90adab200cc804d99d6b6"
+                  "product_retailer_id": "69d54dbd9bf0d32ae9206c90"
                 },
                 {
-                  "product_retailer_id": "69d90b2c2ec32e38347174ed"
+                  "product_retailer_id": "69d7a6e9788108078f3727e8"
                 },
                 {
-                  "product_retailer_id": "69d90b1969b309cf44a39ac0"
+                  "product_retailer_id": "69d66bea8ca23c347186d446"
                 },
                 {
-                  "product_retailer_id": "69d8faeeb36510b69a6511fa"
+                  "product_retailer_id": "69d66c022c4e357a851cb95f"
                 },
                 {
-                  "product_retailer_id": "69d8fb01e4843af3b4f4c89c"
+                  "product_retailer_id": "69d66b45125e0f80537bfe1d"
                 },
                 {
-                  "product_retailer_id": "69d8fb5ab36510b69a657b6d"
+                  "product_retailer_id": "69d50844d35d817d1e901ec3"
                 },
                 {
-                  "product_retailer_id": "69d8fa844dbce094f8ec9cbe"
+                  "product_retailer_id": "69d3c2f36b3269bbe44ec2fc"
                 },
                 {
-                  "product_retailer_id": "69d8fa9542a93f3786d28315"
+                  "product_retailer_id": "69d3c302337ef3c0ce225f56"
                 },
                 {
-                  "product_retailer_id": "69d8fab1376bb5d93eae95db"
+                  "product_retailer_id": "69d3c1d05e7da3a2f60d01fd"
                 },
                 {
-                  "product_retailer_id": "69d908eeb200cc804d975c74"
+                  "product_retailer_id": "69d66a75125e0f80537b3814"
                 },
                 {
-                  "product_retailer_id": "69d8fcaa4dbce094f8ee2454"
-                },
-                {
-                  "product_retailer_id": "69d5198d49248df9f89f4016"
-                },
-                {
-                  "product_retailer_id": "69d5196c337ef3c0ceb9b31f"
-                },
-                {
-                  "product_retailer_id": "69d519269bf0d32ae9bac1cb"
-                },
-                {
-                  "product_retailer_id": "69d51912deafcfb1d18dc905"
-                },
-                {
-                  "product_retailer_id": "69d900755847936101a0b948"
-                },
-                {
-                  "product_retailer_id": "69d90139376bb5d93eb4f576"
+                  "product_retailer_id": "69d66a8842a93f3786982901"
                 }
             ]
           }
         ]
     }
-  }
-    return await whatsappService.sendProductList(to, template);
+    }
+    //hacer un for para enviar ambos templates
+    const templates = [template, template1];
+    for (const temp of templates) {
+       await whatsappService.sendProductList(to, temp);
+    }
   }
 
   async catalogoSubMercado(to) {
