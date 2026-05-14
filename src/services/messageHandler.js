@@ -170,23 +170,28 @@ class MessageHandler {
             rows: [
               {
                 id: "option_1",
-                title: "Salsas🥫 y Condimentos🧂"
+                title: "Despensa🍚🥚🥫🧂",
+                description: "Arroz, Aceite, Huevos, Salsas, Condimentos y más"
               },
               {
                 id: "option_2",
-                title: "Carnes frías🥩 y Frutas🍎🍓"
+                title: "Carnes frías🥩 y Frutas🍎🍓",
+                description: "Carne, Pollo, Pescado, Frutas y Más"
               },
               {
                 id: "option_3",
-                title: "Lácteos Y Refrigeración🥛"
+                title: "Lácteos Y Refrigeración🥛",
+                description: "Leche, Queso, Yogurt y Más"
               },
               {
                 id: "option_4",
-                title: "Bebidas🧃 y Gaseosas🥤"
+                title: "Bebidas🧃 y Gaseosas🥤",
+                description: "Refrescos, Jugos, Agua y Más"
               },
               {
                 id: "option_5",
-                title: "Desechables 🍴🗑️"
+                title: "Desechables 🍴🗑️",
+                description: "Platos, Tazas, Utensilios y Más"
               }
             ]
           },
@@ -195,15 +200,18 @@ class MessageHandler {
             rows: [
               {
                 id: "opcion_1",
-                title: "Personal🧴🧼"
+                title: "Personal🧴🧼",
+                description: "Cuidado personal y productos del hogar"
               },
               {
                 id: "opcion_2",
                 title: "Medicamentos 💊",
+                description: "Medicamentos de venta libre y cuidado de la salud"
               },
               {
                 id: "opcion_3",
                 title: "Del Hogar 🧤🧼",
+                description: "Productos para el hogar y limpieza"
               }
             ]
           },
@@ -212,7 +220,8 @@ class MessageHandler {
             rows: [
               {
                 id: "opt1",
-                title: "Mekatos y confitería🍬🍭"
+                title: "Mekatos y confitería🍬🍭",
+                description: "Mekatos, chocolates, galletas y más"
               }
             ]
           }
@@ -809,6 +818,24 @@ class MessageHandler {
             "product_items": [
                 {
                   "product_retailer_id": "69d5082a9bf0d32ae9a89dd9"
+                },
+                {
+                  "product_retailer_id": "69d515d46b3269bbe4d22121"
+                },
+                {
+                  "product_retailer_id": "69d515be49248df9f89af34c"
+                },
+                {
+                  "product_retailer_id": "69d5159e337ef3c0ceb57793"
+                },
+                {
+                  "product_retailer_id": "69d515396b3269bbe4d1468e"
+                },
+                {
+                  "product_retailer_id": "69d516051e65c66f59c2b41b"
+                },
+                {
+                  "product_retailer_id": "69d3c34649248df9f813421f"
                 },
                 {
                   "product_retailer_id": "69d54fc5c7687b049a9ab2a3"
