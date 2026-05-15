@@ -1488,11 +1488,11 @@ Si no hay IDs, responde: "No hay IDs de productos disponibles"
 
       // Enviar a Gemini para extraer los IDs
       const idsProductos = await geminiService(promptExtraccion, to);
-      
+      console.log("IDs de productos: ", idsProductos);
       // Enviar los IDs al usuario
       // await whatsappService.sendMessage(to, `*Productos solicitados:*\n\n${idsProductos}`);
-      for (const ids in idsProductos.trim().split(",")) {
-        console.log("ID del producto extraído:", ids);
+      for (const ids in idsProductos.split(",")) {
+        console.log("ID del producto extraído: ", ids);
         await whatsappService.sendSingleProduct(to, ids);
       }
       // Limpiar la memoria
