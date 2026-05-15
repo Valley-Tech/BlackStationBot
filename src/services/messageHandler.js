@@ -18,7 +18,7 @@ class MessageHandler {
 
   constructor() {
     this.appointmentState = {};
-    this.assistandState = {};
+    this.assistantState = {};
   }
 
   async handleIncomingMessage(message, senderInfo, screen, datosPedido, pedidoStr) {
@@ -30,6 +30,8 @@ class MessageHandler {
           await this.sendWelcomeMessage(userId, senderInfo);
           await this.sendWelcomeMenu(userId);
           await this.buscadorProductos(userId);
+        } else if (this.assistantState[message.from]) {
+          await this.handleAssistantFlow(message.from, incomingMessage);
         } else if (this.isQuestion(incomingMessage)) {
           await this.handleAssistant(userId, incomingMessage);
         } else {
@@ -1450,7 +1452,7 @@ class MessageHandler {
         this.catalogoMercado2(to);
         break;
       case 'buscar':
-        this.assistandState[to] = { step: 'question' };
+        this.assistantState[to] = { step: 'question' };
         response = 'Dime que quieres comprar: ';
         break;
       default:
@@ -1656,7 +1658,7 @@ completeOrder(productos, data) {
   }
 
   async handleAssistantFlow(to, message) {
-    const state = this.assistandState[to];
+    const state = this.assistantState[to];
     let response;
 
     const menuMessage = "¿Resolví tu pregunta?";
@@ -1674,7 +1676,7 @@ completeOrder(productos, data) {
         response = "Lo siento 😔 no entendí tu respuesta\nPor Favor, elige una de las opciones del menú.";
     }
 
-    delete this.assistandState[to];
+    delete this.assistantState[to];
     await whatsappService.sendMessage(to, response);
     await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
   }
