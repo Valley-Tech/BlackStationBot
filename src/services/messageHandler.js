@@ -13,6 +13,7 @@ const idNumber = {}
 const accion = {}
 const paymentRowMap = {};
 const userOrderDataMap = {};
+const assistantResponseMap = {}; // Memoria para guardar respuestas de Gemini por usuario
 
 class MessageHandler {
 
@@ -1451,6 +1452,9 @@ class MessageHandler {
       case 'opt1':
         this.catalogoMercado2(to);
         break;
+      case 'finalizar':
+        await this.procesarRespuestaAsistente(to);
+        break;
       case 'buscar':
         this.assistantState[to] = { step: 'question' };
         response = 'Dime que quieres comprar: ';
@@ -1460,6 +1464,40 @@ class MessageHandler {
     }
     if (response) {
       await whatsappService.sendMessage(to, response);
+    }
+  }
+
+  async procesarRespuestaAsistente(to) {
+    try {
+      const respuestaAnterior = assistantResponseMap[to];
+      
+      if (!respuestaAnterior) {
+        await whatsappService.sendMessage(to, "No encontré tu solicitud anterior. Por favor, intenta nuevamente.");
+        return;
+      }
+
+      // Crear un prompt para que Gemini extraiga los IDs de los productos de la respuesta anterior
+      const promptExtraccion = `
+Basándote en la siguiente respuesta de una IA que sugirió productos, extrae SOLO los IDs de los productos que menciona:
+
+"${respuestaAnterior}"
+
+Responde ÚNICAMENTE con los IDs de los productos, uno por línea, sin explicaciones adicionales.
+Si no hay IDs, responde: "No hay IDs de productos disponibles"
+`;
+
+      // Enviar a Gemini para extraer los IDs
+      const idsProductos = await geminiService(promptExtraccion, to);
+      
+      // Enviar los IDs al usuario
+      await whatsappService.sendMessage(to, `*Productos solicitados:*\n\n${idsProductos}`);
+      
+      // Limpiar la memoria
+      delete assistantResponseMap[to];
+    } catch (error) {
+      console.error("Error en procesarRespuestaAsistente:", error);
+      printDetailedError(error);
+      await whatsappService.sendMessage(to, "Lo siento, hubo un error procesando tu solicitud 🔧");
     }
   }
 
@@ -1661,16 +1699,18 @@ completeOrder(productos, data) {
     const state = this.assistantState[to];
     let response;
 
-    const menuMessage = "¿Resolví tu pregunta?";
+    const menuMessage = "¿Esto es lo que quieres?";
     const buttons = [
-      { type: 'reply', reply: { id: '', title: "Si, Gracias 😊" } },
-      { type: 'reply', reply: { id: '', title: 'Hacer otra pregunta' } },
-      { type: 'reply', reply: { id: '', title: 'Hablar con asesor 🤵' } }
+      { type: 'reply', reply: { id: 'finalizar', title: "Si, Gracias 😊" } },
+      { type: 'reply', reply: { id: 'buscar', title: 'No, quiero otra cosa' } },
+      // { type: 'reply', reply: { id: '', title: 'Hablar con asesor 🤵' } }
     ];
 
     switch (state.step) {
       case 'question':
         response = await geminiService(message, to);
+        // Guardar la respuesta de Gemini en memoria para procesarla después
+        assistantResponseMap[to] = response;
         break;
       default:
         response = "Lo siento 😔 no entendí tu respuesta\nPor Favor, elige una de las opciones del menú.";
