@@ -181,6 +181,28 @@ class WhatsAppService {
     }
   }
   
+  async sendSingleProduct(to, id) {
+    try {
+      const data = {
+        messaging_product: "whatsapp",
+        recipient_type: "individual",
+        to,
+        type: "interactive",
+        interactive: {
+            type: "product",
+            action: {
+                catalog_id: "2277977052727019",
+                product_retailer_id: id
+            }
+        }
+      };
+  
+    await sendToWhatsApp(data);
+    } catch (error) {
+      printDetailedError(error);
+    }
+  }
+  
   async sendFlowEncuesta(to, action) {
     try {
       const data = {

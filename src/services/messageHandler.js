@@ -23,12 +23,13 @@ class MessageHandler {
 
   async handleIncomingMessage(message, senderInfo, screen, datosPedido, pedidoStr) {
     try {
-      if (message?.type === 'text') {
+      if (message?.type === 'text' && message.text) {
         const incomingMessage = message.text.body.toLowerCase().trim();
         const userId = message.from;
         if (this.isGreeting(incomingMessage)) {
           await this.sendWelcomeMessage(userId, senderInfo);
           await this.sendWelcomeMenu(userId);
+          await this.buscadorProductos(userId);
         } else if (this.isQuestion(incomingMessage)) {
           await this.handleAssistant(userId, incomingMessage);
         } else {
@@ -154,6 +155,17 @@ class MessageHandler {
     }
   }
 
+  async buscadorProductos(to) {
+    const menuMessage = "¿Quieres que te ayude a buscar algo?";
+    const buttons = [
+      { type: 'reply', reply: { id: 'buscar', title: "Si, por favor" } },
+      // { type: 'reply', reply: { id: '', title: 'Hacer otra pregunta' } },
+      // { type: 'reply', reply: { id: '', title: 'Hablar con asesor 🤵' } }
+    ];
+
+    await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
+  }
+
   async sendWelcomeMenu(to) {
   const listMessage = {
     type: "interactive",
@@ -176,7 +188,7 @@ class MessageHandler {
               {
                 id: "option_2",
                 title: "Carnes frías🥩 y Frutas🍎🍓",
-                description: "Carne, Pollo, Pescado, Frutas y Más"
+                description: "Carne, Pollo, Frutas, Verduras y Más"
               },
               {
                 id: "option_3",
@@ -1437,8 +1449,9 @@ class MessageHandler {
       case 'opt1':
         this.catalogoMercado2(to);
         break;
-      case 'opt2':
-        this.catalogoGaseosas(to);
+      case 'buscar':
+        this.assistandState[to] = { step: 'question' };
+        response = 'Dime que quieres comprar: ';
         break;
       default:
         response = "Oops😔\nPorfa, elige una de las opciones del menú o escribe *Hola* para volver a empezar\nTambién, escribe *Carta* para verla.";
@@ -1655,7 +1668,7 @@ completeOrder(productos, data) {
 
     switch (state.step) {
       case 'question':
-        response = await geminiService(message);
+        response = await geminiService(message, to);
         break;
       default:
         response = "Lo siento 😔 no entendí tu respuesta\nPor Favor, elige una de las opciones del menú.";

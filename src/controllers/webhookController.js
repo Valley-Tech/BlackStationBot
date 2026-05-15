@@ -49,7 +49,7 @@ class WebhookController {
       }
       else if (message?.type === 'order') {
       const product_names = {
-        "69d5082a9bf0d32ae9a89dd9" :	"7 Cereales x 60gr",
+        "69d5082a9bf0d32ae9a89dd9" : "7 Cereales x 60gr",
         "69d3b75e337ef3c0ce16b0ee": "Aceite Capilar de Aguacate x 50ml",
         "69d515d46b3269bbe4d22121": "Aceite Ideal x 182ml",
         "69d515be49248df9f89af34c": "Aceite Ideal x 380ml",
