@@ -190,7 +190,7 @@ class MessageHandler {
               },
               {
                 id: "option_2",
-                title: "Carnes frías🥩",
+                title: "Carnes frías🥩 y Frutas🍎",
                 description: "Carne, Pollo, Pescado y Más"
               },
               {
@@ -1025,32 +1025,32 @@ class MessageHandler {
                 }
               ]
           },
-          // {
-          //   "title": "FRUTAS",
-          //     "product_items": [
-          //       {
-          //         "product_retailer_id": "69d8ff7d42a93f3786d6c182"
-          //       },
-          //       {
-          //         "product_retailer_id": "69d8ff93695e2ef9f7c05ffb"
-          //       },
-          //       {
-          //         "product_retailer_id": "69d90a85af2108383d22ab9b"
-          //       },
-          //       {
-          //         "product_retailer_id": "69d90a75f2b6880f9d93c142"
-          //       },
-          //       {
-          //         "product_retailer_id": "69d8feea681205cd21dd39f2"
-          //       },
-          //       {
-          //         "product_retailer_id": "69d8ff0442a93f3786d66d24"
-          //       },
-          //       {
-          //         "product_retailer_id": "69d8ff1858479361019fd609"
-          //       }
-          //     ]
-          // },
+          {
+            "title": "FRUTAS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d8ff7d42a93f3786d6c182"
+                },
+                {
+                  "product_retailer_id": "69d8ff93695e2ef9f7c05ffb"
+                },
+                {
+                  "product_retailer_id": "69d90a85af2108383d22ab9b"
+                },
+                {
+                  "product_retailer_id": "69d90a75f2b6880f9d93c142"
+                },
+                {
+                  "product_retailer_id": "69d8feea681205cd21dd39f2"
+                },
+                {
+                  "product_retailer_id": "69d8ff0442a93f3786d66d24"
+                },
+                {
+                  "product_retailer_id": "69d8ff1858479361019fd609"
+                }
+              ]
+          },
           // {
           //   "title": "CHOCOLATES",
           //     "product_items": [
@@ -1291,16 +1291,16 @@ class MessageHandler {
       type: "product_list",
       header: { 
           type: "text",
-          text: "Bebidas y Gaseosas"
+          text: "Bebidas🧃 y Jugos🥤"
         },
         body: {
-          text: "Gaseosas"
+          text: "Da clic aquí"
         },
         action: {
           catalog_id: "2277977052727019",
           sections: [
           {
-            "title": "Gaseosas",
+            "title": "BEBIDAS",
               "product_items": [
                 {
                   "product_retailer_id": "69d7abe5788108078f3bccc2"
@@ -1324,28 +1324,7 @@ class MessageHandler {
                   "product_retailer_id": "69d8f4634dbce094f8e74bd7"
                 },
                 {
-                  "product_retailer_id": "69d8f409681205cd21d38f87"
-                },
-                {
                   "product_retailer_id": "69d7aba3dde5ad53159e73d7"
-                },
-                {
-                  "product_retailer_id": "69d7c00a42a93f37863d02b2"
-                },
-                {
-                  "product_retailer_id": "69d7dc3e42a93f378669a0b2"
-                },
-                {
-                  "product_retailer_id": "69d7dc3142a93f3786697f27"
-                },
-                {
-                  "product_retailer_id": "69d7dc4b05edc105d4932f51"
-                },
-                {
-                  "product_retailer_id": "69d7c07e05edc105d4689411"
-                },
-                {
-                  "product_retailer_id": "69d8f69e58479361019907df"
                 },
                 {
                   "product_retailer_id": "69d7c025dde5ad5315b2ea90"
@@ -1392,6 +1371,27 @@ class MessageHandler {
                 {
                   "product_retailer_id": "69d8f56f42a93f3786cebf3c"
                 },
+                {
+                  "product_retailer_id": "69d8f242681205cd21d218e3"
+                },
+                {
+                  "product_retailer_id": "69d8f2dc681205cd21d29b03"
+                },
+                {
+                  "product_retailer_id": "69d8f58c695e2ef9f7b6bca9"
+                },
+                {
+                  "product_retailer_id": "69d8f2794dbce094f8e5ae37"
+                },
+                {
+                  "product_retailer_id": "69d8f2b3e4843af3b4ef64a2"
+                },
+                {
+                  "product_retailer_id": "69d907a0b200cc804d95c1f2"
+                },
+                {
+                  "product_retailer_id": "69d907b17da5b1ef28ac78d2"
+                }
                 // MEKATOS 
                 // {
                 //   "product_retailer_id": "69c21a36817aaac0ae64710f"
@@ -1487,8 +1487,118 @@ class MessageHandler {
           }
         ]
     }
+  }
+    const template1 = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Gaseosas 🥤"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "GASEOSAS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d8f409681205cd21d38f87"
+                },
+                {
+                  "product_retailer_id": "69d7c00a42a93f37863d02b2"
+                },
+                {
+                  "product_retailer_id": "69d7dc3e42a93f378669a0b2"
+                },
+                {
+                  "product_retailer_id": "69d7dc3142a93f3786697f27"
+                },
+                {
+                  "product_retailer_id": "69d7dc4b05edc105d4932f51"
+                },
+                {
+                  "product_retailer_id": "69d7c07e05edc105d4689411"
+                },
+                {
+                  "product_retailer_id": "69d8f69e58479361019907df"
+                },
+                {
+                  "product_retailer_id": "69d8f6b8681205cd21d60138"
+                },
+                {
+                  "product_retailer_id": "69d7c0e54dbce094f85b9dc2"
+                },
+                {
+                  "product_retailer_id": "69d7c040431c7881507665a5"
+                },
+                {
+                  "product_retailer_id": "69d8f60db0fb5071dc9c7a90"
+                },
+                {
+                  "product_retailer_id": "69d8f4d1b36510b69a601371"
+                },
+                {
+                  "product_retailer_id": "69d8f4b9e4843af3b4f0be88"
+                },
+                {
+                  "product_retailer_id": "69d7ab92dde5ad53159e681e"
+                },
+                {
+                  "product_retailer_id": "69d7ab7a7a48182babeb72c0"
+                },
+                {
+                  "product_retailer_id": "69d7aaf042a93f3786274006"
+                },
+                {
+                  "product_retailer_id": "69d7a79b05edc105d44f323f"
+                },
+                {
+                  "product_retailer_id": "69d7a7b2788108078f379589"
+                },
+                {
+                  "product_retailer_id": "69d7a78e8dab3343944e3d26"
+                },
+                {
+                  "product_retailer_id": "69d7c554788108078f59a08d"
+                },
+                {
+                  "product_retailer_id": "69d7c0ad4dbce094f85b63e2"
+                },
+                {
+                  "product_retailer_id": "69d8f3c658479361019639b9"
+                },
+                {
+                  "product_retailer_id": "69d8f83442a93f3786d0cf76"
+                },
+                {
+                  "product_retailer_id": "69d8f31b42a93f3786cca375"
+                },
+                {
+                  "product_retailer_id": "69d8f367695e2ef9f7b50525"
+                },
+                {
+                  "product_retailer_id": "69d7c5634dbce094f861204d"
+                },
+                {
+                  "product_retailer_id": "69d7c0d1431c78815076d218"
+                },
+                {
+                  "product_retailer_id": "69d8f915376bb5d93ead1c42"
+                },
+                {
+                  "product_retailer_id": "69d8f92842a93f3786d19ef5"
+                },
+                {
+                  "product_retailer_id": "69d8f822e4843af3b4f2b521"
+                }
+            ]
+          }
+        ]
+    }
   }    
-  const template1 = {
+  const template2 = {
       type: "product_list",
       header: { 
           type: "text",
@@ -1587,7 +1697,7 @@ class MessageHandler {
         ]
     }
   }    
-    const templates = [template, template1];
+    const templates = [template, template1, template2];
     for (const temp of templates) {
        await whatsappService.sendProductList(to, temp);
     }
