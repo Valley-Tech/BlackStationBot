@@ -190,8 +190,8 @@ class MessageHandler {
               },
               {
                 id: "option_2",
-                title: "Carnes frías🥩 y Frutas🍎🍓",
-                description: "Carne, Pollo, Frutas, Verduras y Más"
+                title: "Carnes frías🥩 y Pescados🐟",
+                description: "Carne, Pollo, Pescado y Más"
               },
               {
                 id: "option_3",
@@ -941,7 +941,7 @@ class MessageHandler {
       type: "product_list",
       header: { 
           type: "text",
-          text: "Carnes Frías🥩 y Frutas🍎🍓"
+          text: "Carnes Frías🥩 y Pescado🐟"
         },
         body: {
           text: "Da clic aquí"
@@ -1000,60 +1000,83 @@ class MessageHandler {
                 {
                   "product_retailer_id": "69d912713393eb999422d717"
                 },
+                {
+                  "product_retailer_id": "69d51ec1c7687b049a3995a7"
+                },
+                {
+                  "product_retailer_id": "69d51ea26b3269bbe4dd2d29"
+                }
             ]
           },
           {
-            "title": "FRUTAS",
+            "title": "PESCADO",
               "product_items": [
                 {
-                  "product_retailer_id": "69d8ff7d42a93f3786d6c182"
+                  "product_retailer_id": "69d51cb71e65c66f59ca4ae7"
                 },
                 {
-                  "product_retailer_id": "69d8ff93695e2ef9f7c05ffb"
+                  "product_retailer_id": "69d51f7049248df9f8a75233"
                 },
                 {
-                  "product_retailer_id": "69d90a85af2108383d22ab9b"
+                  "product_retailer_id": "69d51f7f6b3269bbe4de4882"
                 },
                 {
-                  "product_retailer_id": "69d90a75f2b6880f9d93c142"
-                },
-                {
-                  "product_retailer_id": "69d8feea681205cd21dd39f2"
-                },
-                {
-                  "product_retailer_id": "69d8ff0442a93f3786d66d24"
-                },
-                {
-                  "product_retailer_id": "69d8ff1858479361019fd609"
+                  "product_retailer_id": "69d521fdd35d817d1eae5554"
                 }
               ]
           },
-          {
-            "title": "CHOCOLATES",
-              "product_items": [
-                {
-                  "product_retailer_id": "69d90bfe7da5b1ef28b1fb68"
-                },
-                {
-                  "product_retailer_id": "69d9062e681205cd21e472e1"
-                },
-                {
-                  "product_retailer_id": "69d90b9df600f1b57937fecf"
-                },
-                {
-                  "product_retailer_id": "69d90be065d4204c37004155"
-                },
-                {
-                  "product_retailer_id": "69d90b51def710fb3c858ed7"
-                },
-                {
-                  "product_retailer_id": "69d906bee4843af3b4ff5d2b"
-                },
-                {
-                  "product_retailer_id": "69d9070bb0fb5071dcac759a"
-                }
-              ]
-          }
+          // {
+          //   "title": "FRUTAS",
+          //     "product_items": [
+          //       {
+          //         "product_retailer_id": "69d8ff7d42a93f3786d6c182"
+          //       },
+          //       {
+          //         "product_retailer_id": "69d8ff93695e2ef9f7c05ffb"
+          //       },
+          //       {
+          //         "product_retailer_id": "69d90a85af2108383d22ab9b"
+          //       },
+          //       {
+          //         "product_retailer_id": "69d90a75f2b6880f9d93c142"
+          //       },
+          //       {
+          //         "product_retailer_id": "69d8feea681205cd21dd39f2"
+          //       },
+          //       {
+          //         "product_retailer_id": "69d8ff0442a93f3786d66d24"
+          //       },
+          //       {
+          //         "product_retailer_id": "69d8ff1858479361019fd609"
+          //       }
+          //     ]
+          // },
+          // {
+          //   "title": "CHOCOLATES",
+          //     "product_items": [
+          //       {
+          //         "product_retailer_id": "69d90bfe7da5b1ef28b1fb68"
+          //       },
+          //       {
+          //         "product_retailer_id": "69d9062e681205cd21e472e1"
+          //       },
+          //       {
+          //         "product_retailer_id": "69d90b9df600f1b57937fecf"
+          //       },
+          //       {
+          //         "product_retailer_id": "69d90be065d4204c37004155"
+          //       },
+          //       {
+          //         "product_retailer_id": "69d90b51def710fb3c858ed7"
+          //       },
+          //       {
+          //         "product_retailer_id": "69d906bee4843af3b4ff5d2b"
+          //       },
+          //       {
+          //         "product_retailer_id": "69d9070bb0fb5071dcac759a"
+          //       }
+          //     ]
+          // }
         ]
     }
   }
