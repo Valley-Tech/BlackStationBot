@@ -1060,6 +1060,209 @@ class MessageHandler {
     return await whatsappService.sendProductList(to, template);
   }
   
+  async catalogoSubMercado1(to) {
+    const template = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Lácteos y Refrescos🥛🥤"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "LÁCTEOS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d90dbef2b6880f9d976373"
+                },
+                {
+                  "product_retailer_id": "69d90d7ef600f1b5793a1334"
+                },
+                {
+                  "product_retailer_id": "69d90d98f2b6880f9d9731d9"
+                },
+                {
+                  "product_retailer_id": "69d8febd4dbce094f8ef84cf"
+                },
+                {
+                  "product_retailer_id": "69d9083cf600f1b57933e64c"
+                },
+                {
+                  "product_retailer_id": "69d908df2ec32e38346eea3e"
+                },
+                {
+                  "product_retailer_id": "69d9082bdef710fb3c81f282"
+                },
+                {
+                  "product_retailer_id": "69d8f9f6681205cd21d8bbaf"
+                },
+                {
+                  "product_retailer_id": "69d8fa26b36510b69a645b18"
+                },
+                {
+                  "product_retailer_id": "69d8f9dd531e7250784db28f"
+                },
+                {
+                  "product_retailer_id": "69d90a62af2108383d22394c"
+                },
+                {
+                  "product_retailer_id": "69d909bc3393eb999419af14"
+                },
+                {
+                  "product_retailer_id": "69d909c965d4204c37fdd6a0"
+                },
+                {
+                  "product_retailer_id": "69d90adab200cc804d99d6b6"
+                },
+                {
+                  "product_retailer_id": "69d90b2c2ec32e38347174ed"
+                },
+                {
+                  "product_retailer_id": "69d90b1969b309cf44a39ac0"
+                },
+                {
+                  "product_retailer_id": "69d8faeeb36510b69a6511fa"
+                },
+                {
+                  "product_retailer_id": "69d8fb01e4843af3b4f4c89c"
+                },
+                {
+                  "product_retailer_id": "69d8fb5ab36510b69a657b6d"
+                },
+                {
+                  "product_retailer_id": "69d8fa844dbce094f8ec9cbe"
+                },
+                {
+                  "product_retailer_id": "69d8fa9542a93f3786d28315"
+                },
+                {
+                  "product_retailer_id": "69d8fab1376bb5d93eae95db"
+                },
+                {
+                  "product_retailer_id": "69d908eeb200cc804d975c74"
+                },
+                {
+                  "product_retailer_id": "69d8fcaa4dbce094f8ee2454"
+                },
+                {
+                  "product_retailer_id": "69d5198d49248df9f89f4016"
+                },
+                {
+                  "product_retailer_id": "69d5196c337ef3c0ceb9b31f"
+                },
+                {
+                  "product_retailer_id": "69d519269bf0d32ae9bac1cb"
+                },
+                {
+                  "product_retailer_id": "69d51912deafcfb1d18dc905"
+                },
+                {
+                  "product_retailer_id": "69d900755847936101a0b948"
+                },
+                {
+                  "product_retailer_id": "69d90139376bb5d93eb4f576"
+                }
+              ]
+            }
+        ]
+    }
+  }    
+  const template1 = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Yogures, Gelatinas🍧🍵"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "YOGURT",
+              "product_items": [
+              {
+                "product_retailer_id": "69d8ffc8e4843af3b4f8896b"
+              },
+              {
+                "product_retailer_id": "69d90e4bf2b6880f9d982400"
+              },
+              {
+                "product_retailer_id": "69d90e59af2108383d26aef3"
+              },
+              {
+                "product_retailer_id": "69d90e34def710fb3c88c92c"
+              },
+              {
+                "product_retailer_id": "69d90a263393eb99941a3552"
+              },
+              {
+                "product_retailer_id": "69d90904f2b6880f9d92216c"
+              },
+              {
+                "product_retailer_id": "69d9098165d4204c37fd94e7"
+              },
+              {
+                "product_retailer_id": "69d91507f2b6880f9d9fd3fa"
+              },
+              {
+                "product_retailer_id": "69d90e8b7da5b1ef28b49843"
+              },
+              {
+                "product_retailer_id": "69d90e6af2b6880f9d98327d"
+              },
+              {
+                "product_retailer_id": "69d90e783393eb99941ed516"
+              },
+              {
+                "product_retailer_id": "69d90997def710fb3c838f37"
+              },
+              {
+                "product_retailer_id": "69d8fa5d681205cd21d8f037"
+              },
+              {
+                "product_retailer_id": "69d909a7b200cc804d983b8c"
+              },
+              {
+                "product_retailer_id": "69d90a3bf2b6880f9d935a46"
+              },
+              {
+                "product_retailer_id": "69d90de5f2b6880f9d97a3d1"
+              },
+              {
+                "product_retailer_id": "69d90e0cb200cc804d9d0650"
+              },
+              {
+                "product_retailer_id": "69d90df5af2108383d262841"
+              },
+              {
+                "product_retailer_id": "69d8fb94531e7250784ecc1b"
+              },
+              {
+                "product_retailer_id": "69d900d642a93f3786d7d7aa"
+              },
+              {
+                "product_retailer_id": "69d900c9b0fb5071dca5d5d8"
+              },
+              {
+                "product_retailer_id": "69d90dce3393eb99941de30d"
+              }
+            ]
+          }
+        ]
+    }
+  }    
+    const templates = [template, template1];
+    for (const temp of templates) {
+       await whatsappService.sendProductList(to, temp);
+    }
+  }
+
   async catalogoSubMercado2(to) {
     const template = {
       type: "product_list",
@@ -1320,25 +1523,42 @@ class MessageHandler {
             },
             {
               "title": "GELATINAS",
-                "product_items": [
-                {
-                  "product_retailer_id": "69d508a12440c8c597a39a62"
-                },
-                {
-                  "product_retailer_id": "69d508b8d35d817d1e9078a2"
-                },
-                {
-                  "product_retailer_id": "69d508782440c8c597a38a79"
-                },
-                {
-                  "product_retailer_id": "69d50888d35d817d1e9052ab"
-                },
-                {
-                  "product_retailer_id": "69d509486b3269bbe4c55cce"
-                },
-                {
-                  "product_retailer_id": "69d508611e65c66f59b52f2a"
-                }
+              "product_items": [
+              {
+                "product_retailer_id": "69d508a12440c8c597a39a62"
+              },
+              {
+                "product_retailer_id": "69d508b8d35d817d1e9078a2"
+              },
+              {
+                "product_retailer_id": "69d508782440c8c597a38a79"
+              },
+              {
+                "product_retailer_id": "69d50888d35d817d1e9052ab"
+              },
+              {
+                "product_retailer_id": "69d509486b3269bbe4c55cce"
+              },
+              {
+                "product_retailer_id": "69d508611e65c66f59b52f2a"
+              }
+            ]
+          },
+          {
+            "title": "TÉS",
+            "product_items": [
+              {
+                "product_retailer_id": "69d3bd97337ef3c0ce1cf54b"
+              },
+              {
+                "product_retailer_id": "69d3bdf86d06a3361b55ce41"
+              },
+              {
+                "product_retailer_id": "69d3bdba337ef3c0ce1d0cee"
+              },
+              {
+                "product_retailer_id": "69d3bdcc4cb3c588620ca58f"
+              }
             ]
           }
         ]
