@@ -201,7 +201,7 @@ class MessageHandler {
               {
                 id: "option_4",
                 title: "Bebidas🧃 y Gaseosas🥤",
-                description: "Refrescos, Jugos, Agua y Más"
+                description: "Refrescos, Jugos, Gaseosas, Agua y Más"
               },
               {
                 id: "option_5",
@@ -853,6 +853,9 @@ class MessageHandler {
                   "product_retailer_id": "69d3c34649248df9f813421f"
                 },
                 {
+                  "product_retailer_id": "69d51fb7337ef3c0cec20bf6"
+                },
+                {
                   "product_retailer_id": "69d54fc5c7687b049a9ab2a3"
                 },
                 {
@@ -879,9 +882,9 @@ class MessageHandler {
                 {
                   "product_retailer_id": "69d51bd0c7687b049a355544"
                 },
-                {
-                  "product_retailer_id": "69d66c848dab334394bd56ef"
-                },
+                // {
+                //   "product_retailer_id": "69d66c848dab334394bd56ef" Café Sello Rojo x 425gr
+                // },
                 {
                   "product_retailer_id": "69d3c3a5524001f94ed19b3b"
                 },
@@ -1058,7 +1061,7 @@ class MessageHandler {
   }
   
   async catalogoSubMercado2(to) {
-    const template = { 
+    const template = {
       type: "product_list",
       header: { 
           type: "text",
@@ -1259,7 +1262,92 @@ class MessageHandler {
         ]
     }
   }    
-    return await whatsappService.sendProductList(to, template);
+  const template1 = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Frutiños y Jugos"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "FRUTIÑOS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69d3c0854cb3c588620feb86"
+                },
+                {
+                  "product_retailer_id": "69d3c03449248df9f80fca9b"
+                },
+                {
+                  "product_retailer_id": "69d3c109719c4da024db4995"
+                },
+                {
+                  "product_retailer_id": "69d3be276d06a3361b55decb"
+                },
+                {
+                  "product_retailer_id": "69d3c1454cb3c588621092ec"
+                },
+                {
+                  "product_retailer_id": "69d3c0b96b3269bbe44caf05"
+                },
+                {
+                  "product_retailer_id": "69d3be4f4cb3c588620d5485"
+                },
+                {
+                  "product_retailer_id": "69d3be3d719c4da024d90f26"
+                },
+                {
+                  "product_retailer_id": "69d3c0d8337ef3c0ce207988"
+                },
+                {
+                  "product_retailer_id": "69d3c1585e7da3a2f60c85e9"
+                },
+                {
+                  "product_retailer_id": "69d3be956b3269bbe44aeca2"
+                },
+                {
+                  "product_retailer_id": "69d3c16f49248df9f810d687"
+                },
+                {
+                  "product_retailer_id": "69d3c06e6b3269bbe44c7d76"
+                }
+              ]
+            },
+            {
+              "title": "GELATINAS",
+                "product_items": [
+                {
+                  "product_retailer_id": "69d508a12440c8c597a39a62"
+                },
+                {
+                  "product_retailer_id": "69d508b8d35d817d1e9078a2"
+                },
+                {
+                  "product_retailer_id": "69d508782440c8c597a38a79"
+                },
+                {
+                  "product_retailer_id": "69d50888d35d817d1e9052ab"
+                },
+                {
+                  "product_retailer_id": "69d509486b3269bbe4c55cce"
+                },
+                {
+                  "product_retailer_id": "69d508611e65c66f59b52f2a"
+                }
+            ]
+          }
+        ]
+    }
+  }    
+    const templates = [template, template1];
+    for (const temp of templates) {
+       await whatsappService.sendProductList(to, temp);
+    }
   }
 
   async catalogoMercado4(to) {
