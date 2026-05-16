@@ -1065,7 +1065,7 @@ class MessageHandler {
       type: "product_list",
       header: { 
           type: "text",
-          text: "Lácteos y Refrescos🥛🥤"
+          text: "Lácteos 🥛"
         },
         body: {
           text: "Da clic aquí"
@@ -1125,24 +1125,6 @@ class MessageHandler {
                   "product_retailer_id": "69d90b1969b309cf44a39ac0"
                 },
                 {
-                  "product_retailer_id": "69d8faeeb36510b69a6511fa"
-                },
-                {
-                  "product_retailer_id": "69d8fb01e4843af3b4f4c89c"
-                },
-                {
-                  "product_retailer_id": "69d8fb5ab36510b69a657b6d"
-                },
-                {
-                  "product_retailer_id": "69d8fa844dbce094f8ec9cbe"
-                },
-                {
-                  "product_retailer_id": "69d8fa9542a93f3786d28315"
-                },
-                {
-                  "product_retailer_id": "69d8fab1376bb5d93eae95db"
-                },
-                {
                   "product_retailer_id": "69d908eeb200cc804d975c74"
                 },
                 {
@@ -1165,7 +1147,22 @@ class MessageHandler {
                 },
                 {
                   "product_retailer_id": "69d90139376bb5d93eb4f576"
-                }
+                },
+                {
+                "product_retailer_id": "69d8ffc8e4843af3b4f8896b"
+                },
+                {
+                  "product_retailer_id": "69d90e4bf2b6880f9d982400"
+                },
+                {
+                  "product_retailer_id": "69d90e59af2108383d26aef3"
+                },
+                {
+                  "product_retailer_id": "69d90e34def710fb3c88c92c"
+                },
+                {
+                  "product_retailer_id": "69d90a263393eb99941a3552"
+                },
               ]
             }
         ]
@@ -1187,19 +1184,22 @@ class MessageHandler {
             "title": "YOGURT",
               "product_items": [
               {
-                "product_retailer_id": "69d8ffc8e4843af3b4f8896b"
+                "product_retailer_id": "69d8faeeb36510b69a6511fa"
               },
               {
-                "product_retailer_id": "69d90e4bf2b6880f9d982400"
+                "product_retailer_id": "69d8fb01e4843af3b4f4c89c"
               },
               {
-                "product_retailer_id": "69d90e59af2108383d26aef3"
+                "product_retailer_id": "69d8fb5ab36510b69a657b6d"
               },
               {
-                "product_retailer_id": "69d90e34def710fb3c88c92c"
+                "product_retailer_id": "69d8fa844dbce094f8ec9cbe"
               },
               {
-                "product_retailer_id": "69d90a263393eb99941a3552"
+                "product_retailer_id": "69d8fa9542a93f3786d28315"
+              },
+              {
+                "product_retailer_id": "69d8fab1376bb5d93eae95db"
               },
               {
                 "product_retailer_id": "69d90904f2b6880f9d92216c"
