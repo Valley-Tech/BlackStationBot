@@ -190,7 +190,7 @@ class MessageHandler {
               },
               {
                 id: "option_2",
-                title: "Carnes frías🥩 y Pescados🐟",
+                title: "Carnes frías🥩",
                 description: "Carne, Pollo, Pescado y Más"
               },
               {
