@@ -229,7 +229,7 @@ class WhatsAppService {
     }
   }
 
-  async sendMediaMessage(to, type, mediaUrl, caption = '') {
+  async sendMediaMessage(to, type, mediaUrl, caption) {
     try {
       
       const mediaObject = {};

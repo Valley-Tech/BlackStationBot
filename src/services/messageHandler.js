@@ -2058,19 +2058,12 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
       if (datosPedido.datos.pago === "Efectivo") {
         response = "✅¡Pedido recibido!\nPronto nos pondremos en contacto contigo! 🤗";
         // await this.menuOpcionalHiring(to);
-      } else if (datosPedido.datos.pago === "PSE") {
+      } else if (datosPedido.datos.pago === "Codigo QR") { //Era antes PSE
         try {
-          // Generar enlace de pago WOMPi
-          const idlink = await createWompiPaymentLink(
-            datosPedido.monto * 100, // Monto en centavos
-            "COP",
-            pedidoStr
-          );
-          transactionToPhoneMap[idlink] = to;
-          // Enviar mensaje con el enlace de pago
-          response = `*Resumen de tu compra*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\nUtiliza el siguiente *link de pago*:\n\nhttps://checkout.wompi.co/l/${idlink}\n\nLuego, al realizar el pago automáticamente te lo confirmamos! 😊`;
+          // Enviar imagen de codigo QR con sendmediaMessage
+          await whatsappService.sendMediaQR(to);
         } catch (error) {
-          response = "Hubo un problema al generar el enlace de pago. Por favor, intenta nuevamente.";
+          response = "Hubo un problema al enviar el código QR. Por favor, intenta nuevamente.";
         }
     } else if (datosPedido.datos.pago === "Transferencia") {
       userOrderDataMap[to] = {
@@ -2156,12 +2149,12 @@ async handleWompiEvent(transaction) {
     await whatsappService.sendMediaMessage(to, type, mediaUrl, caption);
   }
   
-  async sendMediaEvento(to) {
-    const mediaUrl = 'https://micarta.s3.us-east-1.amazonaws.com/Reserva+tu+mesa.jpg';
-    // const caption = '¡Reserva tu mesa!';
+  async sendMediaQR(to) {
+    const mediaUrl = 'https://sorteo-chatbot.s3.us-east-1.amazonaws.com/Codigo-QR.jpeg';
+    const caption = '¡Envíanos el comprobante de la transferencia (captura) para confirmar tu pedido 😊!';
     const type = 'image';
 
-    await whatsappService.sendMediaMessage(to, type, mediaUrl);
+    await whatsappService.sendMediaMessage(to, type, mediaUrl, caption);
   }
 
   completeHiring(productos, data, total) {
