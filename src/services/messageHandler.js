@@ -2061,7 +2061,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
       } else if (datosPedido.datos.pago === "Codigo QR") { //Era antes PSE
         try {
           // Enviar imagen de codigo QR con sendmediaMessage
-          await whatsappService.sendMediaQR(to);
+          await this.sendMediaQR(to);
         } catch (error) {
           response = "Hubo un problema al enviar el código QR. Por favor, intenta nuevamente.";
         }
