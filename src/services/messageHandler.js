@@ -927,10 +927,99 @@ class MessageHandler {
             ]
           }
         ]
+      }
+    }
+    const template2 = { 
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Panaderia 🍞🥐"
+        },
+        body: {
+          text: "da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "PANADERÍA",
+            "product_items": [
+                {
+                  "product_retailer_id": "69d7a54b95734f580fdab370"
+                },
+                {
+                  "product_retailer_id": "69d7a55a7a48182babe56ee0"
+                },
+                {
+                  "product_retailer_id": "69d3c2db337ef3c0ce222874"
+                },
+                {
+                  "product_retailer_id": "69d7a6a6dde5ad531599cc65"
+                },
+                {
+                  "product_retailer_id": "69d7a72095734f580fdc70e3"
+                },
+                {
+                  "product_retailer_id": "69d7a619788108078f366a2e"
+                },
+                {
+                  "product_retailer_id": "69d7a7058dab3343944dff95"
+                },
+                {
+                  "product_retailer_id": "69d7a51e4dbce094f83f186e"
+                },
+                {
+                  "product_retailer_id": "69d90cafb200cc804d9bc648"
+                },
+                {
+                  "product_retailer_id": "69d7a6f84dbce094f8408770"
+                },
+                {
+                  "product_retailer_id": "69d7a737dde5ad53159a272d"
+                },
+                {
+                  "product_retailer_id": "69d90c8cb200cc804d9b6e8b"
+                },
+                {
+                  "product_retailer_id": "69d7a65d05edc105d44e4923"
+                },
+                {
+                  "product_retailer_id": "69d7a642556e98214761ae63"
+                },
+                {
+                  "product_retailer_id": "69d7a72c7a48182babe7e790"
+                },
+                {
+                  "product_retailer_id": "69d7a52bdde5ad5315989943"
+                },
+                {
+                  "product_retailer_id": "69d7a5398dab3343944be118"
+                },
+                {
+                  "product_retailer_id": "69d7a6d6dde5ad531599fe40"
+                },
+                {
+                  "product_retailer_id": "69d7a68842a93f37862277dc"
+                },
+                {
+                  "product_retailer_id": "69d7a67c556e982147620314"
+                },
+                {
+                  "product_retailer_id": "69d90d58def710fb3c879107"
+                },
+                {
+                  "product_retailer_id": "69d7a698788108078f36f872"
+                },
+                {
+                  "product_retailer_id": "69d90cf069b309cf44a57e06"
+                }
+            ]
+          }
+        ]
     }
     }
     //hacer un for para enviar ambos templates
-    const templates = [template, template1];
+    const templates = [template, template1, template2];
     for (const temp of templates) {
        await whatsappService.sendProductList(to, temp);
     }
@@ -1525,9 +1614,6 @@ class MessageHandler {
                   "product_retailer_id": "69d8f69e58479361019907df"
                 },
                 {
-                  "product_retailer_id": "69d8f6b8681205cd21d60138"
-                },
-                {
                   "product_retailer_id": "69d7c0e54dbce094f85b9dc2"
                 },
                 {
@@ -1541,6 +1627,9 @@ class MessageHandler {
                 },
                 {
                   "product_retailer_id": "69d8f4b9e4843af3b4f0be88"
+                },
+                {
+                  "product_retailer_id": "69d8f6b8681205cd21d60138"
                 },
                 {
                   "product_retailer_id": "69d7ab92dde5ad53159e681e"
