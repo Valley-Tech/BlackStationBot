@@ -1954,6 +1954,7 @@ class MessageHandler {
   
   async handleMenuOption(to, option) {
     let response;
+    idNumber["numero"] = to;
     switch (option) {
       case 'option_1':
         this.catalogoMercado(to);
@@ -1987,7 +1988,7 @@ class MessageHandler {
         break;
       case 'buscar':
         this.assistantState[to] = { step: 'question' };
-        response = 'Dime que quieres comprar: ';
+        response = 'Dime que quieres comprar, por favor sé específico: ';
         break;
       default:
         response = "Oops😔\nPorfa, elige una de las opciones del menú o escribe *Hola* para volver a empezar\nTambién, escribe *Carta* para verla.";
@@ -2060,6 +2061,11 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
         // await this.menuOpcionalHiring(to);
       } else if (datosPedido.datos.pago === "Codigo QR") { //Era antes PSE
         try {
+          userOrderDataMap[to] = {
+            ...datosPedido.datos,
+            monto: datosPedido.monto,
+            pedidoStr
+          };
           // Enviar imagen de codigo QR con sendmediaMessage
           await this.sendMediaQR(to);
         } catch (error) {
