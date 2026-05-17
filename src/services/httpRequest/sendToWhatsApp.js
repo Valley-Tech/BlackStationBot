@@ -28,7 +28,7 @@ const sendToWhatsApp = async (data) => {
         })
         return response.data; 
     } catch (error) {
-        console.error('WhatsApp API error:', error.response?.data || error.message || error);
+        console.error('WhatsApp API error:', error.message || error);
         throw error;
     }
 };

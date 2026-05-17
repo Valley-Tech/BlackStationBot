@@ -2163,11 +2163,10 @@ async handleWompiEvent(transaction) {
     await whatsappService.sendMediaMessage(to, type, mediaUrl, caption);
   }
 
-  completeHiring(productos, data, total) {
+  completeHiring(productos, data, total, numero) {
     let fechayhora = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
     let userData;
     const spreadsheetId = process.env.SPREADSHEETID_PEDIDO;
-    const numero = idNumber["numero"] || "No disponible";
     (total += 3000).toLocaleString('es-CO');
       userData = [
         numero,
