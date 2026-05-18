@@ -833,7 +833,12 @@ class MessageHandler {
               {
                 "product_retailer_id": "69c2277ab5b1d14e3182ae9e"
               },
-              
+              {
+                "product_retailer_id": "69d90c203393eb99941c8f7a"
+              },
+              {
+                "product_retailer_id": "69d66a43bedddfd69a95c044"
+              }
             ]
           }
         ]
@@ -928,14 +933,139 @@ class MessageHandler {
                   },
                   {
                     "product_retailer_id": "69d7a6ca7a48182babe7a5a0"
+                  },
+                  {
+                    "product_retailer_id": "69c2233c7bff33f4a32253bd"
+                  },
+                  {
+                    "product_retailer_id": "69c228a81a3df39f1103714a"
+                  },
+                  {
+                    "product_retailer_id": "69c222bf19d90721373eeb73"
+                  },
+                  {
+                    "product_retailer_id": "69c222f17bff33f4a3224ce7"
+                  },
+                  {
+                    "product_retailer_id": "69c228bc7896dea20a71fafe"
                   }
                   ]
                 }
               ]
             }
           }
+    const template3 = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Otros Mekatos y Snacks"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+            {
+                "title": "SNACKS",
+                "product_items": [
+                    {
+                      "product_retailer_id": "69c226dbfd71b5f79f61d16b"
+                    },
+                    {
+                      "product_retailer_id": "69c22250fd71b5f79f615912"
+                    },
+                    {
+                      "product_retailer_id": "69d6689f2c4e357a8518c4df"
+                    },
+                    {
+                      "product_retailer_id": "69d90c3cf600f1b57938c286"
+                    },
+                    {
+                      "product_retailer_id": "69d90c6f7da5b1ef28b2be2e"
+                    },
+                    {
+                      "product_retailer_id": "69c226571a3df39f1103359e"
+                    },
+                    {
+                      "product_retailer_id": "69c223cf1a3df39f1102f5d7"
+                    },
+                    {
+                      "product_retailer_id": "69c223e2335b9ea55fef2c33"
+                    },
+                    {
+                      "product_retailer_id": "69c2283df055928f6dde88c4"
+                    },
+                    {
+                      "product_retailer_id": "69c228677896dea20a71f4b8"
+                    },
+                    {
+                      "product_retailer_id": "69c228241a3df39f110363d3"
+                    },
+                    {
+                      "product_retailer_id": "69c2284e1a3df39f11036503"
+                    },
+                    {
+                      "product_retailer_id": "69c227bc7bff33f4a3232df4"
+                    },
+                    {
+                      "product_retailer_id": "69d90c2d7da5b1ef28b22abd"
+                    },
+                    {
+                      "product_retailer_id": "69c22273b5b1d14e31819fff"
+                    },
+                    {
+                      "product_retailer_id": "69c22327335b9ea55fef1534"
+                    },
+                    {
+                      "product_retailer_id": "69c22898f055928f6dde8aed"
+                    },
+                    {
+                      "product_retailer_id": "69c222da335b9ea55fef097d"
+                    },
+                    {
+                      "product_retailer_id": "69c22310fd71b5f79f61659e"
+                    },
+                    {
+                      "product_retailer_id": "69c22886335b9ea55ff03046"
+                    },
+                    {
+                      "product_retailer_id": "69c222889d3d40869967bb05"
+                    },
+                    {
+                      "product_retailer_id": "69c228d7fd71b5f79f62036b"
+                    },
+                    {
+                      "product_retailer_id": "69c226bc7bff33f4a32302cd"
+                    },
+                    {
+                      "product_retailer_id": "69d66990125e0f80537a9f0a"
+                    },
+                    {
+                      "product_retailer_id": "69d66a1f2af86b6d19bca290"
+                    },
+                    {
+                      "product_retailer_id": "69d6699f8dab334394b98a43"
+                    },
+                    {
+                      "product_retailer_id": "69d6691842a93f378696ccbf"
+                    },
+                    {
+                      "product_retailer_id": "69d668d0b1a817c419f484db"
+                    },
+                    {
+                      "product_retailer_id": "69d668e62c4e357a85191686"
+                    },
+                    {
+                      "product_retailer_id": "69d66931125e0f80537a5bec"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
     //hacer un for para enviar ambos templates
-    const templates = [template, template1, template2];
+    const templates = [template, template1, template2, template3];
     for (const temp of templates) {
        await whatsappService.sendProductList(to, temp);
     }
