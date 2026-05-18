@@ -283,6 +283,9 @@ class MessageHandler {
             "title": "CUIDADO PERSONAL",
             "product_items": [
               {
+                "product_retailer_id": "69c4b8f106882b0566572f95"
+              },
+              {
                 "product_retailer_id": "69c4ba6e7362d1fe0b8a9408"
               },
               {
@@ -346,10 +349,19 @@ class MessageHandler {
                 "product_retailer_id": "69c4bdb0309b847b30a48d28"
               },
               {
+                "product_retailer_id": "69c4bdc106882b05665890aa"
+              },
+              {
+                "product_retailer_id": "69c4bdd31dcfb49c18ae4170"
+              },
+              {
                 "product_retailer_id": "69c4bd88fd71b5f79fb212f6"
               },
               {
                 "product_retailer_id": "69d3b73d719c4da024d31223"
+              },
+              {
+                "product_retailer_id": "69d3b50549248df9f806115d"
               },
               {
                 "product_retailer_id": "69d3b4e25e7da3a2f6ffdf8a"
@@ -360,24 +372,223 @@ class MessageHandler {
               {
                 "product_retailer_id": "69d3b38bdeafcfb1d1e4e15d"
               },
-              {
-                "product_retailer_id": "69d7b1c995734f580fe64e44"
-              },
-              {
-                "product_retailer_id": "69d7b1968dab3343945ac8d4"
-              },
-              {
-                "product_retailer_id": "69d7b006556e9821476a9f1c"
-              },
-              {
-                "product_retailer_id": "69d7aef6788108078f3f6b2f"
-              },
             ]
           },
         ]
       }
   }
-    return await whatsappService.sendProductList(to, template);
+    const template1 = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Otros Cuidado Personal 🧴🧼"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "OTROS CUIDADO PERSONAL",
+            "product_items": [
+              { 
+                "product_retailer_id": "69d3b75e337ef3c0ce16b0ee" 
+              },
+              { 
+                "product_retailer_id": "69d3b7735e7da3a2f60226d0" 
+              },
+              { 
+                "product_retailer_id": "69d3b54d6d06a3361b4d59b6" 
+              },
+              { 
+                "product_retailer_id": "69d3b2db5e7da3a2f6fda87b" 
+              },
+              { 
+                "product_retailer_id": "69d3b27549248df9f8033791" 
+              },
+              { 
+                "product_retailer_id": "69d3b80f5e7da3a2f602b880" 
+              },
+              { 
+                "product_retailer_id": "69d3b82249248df9f807fe87" 
+              },
+              { 
+                "product_retailer_id": "69d3b8d75e7da3a2f603f359" 
+              },
+              { 
+                "product_retailer_id": "69c4bcb67362d1fe0b8b6221" 
+              },
+              { 
+                "product_retailer_id": "69d3bac4337ef3c0ce19aabe" 
+              },
+              { 
+                "product_retailer_id": "69c4bca3cfdc708e20239bfe" 
+              },
+              { 
+                "product_retailer_id": "69c4b5f31b70fbcf1b6db8cd" 
+              },
+              { 
+                "product_retailer_id": "69c4b86d1b70fbcf1b6eca0f" 
+              },
+              { 
+                "product_retailer_id": "69c4b808cfdc708e20219966" 
+              },
+              { 
+                "product_retailer_id": "69c4b7b5309b847b30a2d4b8" 
+              },
+              { 
+                "product_retailer_id": "69d3bb122440c8c59722a650" 
+              },
+              { 
+                "product_retailer_id": "69d3bae7524001f94ec8bc59" 
+              },
+              { 
+                "product_retailer_id": "69d3b6956b3269bbe44250f9" 
+              },
+              { 
+                "product_retailer_id": "69d3ba9a6b3269bbe4466255" 
+              },
+              { 
+                "product_retailer_id": "69d3b25c5e7da3a2f6fd5b54" 
+              },
+              { 
+                "product_retailer_id": "69d3b8b82440c8c59720a64a" 
+              },
+              { 
+                "product_retailer_id": "69d3b5e3524001f94ec45c0c" 
+              },
+              { 
+                "product_retailer_id": "69c4bd04fd71b5f79fb1f51d" 
+              },
+              { 
+                "product_retailer_id": "69c4bc4acfdc708e20238321" 
+              },
+              { 
+                "product_retailer_id": "69c4bc79e61fb4357fc3b5d1" 
+              },
+              { 
+                "product_retailer_id": "69c4bb101b70fbcf1b6fd2eb" 
+              },
+              { 
+                "product_retailer_id": "69c4bb2e7362d1fe0b8acef8" 
+              },
+              { 
+                "product_retailer_id": "69d3b7b6deafcfb1d1e898e8" 
+              },
+              { 
+                "product_retailer_id": "69d3ba33524001f94ec83be9" 
+              },
+              { 
+                "product_retailer_id": "69d3b8f7524001f94ec77112" 
+              }
+            ]
+          },
+        ]
+      }
+  }
+    const template2 = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Otros Cuidado Personal 🧴🧼"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "OMNILIFE",
+            "product_items": [
+              { 
+                "product_retailer_id": "69d3b7a04cb3c58862080ed8" 
+              },
+              { 
+                "product_retailer_id": "69d3ba02524001f94ec82743" 
+              },
+              { 
+                "product_retailer_id": "69c4be17e61fb4357fc43b4b" 
+              },
+              { 
+                "product_retailer_id": "69c4bdeba88b9bc5196aaa7e" 
+              },
+              { 
+                "product_retailer_id": "69c4be081b70fbcf1b7095e5" 
+              },
+              { 
+                "product_retailer_id": "69c4be81e61fb4357fc449e5" 
+              },
+              { 
+                "product_retailer_id": "69c4be67126013bf1f5ab65f" 
+              },
+              { 
+                "product_retailer_id": "69c4be52fd71b5f79fb2575a" 
+              },
+              { 
+                "product_retailer_id": "69c4be3ecfdc708e20244625" 
+              },
+              { 
+                "product_retailer_id": "69d3b50549248df9f806115d" 
+              },
+              { 
+                "product_retailer_id": "69d3b3d149248df9f804d8eb" 
+              },
+              { 
+                "product_retailer_id": "69d3b59c337ef3c0ce152e3d" 
+              },
+              { 
+                "product_retailer_id": "69d3b6344cb3c5886206bea0" 
+              },
+              { 
+                "product_retailer_id": "69d3b5312440c8c5971d6527" 
+              },
+              { 
+                "product_retailer_id": "69d3b23fdeafcfb1d1e3fbc3" 
+              },
+              { 
+                "product_retailer_id": "69d3ba195e7da3a2f604e744" 
+              },
+              { 
+                "product_retailer_id": "69d3b7e9deafcfb1d1e8b9bd" 
+              },
+              { 
+                "product_retailer_id": "69c4beb27362d1fe0b8c1f15" 
+              },
+              { 
+                "product_retailer_id": "69d3b4936d06a3361b4bd476" 
+              },
+              { 
+                "product_retailer_id": "69d3b4494cb3c5886204f58e" 
+              },
+              { 
+                "product_retailer_id": "69d3b470deafcfb1d1e5ccab" 
+              },
+              { 
+                "product_retailer_id": "69d3b434337ef3c0ce1391d9" 
+              },
+              { 
+                "product_retailer_id": "69d3b4152440c8c5971c5732" 
+              },
+              { 
+                "product_retailer_id": "69d3b5c66b3269bbe44161ce" 
+              },
+              { 
+                "product_retailer_id": "69d3b7ce6d06a3361b4f8aa5" 
+              },
+              { 
+                "product_retailer_id": "69d3b6802440c8c5971ea9de" 
+              }
+            ]
+          },
+        ]
+      }
+  }
+    const templates = [template, template1, template2];
+    for (const temp of templates) {
+       await whatsappService.sendProductList(to, temp);
+    }
   }
 
   async catalogoMercado2(to) {
@@ -745,7 +956,7 @@ class MessageHandler {
       type: "product_list",
       header: { 
           type: "text",
-          text: "Otros Cuidado del Hogar🧤"
+          text: "Omnilife y Cuidado del Hogar🧤"
         },
         body: {
           text: "Da clic aquí"
@@ -753,6 +964,44 @@ class MessageHandler {
         action: {
           catalog_id: "2277977052727019",
           sections: [
+            {
+            "title": "OMNILIFE",
+              "product_items": [
+              {
+                "product_retailer_id": "69d7b1c995734f580fe64e44"
+              },
+              {
+                "product_retailer_id": "69d7b1968dab3343945ac8d4"
+              },
+              {
+                "product_retailer_id": "69d7b006556e9821476a9f1c"
+              },
+              {
+                "product_retailer_id": "69d7aef6788108078f3f6b2f"
+              },
+              {
+                "product_retailer_id": "69d7afb94dbce094f848f152"
+              },
+              {
+                "product_retailer_id": "69d7b17fdde5ad5315a54e60"
+              },
+              {
+                "product_retailer_id": "69d7afa7788108078f407223"
+              },
+              {
+                "product_retailer_id": "69d7b01742a93f37862c5a6f"
+              },
+              {
+                "product_retailer_id": "69d7afcd8dab33439457994c"
+              },
+              {
+                "product_retailer_id": "69d7aff495734f580fe418ff"
+              },
+              {
+                "product_retailer_id": "69d7b1b14dbce094f84bb3f1"
+              },
+            ]
+          },
           {
             "title": "HOGAR Y MASCOTAS",
               "product_items": [
