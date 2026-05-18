@@ -360,6 +360,18 @@ class MessageHandler {
               {
                 "product_retailer_id": "69d3b38bdeafcfb1d1e4e15d"
               },
+              {
+                "product_retailer_id": "69d7b1c995734f580fe64e44"
+              },
+              {
+                "product_retailer_id": "69d7b1968dab3343945ac8d4"
+              },
+              {
+                "product_retailer_id": "69d7b006556e9821476a9f1c"
+              },
+              {
+                "product_retailer_id": "69d7aef6788108078f3f6b2f"
+              },
             ]
           },
         ]
@@ -601,7 +613,7 @@ class MessageHandler {
       type: "product_list",
       header: { 
           type: "text",
-          text: "Cuidado del Hogar🧤🧼"
+          text: "Cuidado del Hogar🧼"
         },
         body: {
           text: "Da clic aquí"
@@ -610,45 +622,189 @@ class MessageHandler {
           catalog_id: "2277977052727019",
           sections: [
           {
-            "title": "Cuidado del Hogar",
+            "title": "HOGAR",
               "product_items": [
                 {
-                  "product_retailer_id": "69d7b1c995734f580fe64e44"
+                  "product_retailer_id": "69c3723e1b70fbcf1bc67a83"
                 },
                 {
-                  "product_retailer_id": "69d7b1968dab3343945ac8d4"
+                  "product_retailer_id": "69c374a2a88b9bc519bf3251"
                 },
                 {
-                  "product_retailer_id": "69d7b006556e9821476a9f1c"
+                  "product_retailer_id": "69c372a37896dea20a094364"
                 },
                 {
-                  "product_retailer_id": "69d7aef6788108078f3f6b2f"
+                  "product_retailer_id": "69c376d920de4f254d32fb19"
                 },
                 {
-                  "product_retailer_id": "69d7afb94dbce094f848f152"
+                  "product_retailer_id": "69c376ce1b70fbcf1bc6f723"
                 },
                 {
-                  "product_retailer_id": "69d7b17fdde5ad5315a54e60"
+                  "product_retailer_id": "69c36fd8872399ad64754151"
                 },
                 {
-                  "product_retailer_id": "69d7afa7788108078f407223"
+                  "product_retailer_id": "69c36e617896dea20a088c7e"
                 },
                 {
-                  "product_retailer_id": "69d7b01742a93f37862c5a6f"
+                  "product_retailer_id": "69c36e7a6a7528a70c1e9c10"
                 },
                 {
-                  "product_retailer_id": "69d7afcd8dab33439457994c"
+                  "product_retailer_id": "69c36e5075e6fcf877e38f55"
                 },
                 {
-                  "product_retailer_id": "69d7aff495734f580fe418ff"
+                  "product_retailer_id": "69c376a1872399ad64761319"
                 },
                 {
-                  "product_retailer_id": "69d7b1b14dbce094f84bb3f1"
+                  "product_retailer_id": "69c376bebfb27e5db6699d7e"
+                },
+                {
+                  "product_retailer_id": "69c3716ebfb27e5db669239f"
+                },
+                {
+                  "product_retailer_id": "69c3718afd71b5f79f0696fe"
+                },
+                {
+                  "product_retailer_id": "69c36efb872399ad64751bfc"
+                },
+                {
+                  "product_retailer_id": "69c374766a7528a70c1f5dba"
+                },
+                {
+                  "product_retailer_id": "69c374663cce32fbe56dcee0"
+                },
+                {
+                  "product_retailer_id": "69c373a4a88b9bc519bf23c1"
+                },
+                {                  
+                  "product_retailer_id": "69c373896a7528a70c1f313f"
+                },
+                {                  
+                  "product_retailer_id": "69c376f73cce32fbe56e2443"
+                },
+                {                  
+                  "product_retailer_id": "69c36ec83cce32fbe56d16c3"
+                },
+                {
+                  "product_retailer_id": "69c36f11bfb27e5db6689e3b"
+                },
+                {
+                  "product_retailer_id": "69c36edffd71b5f79f061959"
+                },
+                {
+                  "product_retailer_id": "69c36f221b70fbcf1bc5c85b"
+                },
+                {
+                  "product_retailer_id": "69c3703c6a7528a70c1ec3f4"
+                },
+                {
+                  "product_retailer_id": "69c370c93cce32fbe56d5292"
+                },
+                {
+                  "product_retailer_id": "69c3767efd71b5f79f071be2"
+                },
+                {
+                  "product_retailer_id": "69c3726620de4f254d329f66"
+                },
+                {
+                  "product_retailer_id": "69c375551b70fbcf1bc6de23"
+                },
+                {
+                  "product_retailer_id": "69c37540872399ad6475fb58"
+                },
+                {
+                  "product_retailer_id": "69c370f66a7528a70c1ed222"
+                }
+                // {
+                //   "product_retailer_id": "69d7afb94dbce094f848f152"
+                // },
+                // {
+                //   "product_retailer_id": "69d7b17fdde5ad5315a54e60"
+                // },
+                // {
+                //   "product_retailer_id": "69d7afa7788108078f407223"
+                // },
+                // {
+                //   "product_retailer_id": "69d7b01742a93f37862c5a6f"
+                // },
+                // {
+                //   "product_retailer_id": "69d7afcd8dab33439457994c"
+                // },
+                // {
+                //   "product_retailer_id": "69d7aff495734f580fe418ff"
+                // },
+                // {
+                //   "product_retailer_id": "69d7b1b14dbce094f84bb3f1"
+                // }
+              ]
+            }
+        ]
+      }
+  }
+
+    const template1 = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Otros Cuidado del Hogar🧤"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "HOGAR Y MASCOTAS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69c36f9620de4f254d31fbfc"
+                },
+                {
+                  "product_retailer_id": "69c36fbd3cce32fbe56d3332"
+                },
+                {
+                  "product_retailer_id": "69c36f66872399ad647527b2"
+                },
+                {
+                  "product_retailer_id": "69c36f831b70fbcf1bc5e15e"
+                },
+                {
+                  "product_retailer_id": "69c37523fd71b5f79f06fcc1"
+                },
+                {
+                  "product_retailer_id": "69c375177896dea20a099a95"
+                },
+                {
+                  "product_retailer_id": "69c372d2a88b9bc519bf0921"
+                },
+                {
+                  "product_retailer_id": "69c374e175e6fcf877e49277"
+                },
+                {
+                  "product_retailer_id": "69c374d0bfb27e5db6697fd0"
+                },
+                {
+                  "product_retailer_id": "69c37214bfb27e5db6693290"
+                },
+                {
+                  "product_retailer_id": "69c371ec7896dea20a092424"
+                },
+                {
+                  "product_retailer_id": "69c37207872399ad647584d6"
+                },
+                {
+                  "product_retailer_id": "69c371da20de4f254d327b69"
+                },
+                {
+                  "product_retailer_id": "69c3734b20de4f254d32b1a7"
+                },
+                {
+                  "product_retailer_id": "69c373733cce32fbe56da967"
                 }
               ]
             },
             {
-            "title": "Cuidado del Hogar",
+            "title": "MASCOTAS",
               "product_items": [
                 {
                   "product_retailer_id": "69d50c45d35d817d1e9466a6"
@@ -662,12 +818,16 @@ class MessageHandler {
                 {
                   "product_retailer_id": "69d50c2c2440c8c597a71d71"
                 },
-              ]
+            ]
           }
         ]
       }
   }
-    return await whatsappService.sendProductList(to, template);
+    //hacer un for para enviar ambos templates
+    const templates = [template, template1, ];
+    for (const temp of templates) {
+       await whatsappService.sendProductList(to, temp);
+    }
   }
 
   async catalogoMercado(to) {
