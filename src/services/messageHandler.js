@@ -403,10 +403,7 @@ class MessageHandler {
             "title": "CREMAS",
             "product_items": [
               { 
-                "product_retailer_id": "69d3b75e337ef3c0ce16b0ee" 
-              },
-              { 
-                "product_retailer_id": "69d3b7735e7da3a2f60226d0" 
+                "product_retailer_id": "69d3b5e3524001f94ec45c0c" 
               },
               { 
                 "product_retailer_id": "69d3b54d6d06a3361b4d59b6" 
@@ -422,6 +419,12 @@ class MessageHandler {
               },
               { 
                 "product_retailer_id": "69d3b8b82440c8c59720a64a" 
+              },
+              { 
+                "product_retailer_id": "69d3b75e337ef3c0ce16b0ee" 
+              },
+              { 
+                "product_retailer_id": "69d3b7735e7da3a2f60226d0" 
               },
             ]
           },
@@ -468,9 +471,6 @@ class MessageHandler {
               },
               { 
                 "product_retailer_id": "69d3b8d75e7da3a2f603f359" 
-              },
-              { 
-                "product_retailer_id": "69d3b5e3524001f94ec45c0c" 
               },
               { 
                 "product_retailer_id": "69d3b7b6deafcfb1d1e898e8" 
