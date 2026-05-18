@@ -18,8 +18,7 @@ export const uploadToPublicStorage = async (buffer, mimeType = "image/jpeg") => 
     Bucket: config.AWS_BUCKET_NAME,
     Key: fileName,
     Body: buffer,
-    ContentType: mimeType,
-    ACL: 'public-read',
+    ContentType: mimeType
   };
 
   await s3.send(new PutObjectCommand(params));
