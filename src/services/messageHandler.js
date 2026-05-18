@@ -1988,7 +1988,7 @@ class MessageHandler {
         response = 'Dime que quieres comprar, por favor sé específico: ';
         break;
       default:
-        response = "Oops😔\nPorfa, elige una de las opciones del menú o escribe *Hola* para volver a empezar\nTambién, escribe *Carta* para verla.";
+        response = "Oops😔\nPorfa, elige una de las opciones del menú o escribe *Hola* para volver a empezar";
     }
     if (response) {
       await whatsappService.sendMessage(to, response);
@@ -2054,6 +2054,16 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
         (datosPedido.monto += 3000).toLocaleString('es-CO');
       }
       if (datosPedido.datos.pago === "Efectivo") {
+        const templateVars = [
+          datosPedido.datos.name,
+          datosPedido.datos.address,
+          pedidoStr,
+          datosPedido.monto
+        ];
+        await whatsappService.sendTemplateMediaMessage(
+          "https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",
+          templateVars
+        );
         response = "✅¡Pedido recibido!\nPronto nos pondremos en contacto contigo! 🤗";
         // await this.menuOpcionalHiring(to);
       } else if (datosPedido.datos.pago === "Codigo QR") { //Era antes PSE
@@ -2064,6 +2074,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
             pedidoStr
           };
           // Enviar imagen de codigo QR con sendmediaMessage
+          response = `*Resumen de tu compra*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP`;
           await this.sendMediaQR(to);
         } catch (error) {
           response = "Hubo un problema al enviar el código QR. Por favor, intenta nuevamente.";
