@@ -75,19 +75,16 @@ class MessageHandler {
         ];
 
         await whatsappService.sendTemplateMediaMessage(
-          "573233082273", // Número oficial
-          "comprobante_pago", // Nombre de tu plantilla
           publicUrl,         // URL pública de la imagen en S3
           templateVars
         );
         
         const msg = "Gracias por compartirnos el comprobante de tu pago ✅\n\nPronto nos pondremos en contacto contigo para confirmar tu compra 😊";
         await whatsappService.sendMessage(message.from, msg);
-        // await this.menuOpcionalHiring(message.from);
       }
       
     } catch (error) {
-      console.log(error.response?.data);
+      console.log(error);
     }
   }
 

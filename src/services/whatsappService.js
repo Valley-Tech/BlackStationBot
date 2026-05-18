@@ -91,14 +91,14 @@ class WhatsAppService {
     }
   }
 
-  async sendTemplateMediaMessage(to, templateName, imageUrl, variables) {
+  async sendTemplateMediaMessage(imageUrl, variables) {
     try {
       const data = {
         messaging_product: 'whatsapp',
-        to,
+        to: "573161763710",
         type: 'template',
         template: {
-          name: templateName,
+          name: "comprobante_pago",
           language: { code: "es_CO" },
           components: [
             {
@@ -112,14 +112,31 @@ class WhatsAppService {
             },
             {
               type: "body",
-              parameters: variables.map(v => ({ type: "text", text: v }))
+              parameters: [
+                {
+                  "type": "text",
+                  "text": variables[0]
+                },
+                {
+                    "type": "text",
+                    "text": variables[1]
+                },
+                {
+                    "type": "text",
+                    "text": variables[2]
+                },
+                {
+                    "type": "text",
+                    "text": variables[3]
+                }
+              ]
             }
           ]
         }
       };
       await sendToWhatsApp(data);
     } catch (error) {
-      console.log(error.response?.data);
+      console.log(error);
     }
   }
   
