@@ -628,116 +628,6 @@ class MessageHandler {
       type: "product_list",
       header: { 
           type: "text",
-          text: "Mekatos y confitería🍬🍭"
-        },
-        body: {
-          text: "Da clic aquí"
-        },
-        action: {
-          catalog_id: "2277977052727019",
-          sections: [
-          {
-            "title": "CONFITERÍA",
-            "product_items": [
-              {
-                "product_retailer_id": "69d68e002af86b6d19fd009f"
-              },
-              {
-                "product_retailer_id": "69d68e242af86b6d19fd552e"
-              },
-              {
-                "product_retailer_id": "69d68e115f0010c7d1f9af40"
-              },
-              {
-                "product_retailer_id": "69d689d82af86b6d19f20b24"
-              },
-              {
-                "product_retailer_id": "69d689c0b1a817c41928605d"
-              },
-              {
-                "product_retailer_id": "69d68de6bedddfd69ad1df84"
-              },
-              {
-                "product_retailer_id": "69d6891e42a93f3786c68848"
-              },
-              {
-                "product_retailer_id": "69d68a0ecced254ef4334c43"
-              },
-              {
-                "product_retailer_id": "69d689f82c4e357a854b2186"
-              },
-              {
-                "product_retailer_id": "69d68ecbbedddfd69ad37fe8"
-              },
-              {
-                "product_retailer_id": "69d68ebc8ca23c3471c0738b"
-              },
-              {
-                "product_retailer_id": "69d68c4d42a93f3786cf8b94"
-              },
-              {
-                "product_retailer_id": "69d68c23cced254ef43a9cd5"
-              },
-              {
-                "product_retailer_id": "69d68d7c2c4e357a85535971"
-              },
-              {
-                "product_retailer_id": "69d68c5fbedddfd69acdf5a2"
-              },
-              {
-                "product_retailer_id": "69d68c352c4e357a8551027d"
-              },
-              {
-                "product_retailer_id": "69c21a36817aaac0ae64710f"
-              },
-              {
-                "product_retailer_id": "69c22941f055928f6dde94a6"
-              },
-              {
-                "product_retailer_id": "69c2292d335b9ea55ff03f29"
-              },
-              {
-                "product_retailer_id": "69c229861a3df39f1103940a"
-              },
-              {
-                "product_retailer_id": "69c22974f055928f6ddeaf79"
-              },
-              {
-                "product_retailer_id": "69c229c17bff33f4a3236ae3"
-              },
-              {
-                "product_retailer_id": "69c229591a3df39f11038692"
-              },
-              {
-                "product_retailer_id": "69c2299a7896dea20a720b75"
-              },
-              {
-                "product_retailer_id": "69c229aefd71b5f79f6223dc"
-              },
-              {
-                "product_retailer_id": "69c2272d335b9ea55ff00c70"
-              },
-              {
-                "product_retailer_id": "69c227447bff33f4a3232346"
-              },
-              {
-                "product_retailer_id": "69c22759fd71b5f79f61eb82"
-              },
-              {
-                "product_retailer_id": "69c2277ab5b1d14e3182ae9e"
-              },
-              {
-                "product_retailer_id": "69c2212a9d3d408699676377"
-              },
-            ]
-          }
-        ]
-      }
-    }
-    const template1 = {
-      type: "product_list",
-      header: { 
-          type: "text",
           text: "Confitería🍬🍭"
         },
         body: {
@@ -844,11 +734,116 @@ class MessageHandler {
               ]
             }
           }
+    const template1 = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Mekatos y confitería🍬🍭"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "CONFITERÍA",
+            "product_items": [
+              {
+                "product_retailer_id": "69d68e002af86b6d19fd009f"
+              },
+              {
+                "product_retailer_id": "69d68e242af86b6d19fd552e"
+              },
+              {
+                "product_retailer_id": "69d68e115f0010c7d1f9af40"
+              },
+              {
+                "product_retailer_id": "69d689d82af86b6d19f20b24"
+              },
+              {
+                "product_retailer_id": "69d689c0b1a817c41928605d"
+              },
+              {
+                "product_retailer_id": "69d68de6bedddfd69ad1df84"
+              },
+              {
+                "product_retailer_id": "69d6891e42a93f3786c68848"
+              },
+              {
+                "product_retailer_id": "69d68a0ecced254ef4334c43"
+              },
+              {
+                "product_retailer_id": "69d689f82c4e357a854b2186"
+              },
+              {
+                "product_retailer_id": "69d68ecbbedddfd69ad37fe8"
+              },
+              {
+                "product_retailer_id": "69d68ebc8ca23c3471c0738b"
+              },
+              {
+                "product_retailer_id": "69d68c4d42a93f3786cf8b94"
+              },
+              {
+                "product_retailer_id": "69d68c23cced254ef43a9cd5"
+              },
+              {
+                "product_retailer_id": "69d68d7c2c4e357a85535971"
+              },
+              {
+                "product_retailer_id": "69d68c5fbedddfd69acdf5a2"
+              },
+              {
+                "product_retailer_id": "69d68c352c4e357a8551027d"
+              },
+              {
+                "product_retailer_id": "69c22941f055928f6dde94a6"
+              },
+              {
+                "product_retailer_id": "69c2292d335b9ea55ff03f29"
+              },
+              {
+                "product_retailer_id": "69c229861a3df39f1103940a"
+              },
+              {
+                "product_retailer_id": "69c22974f055928f6ddeaf79"
+              },
+              {
+                "product_retailer_id": "69c229c17bff33f4a3236ae3"
+              },
+              {
+                "product_retailer_id": "69c229591a3df39f11038692"
+              },
+              {
+                "product_retailer_id": "69c2299a7896dea20a720b75"
+              },
+              {
+                "product_retailer_id": "69c229aefd71b5f79f6223dc"
+              },
+              {
+                "product_retailer_id": "69c2272d335b9ea55ff00c70"
+              },
+              {
+                "product_retailer_id": "69c227447bff33f4a3232346"
+              },
+              {
+                "product_retailer_id": "69c22759fd71b5f79f61eb82"
+              },
+              {
+                "product_retailer_id": "69c2277ab5b1d14e3182ae9e"
+              },
+              
+            ]
+          }
+        ]
+      }
+    }
     const template2 = {
       type: "product_list",
       header: { 
           type: "text",
-          text: "Confitería🍬🍭"
+          text: "Mekatos y Papas"
         },
         body: {
           text: "Da clic aquí"
@@ -857,8 +852,32 @@ class MessageHandler {
           catalog_id: "2277977052727019",
           sections: [
             {
-                "title": "CONFITERÍA",
+                "title": "MEKATOS",
                 "product_items": [
+                  {
+                    "product_retailer_id": "69c21d5e7896dea20a70a2e9"
+                  },
+                  {
+                    "product_retailer_id": "69c21a527896dea20a701c05"
+                  },
+                  {
+                    "product_retailer_id": "69c21d841a3df39f110203a4"
+                  },
+                  {
+                    "product_retailer_id": "69c21da2fd71b5f79f609c2e"
+                  },
+                  {
+                    "product_retailer_id": "69c21d481a3df39f1101fd6e"
+                  },
+                  {
+                    "product_retailer_id": "69c21d367896dea20a709b9b"
+                  },
+                  {
+                    "product_retailer_id": "69c21a36817aaac0ae64710f"
+                  },
+                  {
+                    "product_retailer_id": "69c2212a9d3d408699676377"
+                  },
                   {
                     "product_retailer_id": "69c220e8b5b1d14e31816ce2"
                   },
@@ -906,6 +925,9 @@ class MessageHandler {
                   },
                   {
                     "product_retailer_id": "69c21cbb9d3d40869966cedb"
+                  },
+                  {
+                    "product_retailer_id": "69d7a6ca7a48182babe7a5a0"
                   }
                   ]
                 }
