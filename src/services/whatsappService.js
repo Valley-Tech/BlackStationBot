@@ -95,7 +95,7 @@ class WhatsAppService {
     try {
       const data = {
         messaging_product: 'whatsapp',
-        to: "573161763710",
+        to: "573162822076",
         type: 'template',
         template: {
           name: "comprobante_pago",
