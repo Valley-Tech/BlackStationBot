@@ -1622,7 +1622,10 @@ class MessageHandler {
                   "product_retailer_id": "69d515396b3269bbe4d1468e"
                 },
                 {
-                  "product_retailer_id": "69d516051e65c66f59c2b41b"
+                  "product_retailer_id": "69d91b3cf600f1b5794b8131"
+                },
+                {
+                  "product_retailer_id": "69d91b257da5b1ef28c3f3b7"
                 },
                 {
                   "product_retailer_id": "69d3c34649248df9f813421f"
@@ -1691,9 +1694,6 @@ class MessageHandler {
                   "product_retailer_id": "69d3c302337ef3c0ce225f56"
                 },
                 {
-                  "product_retailer_id": "69d3c1d05e7da3a2f60d01fd"
-                },
-                {
                   "product_retailer_id": "69d66a75125e0f80537b3814"
                 },
                 {
@@ -1719,6 +1719,24 @@ class MessageHandler {
           {
             "title": "PANADERÍA",
             "product_items": [
+                {
+                  "product_retailer_id": "69d516279bf0d32ae9b7a3fa"
+                },
+                {
+                  "product_retailer_id": "69d51fdbc7687b049a3b0655"
+                },
+                {
+                  "product_retailer_id": "69d51fca49248df9f8a7a541"
+                },
+                {
+                  "product_retailer_id": "69d516051e65c66f59c2b41b"
+                },
+                {
+                  "product_retailer_id": "69d3c1d05e7da3a2f60d01fd"
+                },
+                {
+                  "product_retailer_id": "69d5225d49248df9f8aa6d66"
+                },
                 {
                   "product_retailer_id": "69d7a54b95734f580fdab370"
                 },
@@ -1787,7 +1805,7 @@ class MessageHandler {
                 },
                 {
                   "product_retailer_id": "69d90cf069b309cf44a57e06"
-                }
+                },
             ]
           }
         ]
