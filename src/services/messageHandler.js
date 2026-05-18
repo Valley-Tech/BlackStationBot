@@ -400,7 +400,7 @@ class MessageHandler {
           catalog_id: "2277977052727019",
           sections: [
           {
-            "title": "ACONDICIONADORES Y CREMAS",
+            "title": "CREMAS",
             "product_items": [
               { 
                 "product_retailer_id": "69d3b75e337ef3c0ce16b0ee" 
@@ -418,14 +418,16 @@ class MessageHandler {
                 "product_retailer_id": "69d3b27549248df9f8033791" 
               },
               { 
-                "product_retailer_id": "69d3b80f5e7da3a2f602b880" 
+                "product_retailer_id": "69d3b25c5e7da3a2f6fd5b54" 
               },
               { 
-                "product_retailer_id": "69d3b82249248df9f807fe87" 
+                "product_retailer_id": "69d3b8b82440c8c59720a64a" 
               },
-              { 
-                "product_retailer_id": "69d3b8d75e7da3a2f603f359" 
-              },
+            ]
+          },
+          {
+            "title": "COLGATE",
+            "product_items": [
               { 
                 "product_retailer_id": "69c4bcb67362d1fe0b8b6221" 
               },
@@ -446,30 +448,29 @@ class MessageHandler {
               },
               { 
                 "product_retailer_id": "69c4b7b5309b847b30a2d4b8" 
+              }
+            ]
+          },
+          {
+            "title": "DESODORANTES",
+            "product_items": [
+              { 
+                "product_retailer_id": "69d3b80f5e7da3a2f602b880" 
               },
               { 
-                "product_retailer_id": "69d3bb122440c8c59722a650" 
+                "product_retailer_id": "69d3b82249248df9f807fe87" 
               },
               { 
-                "product_retailer_id": "69d3bae7524001f94ec8bc59" 
+                "product_retailer_id": "69d3b8d75e7da3a2f603f359" 
               },
               { 
-                "product_retailer_id": "69d3b6956b3269bbe44250f9" 
+                "product_retailer_id": "69d3b6956b3269bbe44250f9"
               },
               { 
                 "product_retailer_id": "69d3ba9a6b3269bbe4466255" 
               },
               { 
-                "product_retailer_id": "69d3b25c5e7da3a2f6fd5b54" 
-              },
-              { 
-                "product_retailer_id": "69d3b8b82440c8c59720a64a" 
-              },
-              { 
                 "product_retailer_id": "69d3b5e3524001f94ec45c0c" 
-              },
-              { 
-                "product_retailer_id": "69c4bd04fd71b5f79fb1f51d" 
               },
               { 
                 "product_retailer_id": "69d3b7b6deafcfb1d1e898e8" 
@@ -479,9 +480,26 @@ class MessageHandler {
               },
               { 
                 "product_retailer_id": "69d3b8f7524001f94ec77112" 
-              }
+              },
+              { 
+                "product_retailer_id": "69d3b7a04cb3c58862080ed8" 
+              },
             ]
           },
+          {
+            "title": "INTIMO/A",
+            "product_items": [
+              { 
+                "product_retailer_id": "69c4bd04fd71b5f79fb1f51d" 
+              },
+              { 
+                "product_retailer_id": "69d3bb122440c8c59722a650" 
+              },
+              { 
+                "product_retailer_id": "69d3bae7524001f94ec8bc59" 
+              },
+            ]
+          }
         ]
       }
   }
@@ -498,7 +516,7 @@ class MessageHandler {
           catalog_id: "2277977052727019",
           sections: [
           {
-            "title": "OTROS CUIDADOS",
+            "title": "PAÑALES",
             "product_items": [
               {
                 "product_retailer_id": "69d3bbf86b3269bbe44811f2"
@@ -520,19 +538,12 @@ class MessageHandler {
               },
               {
                 "product_retailer_id": "69d3ba836b3269bbe4465231"
-              },
-              {
-                "product_retailer_id": "69c4bd58cfdc708e2023ee39"
-              },
-              {
-                "product_retailer_id": "69c4bd35e61fb4357fc405b8"
-              },
-              {
-                "product_retailer_id": "69c4bcde126013bf1f5a1ff4"
-              },
-              {
-                "product_retailer_id": "69c4bd1f126013bf1f5a34a8"
-              },
+              }
+            ]
+          },
+          {
+            "title": "TOALLAS HIGIÉNICAS",
+            "product_items": [
               {
                 "product_retailer_id": "69c4bdb0309b847b30a48d28"
               },
@@ -544,15 +555,6 @@ class MessageHandler {
               },
               {
                 "product_retailer_id": "69c4bd88fd71b5f79fb212f6"
-              },
-              {
-                "product_retailer_id": "69d3b73d719c4da024d31223"
-              },
-              { 
-                "product_retailer_id": "69d3b7a04cb3c58862080ed8" 
-              },
-              { 
-                "product_retailer_id": "69d3ba02524001f94ec82743" 
               },
               { 
                 "product_retailer_id": "69c4be17e61fb4357fc43b4b" 
@@ -574,9 +576,24 @@ class MessageHandler {
               },
               { 
                 "product_retailer_id": "69c4be3ecfdc708e20244625" 
+              }
+            ]
+          },
+          {
+            "title": "OTROS CUIDADOS",
+            "product_items": [
+              {
+                "product_retailer_id": "69c4bd58cfdc708e2023ee39"
               },
-              
-
+              {
+                "product_retailer_id": "69c4bd35e61fb4357fc405b8"
+              },
+              {
+                "product_retailer_id": "69c4bcde126013bf1f5a1ff4"
+              },
+              {
+                "product_retailer_id": "69c4bd1f126013bf1f5a34a8"
+              },
               { 
                 "product_retailer_id": "69d3ba195e7da3a2f604e744" 
               },
@@ -586,14 +603,15 @@ class MessageHandler {
               { 
                 "product_retailer_id": "69c4beb27362d1fe0b8c1f15" 
               },
-              
-
               { 
                 "product_retailer_id": "69d3b7ce6d06a3361b4f8aa5" 
               },
               { 
                 "product_retailer_id": "69d3b6802440c8c5971ea9de" 
-              }
+              },
+              {
+                "product_retailer_id": "69d3b73d719c4da024d31223"
+              },
             ]
           },
         ]
