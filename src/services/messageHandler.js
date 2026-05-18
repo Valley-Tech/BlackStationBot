@@ -213,7 +213,7 @@ class MessageHandler {
               {
                 id: "opcion_1",
                 title: "Personal🧴🧼",
-                description: "Cuidado personal y productos del hogar"
+                description: "Jabones, Champús, Cremas y Más"
               },
               {
                 id: "opcion_2",
@@ -223,7 +223,7 @@ class MessageHandler {
               {
                 id: "opcion_3",
                 title: "Del Hogar 🧤🧼",
-                description: "Productos para el hogar y limpieza"
+                description: "Detergentes, Desinfectantes, Suavizantes y Más"
               }
             ]
           },
@@ -274,13 +274,13 @@ class MessageHandler {
           text: "Cuidado Personal 🧴🧼"
         },
         body: {
-          text: "Da clic aquí"
+          text: "Jabones, Champús y Tratamientos"
         },
         action: {
           catalog_id: "2277977052727019",
           sections: [
           {
-            "title": "CUIDADO PERSONAL",
+            "title": "JABONES",
             "product_items": [
               {
                 "product_retailer_id": "69c4b8f106882b0566572f95"
@@ -312,54 +312,23 @@ class MessageHandler {
               {
                 "product_retailer_id": "69c4b95106882b0566575551"
               },
-              {
-                "product_retailer_id": "69d3bbf86b3269bbe44811f2"
+              { 
+                "product_retailer_id": "69c4bc4acfdc708e20238321" 
               },
-              {
-                "product_retailer_id": "69d3bc615e7da3a2f6073e2c"
+              { 
+                "product_retailer_id": "69c4bc79e61fb4357fc3b5d1" 
               },
-              {
-                "product_retailer_id": "69d3bc73524001f94eca0054"
+              { 
+                "product_retailer_id": "69c4bb101b70fbcf1b6fd2eb" 
               },
-              {
-                "product_retailer_id": "69d3bc9a5e7da3a2f607a8be"
-              },
-              {
-                "product_retailer_id": "69d3bcbbdeafcfb1d1ed53eb"
-              },
-              {
-                "product_retailer_id": "69d3ba66deafcfb1d1ea89a9"
-              },
-              {
-                "product_retailer_id": "69d3ba836b3269bbe4465231"
-              },
-              {
-                "product_retailer_id": "69c4bd58cfdc708e2023ee39"
-              },
-              {
-                "product_retailer_id": "69c4bd35e61fb4357fc405b8"
-              },
-              {
-                "product_retailer_id": "69c4bcde126013bf1f5a1ff4"
-              },
-              {
-                "product_retailer_id": "69c4bd1f126013bf1f5a34a8"
-              },
-              {
-                "product_retailer_id": "69c4bdb0309b847b30a48d28"
-              },
-              {
-                "product_retailer_id": "69c4bdc106882b05665890aa"
-              },
-              {
-                "product_retailer_id": "69c4bdd31dcfb49c18ae4170"
-              },
-              {
-                "product_retailer_id": "69c4bd88fd71b5f79fb212f6"
-              },
-              {
-                "product_retailer_id": "69d3b73d719c4da024d31223"
-              },
+              { 
+                "product_retailer_id": "69c4bb2e7362d1fe0b8acef8" 
+              }
+            ]
+          },
+          {
+            "title": "SHAMPÚS",
+            "product_items": [
               {
                 "product_retailer_id": "69d3b50549248df9f806115d"
               },
@@ -372,6 +341,47 @@ class MessageHandler {
               {
                 "product_retailer_id": "69d3b38bdeafcfb1d1e4e15d"
               },
+              { 
+                "product_retailer_id": "69d3b3d149248df9f804d8eb" 
+              },
+              { 
+                "product_retailer_id": "69d3b59c337ef3c0ce152e3d" 
+              },
+              { 
+                "product_retailer_id": "69d3b6344cb3c5886206bea0" 
+              },
+              { 
+                "product_retailer_id": "69d3b5312440c8c5971d6527" 
+              },
+              { 
+                "product_retailer_id": "69d3b23fdeafcfb1d1e3fbc3" 
+              },
+            ]
+          },
+          {
+            "title": "TRATAMIENTOS",
+            "product_items": [
+              { 
+                "product_retailer_id": "69d3ba02524001f94ec82743" 
+              },
+              { 
+                "product_retailer_id": "69d3b4936d06a3361b4bd476" 
+              },
+              { 
+                "product_retailer_id": "69d3b4494cb3c5886204f58e" 
+              },
+              { 
+                "product_retailer_id": "69d3b470deafcfb1d1e5ccab" 
+              },
+              { 
+                "product_retailer_id": "69d3b434337ef3c0ce1391d9" 
+              },
+              { 
+                "product_retailer_id": "69d3b4152440c8c5971c5732" 
+              },
+              { 
+                "product_retailer_id": "69d3b5c66b3269bbe44161ce" 
+              },
             ]
           },
         ]
@@ -381,16 +391,16 @@ class MessageHandler {
       type: "product_list",
       header: { 
           type: "text",
-          text: "Otros Cuidado Personal 🧴🧼"
+          text: "Cuidado bucal y capilar 🧴"
         },
         body: {
-          text: "Da clic aquí"
+          text: "Cremas, Desodorantes y Acondicionadores"
         },
         action: {
           catalog_id: "2277977052727019",
           sections: [
           {
-            "title": "OTROS CUIDADO PERSONAL",
+            "title": "ACONDICIONADORES Y CREMAS",
             "product_items": [
               { 
                 "product_retailer_id": "69d3b75e337ef3c0ce16b0ee" 
@@ -462,18 +472,6 @@ class MessageHandler {
                 "product_retailer_id": "69c4bd04fd71b5f79fb1f51d" 
               },
               { 
-                "product_retailer_id": "69c4bc4acfdc708e20238321" 
-              },
-              { 
-                "product_retailer_id": "69c4bc79e61fb4357fc3b5d1" 
-              },
-              { 
-                "product_retailer_id": "69c4bb101b70fbcf1b6fd2eb" 
-              },
-              { 
-                "product_retailer_id": "69c4bb2e7362d1fe0b8acef8" 
-              },
-              { 
                 "product_retailer_id": "69d3b7b6deafcfb1d1e898e8" 
               },
               { 
@@ -494,14 +492,62 @@ class MessageHandler {
           text: "Otros Cuidado Personal 🧴🧼"
         },
         body: {
-          text: "Da clic aquí"
+          text: "Papel higiénico, Toallas higiénicas y Pañales"
         },
         action: {
           catalog_id: "2277977052727019",
           sections: [
           {
-            "title": "OMNILIFE",
+            "title": "OTROS CUIDADOS",
             "product_items": [
+              {
+                "product_retailer_id": "69d3bbf86b3269bbe44811f2"
+              },
+              {
+                "product_retailer_id": "69d3bc615e7da3a2f6073e2c"
+              },
+              {
+                "product_retailer_id": "69d3bc73524001f94eca0054"
+              },
+              {
+                "product_retailer_id": "69d3bc9a5e7da3a2f607a8be"
+              },
+              {
+                "product_retailer_id": "69d3bcbbdeafcfb1d1ed53eb"
+              },
+              {
+                "product_retailer_id": "69d3ba66deafcfb1d1ea89a9"
+              },
+              {
+                "product_retailer_id": "69d3ba836b3269bbe4465231"
+              },
+              {
+                "product_retailer_id": "69c4bd58cfdc708e2023ee39"
+              },
+              {
+                "product_retailer_id": "69c4bd35e61fb4357fc405b8"
+              },
+              {
+                "product_retailer_id": "69c4bcde126013bf1f5a1ff4"
+              },
+              {
+                "product_retailer_id": "69c4bd1f126013bf1f5a34a8"
+              },
+              {
+                "product_retailer_id": "69c4bdb0309b847b30a48d28"
+              },
+              {
+                "product_retailer_id": "69c4bdc106882b05665890aa"
+              },
+              {
+                "product_retailer_id": "69c4bdd31dcfb49c18ae4170"
+              },
+              {
+                "product_retailer_id": "69c4bd88fd71b5f79fb212f6"
+              },
+              {
+                "product_retailer_id": "69d3b73d719c4da024d31223"
+              },
               { 
                 "product_retailer_id": "69d3b7a04cb3c58862080ed8" 
               },
@@ -529,24 +575,8 @@ class MessageHandler {
               { 
                 "product_retailer_id": "69c4be3ecfdc708e20244625" 
               },
-              { 
-                "product_retailer_id": "69d3b50549248df9f806115d" 
-              },
-              { 
-                "product_retailer_id": "69d3b3d149248df9f804d8eb" 
-              },
-              { 
-                "product_retailer_id": "69d3b59c337ef3c0ce152e3d" 
-              },
-              { 
-                "product_retailer_id": "69d3b6344cb3c5886206bea0" 
-              },
-              { 
-                "product_retailer_id": "69d3b5312440c8c5971d6527" 
-              },
-              { 
-                "product_retailer_id": "69d3b23fdeafcfb1d1e3fbc3" 
-              },
+              
+
               { 
                 "product_retailer_id": "69d3ba195e7da3a2f604e744" 
               },
@@ -556,24 +586,8 @@ class MessageHandler {
               { 
                 "product_retailer_id": "69c4beb27362d1fe0b8c1f15" 
               },
-              { 
-                "product_retailer_id": "69d3b4936d06a3361b4bd476" 
-              },
-              { 
-                "product_retailer_id": "69d3b4494cb3c5886204f58e" 
-              },
-              { 
-                "product_retailer_id": "69d3b470deafcfb1d1e5ccab" 
-              },
-              { 
-                "product_retailer_id": "69d3b434337ef3c0ce1391d9" 
-              },
-              { 
-                "product_retailer_id": "69d3b4152440c8c5971c5732" 
-              },
-              { 
-                "product_retailer_id": "69d3b5c66b3269bbe44161ce" 
-              },
+              
+
               { 
                 "product_retailer_id": "69d3b7ce6d06a3361b4f8aa5" 
               },
@@ -956,7 +970,7 @@ class MessageHandler {
       type: "product_list",
       header: { 
           type: "text",
-          text: "Omnilife y Cuidado del Hogar🧤"
+          text: "Omnilife y Otros Cuidado del Hogar🧤"
         },
         body: {
           text: "Da clic aquí"
@@ -1003,7 +1017,7 @@ class MessageHandler {
             ]
           },
           {
-            "title": "HOGAR Y MASCOTAS",
+            "title": "HOGAR",
               "product_items": [
                 {
                   "product_retailer_id": "69c36f9620de4f254d31fbfc"
