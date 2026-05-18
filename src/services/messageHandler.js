@@ -2006,12 +2006,12 @@ class MessageHandler {
 
       // Crear un prompt para que Gemini extraiga los IDs de los productos de la respuesta anterior
       const promptExtraccion = `
-Basándote en la siguiente respuesta de una IA que sugirió productos, extrae SOLO los IDs de los productos que menciona:
+      [SISTEMA]: Basándote en la siguiente respuesta de una IA que sugirió productos, extrae SOLO los IDs de los productos que menciona a continuación:
 
 "${respuestaAnterior}"
 
 Responde ÚNICAMENTE con los IDs de los productos, uno por línea, sin explicaciones adicionales.
-Si no hay IDs, responde: "No hay IDs de productos disponibles"
+Si no hay IDs, responde: "No hay productos disponibles"
 `;
 
       // Enviar a Gemini para extraer los IDs
@@ -2085,7 +2085,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
         monto: datosPedido.monto,
         pedidoStr
       };
-        response = `*Resumen de tu compra*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\n🏦Cuentas bancarias:\n\n*Nequi/Daviplata:* 3233082273\n\n*Bancolombia Ahorros:* 70416357747\n\n🚨 Luego, envíanos el comprobante de la transferencia (captura) para confirmar tu pago 😊`;
+        response = `*Resumen de tu compra*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\n🏦Cuentas bancarias:\n\n*Nequi/Daviplata:* 3233082273\n\n*Bancolombia Ahorros:* 70416357747\n\n*Llave (Bre-B):* 0089662634\n\n🚨 Luego, envíanos el comprobante de la transferencia (captura) para confirmar tu pago 😊`;
       }
    } else if (screen === "RATE") {
     response = "¡Recibido!\nMuchas gracias por tu opinión! 🤗";
@@ -2244,7 +2244,7 @@ completeOrder(productos, data) {
     const menuMessage = "¿Esto es lo que quieres?";
     const buttons = [
       { type: 'reply', reply: { id: 'finalizar', title: "Si, Gracias 😊" } },
-      { type: 'reply', reply: { id: 'buscar', title: 'No, quiero otra cosa' } },
+      { type: 'reply', reply: { id: 'buscar', title: 'No, corregir' } },
       // { type: 'reply', reply: { id: '', title: 'Hablar con asesor 🤵' } }
     ];
 
