@@ -640,58 +640,13 @@ class MessageHandler {
                   "title": "CONFITERÍA",
                   "product_items": [
                     {
-                      "product_retailer_id": "69d689605f0010c7d1ee7582"
-                    },
-                    {
-                      "product_retailer_id": "69d6896d8ca23c3471b2a72c"
-                    },
-                    {
-                      "product_retailer_id": "69d686bb8ca23c3471add12a"
-                    },
-                    {
-                      "product_retailer_id": "69d686a38dab334394e4e803"
-                    },
-                    {
-                      "product_retailer_id": "69d687e08ca23c3471b027e6"
-                    },
-                    {
-                      "product_retailer_id": "69d68ef98dab334394f962f8"
-                    },
-                    {
-                      "product_retailer_id": "69d68ee5125e0f8053baedb5"
-                    },
-                    {
-                      "product_retailer_id": "69d68b7abedddfd69acb6b68"
-                    },
-                    {
-                      "product_retailer_id": "69d68add2c4e357a854d62e2"
-                    },
-                    {
-                      "product_retailer_id": "69d68a27125e0f8053ae7179"
-                    },
-                    {
-                      "product_retailer_id": "69d68ba88dab334394f20308"
-                    },
-                    {
-                      "product_retailer_id": "69d68fe9b1a817c419383c1d"
-                    },
-                    {
-                      "product_retailer_id": "69d68fd4bedddfd69ad5bdb5"
-                    },
-                    {
-                      "product_retailer_id": "69d68dd8b1a817c419332d5f"
-                    },
-                    {
-                      "product_retailer_id": "69d686f9cced254ef42d1e3d"
-                    },
-                    {
-                      "product_retailer_id": "69d686e242a93f3786c1a735"
-                    },
-                    {
                       "product_retailer_id": "69d68e002af86b6d19fd009f"
                     },
                     {
                       "product_retailer_id": "69d68e242af86b6d19fd552e"
+                    },
+                    {
+                      "product_retailer_id": "69d68e115f0010c7d1f9af40"
                     },
                     {
                       "product_retailer_id": "69d689d82af86b6d19f20b24"
@@ -726,12 +681,175 @@ class MessageHandler {
                     {
                       "product_retailer_id": "69d68d7c2c4e357a85535971"
                     },
+                    {
+                      "product_retailer_id": "69d68c5fbedddfd69acdf5a2"
+                    },
+                    {
+                      "product_retailer_id": "69d68c352c4e357a8551027d"
+                    }
                   ]
                 }
               ]
             }
           }
-    return await whatsappService.sendProductList(to, template);
+    const template1 = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Confitería🍬🍭"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+            {
+                "title": "CONFITERÍA",
+                "product_items": [
+                  {
+                    "product_retailer_id": "69d68f7b2af86b6d19008ccb"
+                  },
+                  {
+                    "product_retailer_id": "69d68f5a8ca23c3471c1d245"
+                  },
+                  {
+                    "product_retailer_id": "69d6889142a93f3786c577c1"
+                  },
+                  {
+                    "product_retailer_id": "69d6882e8ca23c3471b0b1c9"
+                  },
+                  {
+                    "product_retailer_id": "69d688e4cced254ef4307f06"
+                  },
+                  {
+                    "product_retailer_id": "69d688ce8dab334394e96682"
+                  },
+                  {
+                    "product_retailer_id": "69d69383b1a817c41940c1a2"
+                  },
+                  {
+                    "product_retailer_id": "69d69216bedddfd69ada4b40"
+                  },
+                  {
+                    "product_retailer_id": "69d690ed42a93f3786d8f736"
+                  },
+                  {
+                    "product_retailer_id": "69d693a92af86b6d190810b6"
+                  },
+                  {
+                    "product_retailer_id": "69d689605f0010c7d1ee7582"
+                  },
+                  {
+                    "product_retailer_id": "69d6896d8ca23c3471b2a72c"
+                  },
+                  {
+                    "product_retailer_id": "69d686bb8ca23c3471add12a"
+                  },
+                  {
+                    "product_retailer_id": "69d686a38dab334394e4e803"
+                  },
+                  {
+                    "product_retailer_id": "69d69017cced254ef4447d84"
+                  },
+                  {
+                    "product_retailer_id": "69d6900742a93f3786d739c8"
+                  },
+                  {
+                    "product_retailer_id": "69d687e08ca23c3471b027e6"
+                  },
+                  {
+                    "product_retailer_id": "69d68753bedddfd69ac17766"
+                  },
+                  {
+                    "product_retailer_id": "69d68ef98dab334394f962f8"
+                  },
+                  {
+                    "product_retailer_id": "69d68ee5125e0f8053baedb5"
+                  },
+                  {
+                    "product_retailer_id": "69d68b7abedddfd69acb6b68"
+                  },
+                  {
+                    "product_retailer_id": "69d68bc9cced254ef439f4d7"
+                  },
+                  {
+                    "product_retailer_id": "69d68add2c4e357a854d62e2"
+                  },
+                  {
+                    "product_retailer_id": "69d68a27125e0f8053ae7179"
+                  },
+                  {
+                    "product_retailer_id": "69d68ba88dab334394f20308"
+                  },
+                  {
+                    "product_retailer_id": "69d68fe9b1a817c419383c1d"
+                  },
+                  {
+                    "product_retailer_id": "69d68fd4bedddfd69ad5bdb5"
+                  },
+                  {
+                    "product_retailer_id": "69d68dd8b1a817c419332d5f"
+                  },
+                  {
+                    "product_retailer_id": "69d686f9cced254ef42d1e3d"
+                  },
+                  {
+                    "product_retailer_id": "69d686e242a93f3786c1a735"
+                  },
+                  // MEKATOS 
+                  {
+                    "product_retailer_id": "69c21a36817aaac0ae64710f"
+                  },
+                  {
+                    "product_retailer_id": "69c22941f055928f6dde94a6"
+                  },
+                  {
+                    "product_retailer_id": "69c2292d335b9ea55ff03f29"
+                  },
+                  {
+                    "product_retailer_id": "69c229861a3df39f1103940a"
+                  },
+                  {
+                    "product_retailer_id": "69c22974f055928f6ddeaf79"
+                  },
+                  {
+                    "product_retailer_id": "69c229c17bff33f4a3236ae3"
+                  },
+                  {
+                    "product_retailer_id": "69c229591a3df39f11038692"
+                  },
+                  {
+                    "product_retailer_id": "69c2299a7896dea20a720b75"
+                  },
+                  {
+                    "product_retailer_id": "69c229aefd71b5f79f6223dc"
+                  },
+                  {
+                    "product_retailer_id": "69c2272d335b9ea55ff00c70"
+                  },
+                  {
+                    "product_retailer_id": "69c227447bff33f4a3232346"
+                  },
+                  {
+                    "product_retailer_id": "69c22759fd71b5f79f61eb82"
+                  },
+                  {
+                    "product_retailer_id": "69c2277ab5b1d14e3182ae9e"
+                  },
+                  {
+                    "product_retailer_id": "69c2212a9d3d408699676377"
+                  }
+                  ]
+                }
+              ]
+            }
+          }
+    //hacer un for para enviar ambos templates
+    const templates = [template, template1, ];
+    for (const temp of templates) {
+       await whatsappService.sendProductList(to, temp);
+    }
   }
 
   async catalogoSubMercado4(to) {
@@ -1919,97 +2037,6 @@ class MessageHandler {
                 {
                   "product_retailer_id": "69d907b17da5b1ef28ac78d2"
                 }
-                // MEKATOS 
-                // {
-                //   "product_retailer_id": "69c21a36817aaac0ae64710f"
-                // },
-                // {
-                //   "product_retailer_id": "69c22941f055928f6dde94a6"
-                // },
-                // {
-                //   "product_retailer_id": "69c2292d335b9ea55ff03f29"
-                // },
-                // {
-                //   "product_retailer_id": "69c229861a3df39f1103940a"
-                // },
-                // {
-                //   "product_retailer_id": "69c22974f055928f6ddeaf79"
-                // },
-                // {
-                //   "product_retailer_id": "69c229c17bff33f4a3236ae3"
-                // },
-                // {
-                //   "product_retailer_id": "69c229591a3df39f11038692"
-                // },
-                // {
-                //   "product_retailer_id": "69c2299a7896dea20a720b75"
-                // },
-                // {
-                //   "product_retailer_id": "69c229aefd71b5f79f6223dc"
-                // },
-                // {
-                //   "product_retailer_id": "69c2272d335b9ea55ff00c70"
-                // },
-                // {
-                //   "product_retailer_id": "69c227447bff33f4a3232346"
-                // },
-                // {
-                //   "product_retailer_id": "69c22759fd71b5f79f61eb82"
-                // },
-                // {
-                //   "product_retailer_id": "69c2277ab5b1d14e3182ae9e"
-                // },
-                // {
-                //   "product_retailer_id": "69c2212a9d3d408699676377"
-                // },
-                // {
-                //   "product_retailer_id": "69c220e8b5b1d14e31816ce2"
-                // },
-                // {
-                //   "product_retailer_id": "69c22138817aaac0ae65a6e3"
-                // },
-                // {
-                //   "product_retailer_id": "69c226a1335b9ea55feff903"
-                // },
-                // {
-                //   "product_retailer_id": "69c226fbf055928f6dde602b"
-                // },
-                // {
-                //   "product_retailer_id": "69c229007896dea20a71ff28"
-                // },
-                // {
-                //   "product_retailer_id": "69c21ec7fd71b5f79f60e11d"
-                // },
-                // {
-                //   "product_retailer_id": "69c21a8c1a3df39f110186d9"
-                // },
-                // {
-                //   "product_retailer_id": "69c21aa1f055928f6ddccea7"
-                // },
-                // {
-                //   "product_retailer_id": "69c21cf419d90721373dff0d"
-                // },
-                // {
-                //   "product_retailer_id": "69c219c37896dea20a6ff600"
-                // },
-                // {
-                //   "product_retailer_id": "69c21ca57896dea20a707d24"
-                // },
-                // {
-                //   "product_retailer_id": "69c21cce19d90721373dfa55"
-                // },
-                // {
-                //   "product_retailer_id": "69c21a0419d90721373d56d4"
-                // },
-                // {
-                //   "product_retailer_id": "69c21c7af055928f6ddd2b44"
-                // },
-                // {
-                //   "product_retailer_id": "69c21d06817aaac0ae64ef6d"
-                // },
-                // {
-                //   "product_retailer_id": "69c21cbb9d3d40869966cedb"
-                // }
             ]
           }
         ]
