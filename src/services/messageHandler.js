@@ -426,7 +426,7 @@ class MessageHandler {
             ]
           },
           {
-            "title": "COLGATE",
+            "title": "COLGATE Y LIMPIEZA",
             "product_items": [
               { 
                 "product_retailer_id": "69c4bcb67362d1fe0b8b6221" 
@@ -448,7 +448,13 @@ class MessageHandler {
               },
               { 
                 "product_retailer_id": "69c4b7b5309b847b30a2d4b8" 
-              }
+              },
+              { 
+                "product_retailer_id": "69d3b6956b3269bbe44250f9"
+              },
+              { 
+                "product_retailer_id": "69d3ba9a6b3269bbe4466255" 
+              },
             ]
           },
           {
@@ -464,12 +470,6 @@ class MessageHandler {
                 "product_retailer_id": "69d3b8d75e7da3a2f603f359" 
               },
               { 
-                "product_retailer_id": "69d3b6956b3269bbe44250f9"
-              },
-              { 
-                "product_retailer_id": "69d3ba9a6b3269bbe4466255" 
-              },
-              { 
                 "product_retailer_id": "69d3b5e3524001f94ec45c0c" 
               },
               { 
@@ -483,6 +483,9 @@ class MessageHandler {
               },
               { 
                 "product_retailer_id": "69d3b7a04cb3c58862080ed8" 
+              },
+              { 
+                "product_retailer_id": "69d3b7e9deafcfb1d1e8b9bd" 
               },
             ]
           },
@@ -576,7 +579,10 @@ class MessageHandler {
               },
               { 
                 "product_retailer_id": "69c4be3ecfdc708e20244625" 
-              }
+              },
+              { 
+                "product_retailer_id": "69c4beb27362d1fe0b8c1f15" 
+              },
             ]
           },
           {
@@ -596,12 +602,6 @@ class MessageHandler {
               },
               { 
                 "product_retailer_id": "69d3ba195e7da3a2f604e744" 
-              },
-              { 
-                "product_retailer_id": "69d3b7e9deafcfb1d1e8b9bd" 
-              },
-              { 
-                "product_retailer_id": "69c4beb27362d1fe0b8c1f15" 
               },
               { 
                 "product_retailer_id": "69d3b7ce6d06a3361b4f8aa5" 
