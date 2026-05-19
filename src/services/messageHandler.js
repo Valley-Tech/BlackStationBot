@@ -1176,19 +1176,13 @@ class MessageHandler {
                 },
                 {
                   "product_retailer_id": "69c213d47896dea20a6e041f"
-                },
-                {
-                  "product_retailer_id": "69c213341a3df39f11ff6603"
-                },
-                {
-                  "product_retailer_id": "69c2116a19d90721373a4a40"
                 }
             ]
           }
         ]
       }
   }
-    const template = {
+    const template1 = {
       type: "product_list",
       header: { 
           type: "text",
@@ -1250,13 +1244,23 @@ class MessageHandler {
                 },
                 {
                   "product_retailer_id": "69c211f6f055928f6dd9e6fd"
+                },
+                {
+                  "product_retailer_id": "69c213341a3df39f11ff6603"
+                },
+                {
+                  "product_retailer_id": "69c2116a19d90721373a4a40"
                 }
             ]
           }
         ]
       }
   }
-    return await whatsappService.sendProductList(to, template);
+    //hacer un for para enviar ambos templates
+    const templates = [template, template1, ];
+    for (const temp of templates) {
+       await whatsappService.sendProductList(to, temp);
+    }
   }
 
   async catalogoSubMercado5(to) {
