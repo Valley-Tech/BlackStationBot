@@ -1106,10 +1106,16 @@ class MessageHandler {
                   "product_retailer_id": "69c2134b7896dea20a6de140"
                 },
                 {
+                  "product_retailer_id": "69c2150b7bff33f4a31e489a"
+                },
+                {
                   "product_retailer_id": "69c212467bff33f4a31d16ef"
                 },
                 {
                   "product_retailer_id": "69c2146919d90721373bacdd"
+                },
+                {
+                  "product_retailer_id": "69c2147b817aaac0ae621f7b"
                 },
                 {
                   "product_retailer_id": "69c211a7b5b1d14e317d0743"
@@ -1162,9 +1168,6 @@ class MessageHandler {
                 {
                   "product_retailer_id": "69c214907bff33f4a31e2a0c"
                 },
-                // {
-                //   "product_retailer_id": "69c214069d3d408699643684" //Metronidazol
-                // },
                 {
                   "product_retailer_id": "69c21543335b9ea55febfce1"
                 },
@@ -1179,6 +1182,74 @@ class MessageHandler {
                 },
                 {
                   "product_retailer_id": "69c2116a19d90721373a4a40"
+                }
+            ]
+          }
+        ]
+      }
+  }
+    const template = {
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Otros Medicamentos"
+        },
+        body: {
+          text: "Da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "MEDICAMENTOS",
+              "product_items": [
+                {
+                  "product_retailer_id": "69c214069d3d408699643684" //Metronidazol
+                },
+                {
+                  "product_retailer_id": "69d3b86d719c4da024d3fbcd"
+                },
+                {
+                  "product_retailer_id": "69c215b0fd71b5f79f5eb610"
+                },
+                {
+                  "product_retailer_id": "69c211401a3df39f11fe31df"
+                },
+                {
+                  "product_retailer_id": "69c2118c7bff33f4a31c8411"
+                },
+                {
+                  "product_retailer_id": "69c2115219d90721373a4231"
+                },
+                {
+                  "product_retailer_id": "69c212de1a3df39f11ff4702"
+                },
+                {
+                  "product_retailer_id": "69c21519fd71b5f79f5e6b4a"
+                },
+                {
+                  "product_retailer_id": "69c2179cf055928f6ddc177b"
+                },
+                {
+                  "product_retailer_id": "69c21767335b9ea55fecb407"
+                },
+                {
+                  "product_retailer_id": "69c2122f19d90721373aa785"
+                },
+                {
+                  "product_retailer_id": "69c2121a9d3d408699630a83"
+                },
+                {
+                  "product_retailer_id": "69c2100b9d3d408699612213"
+                },
+                {
+                  "product_retailer_id": "69c2158f19d90721373c0005"
+                },
+                {
+                  "product_retailer_id": "69c214f2335b9ea55febed87"
+                },
+                {
+                  "product_retailer_id": "69c211f6f055928f6dd9e6fd"
                 }
             ]
           }
@@ -1479,27 +1550,6 @@ class MessageHandler {
               {
                 "product_retailer_id": "69c366e63cce32fbe56b2d46"
               },
-              // {
-              //   "product_retailer_id": "69c3699e872399ad6473ba11"
-              // },
-              // {
-              //   "product_retailer_id": "69c36708bfb27e5db666e687"
-              // },
-              // {
-              //   "product_retailer_id": "69c36a71872399ad6473e5ee"
-              // },
-              // {
-              //   "product_retailer_id": "69c36a25872399ad6473d106"
-              // },
-              // {
-              //   "product_retailer_id": "69c369c31b70fbcf1bc4a8a7"
-              // },
-              // {
-              //   "product_retailer_id": "69c36a391b70fbcf1bc4c1e1"
-              // },
-              // {
-              //   "product_retailer_id": "69c36981bfb27e5db6675521"
-              // },
               {
                 "product_retailer_id": "69c36acdfd71b5f79f04cfe9"
               },
@@ -1562,18 +1612,12 @@ class MessageHandler {
               {
                 "product_retailer_id": "69c36c591b70fbcf1bc535dc"
               },
-              // {
-              //   "product_retailer_id": "69c36c6f3cce32fbe56caa6c"
-              // },
               {
                 "product_retailer_id": "69c368367896dea20a071cd7"
               },
               {
                 "product_retailer_id": "69c36793872399ad64732db2"
               },
-              // {
-              //   "product_retailer_id": "69c36c23bfb27e5db667eadb"
-              // },
               {
                 "product_retailer_id": "69c36c32fd71b5f79f05681c"
               },
@@ -1592,6 +1636,112 @@ class MessageHandler {
     }
     }
     const template1 = { 
+      type: "product_list",
+      header: { 
+          type: "text",
+          text: "Otras Salsas🥫 y Cocina🧂"
+        },
+        body: {
+          text: "da clic aquí"
+        },
+        action: {
+          catalog_id: "2277977052727019",
+          sections: [
+          {
+            "title": "SALSAS",
+            "product_items": [
+              {
+                "product_retailer_id": "69c3699e872399ad6473ba11"
+              },
+              {
+                "product_retailer_id": "69c36708bfb27e5db666e687"
+              },
+              {
+                "product_retailer_id": "69c36a71872399ad6473e5ee"
+              },
+              {
+                "product_retailer_id": "69c36a25872399ad6473d106"
+              },
+              {
+                "product_retailer_id": "69c369c31b70fbcf1bc4a8a7"
+              },
+              {
+                "product_retailer_id": "69c36a391b70fbcf1bc4c1e1"
+              },
+              {
+                "product_retailer_id": "69c36981bfb27e5db6675521"
+              },
+            ]
+          },
+          {
+            "title": "COCINA",
+              "product_items": [
+              {
+                "product_retailer_id": "69c36c6f3cce32fbe56caa6c"
+              },
+              {
+                "product_retailer_id": "69c36c23bfb27e5db667eadb"
+              },
+              {
+                "product_retailer_id": "69d3c3295e7da3a2f60dfe7a"
+              },
+              {
+                "product_retailer_id": "69d54d2bd35d817d1e092cb4"
+              },
+              {
+                "product_retailer_id": "69d54d17d35d817d1e08f69b"
+              },
+              {
+                "product_retailer_id": "69d51ff32440c8c597bc73cc"
+              },
+              {
+                "product_retailer_id": "69d52019337ef3c0cec2883c"
+              },
+              {
+                "product_retailer_id": "69d517536b3269bbe4d3c9ee"
+              },
+              {
+                "product_retailer_id": "69d51881deafcfb1d18d0b73"
+              },
+              {
+                "product_retailer_id": "69d3c2c9719c4da024dc9dd0"
+              },
+              {
+                "product_retailer_id": "69d7a634dde5ad5315998eaf"
+              },
+              {
+                "product_retailer_id": "69d5105a1e65c66f59bdd358"
+              },
+              {
+                "product_retailer_id": "69d522332440c8c597be946a"
+              },
+              {
+                "product_retailer_id": "69d521e7c7687b049a3d4a55"
+              },
+              {
+                "product_retailer_id": "69d66b2d8dab334394bb9e83"
+              },
+              {
+                "product_retailer_id": "69d5119b9bf0d32ae9b31493"
+              },
+              {
+                "product_retailer_id": "69d509639bf0d32ae9a9e963"
+              },
+              {
+                "product_retailer_id": "69d521259bf0d32ae9c47f6a"
+              },
+              {
+                "product_retailer_id": "69d50976d35d817d1e91287c"
+              },
+              {
+                "product_retailer_id": "69d5204f2440c8c597bcac3b"
+              }
+            ]
+          }
+        ]
+    }
+    }
+    const template2 = { 
       type: "product_list",
       header: { 
           type: "text",
@@ -1704,7 +1854,7 @@ class MessageHandler {
         ]
       }
     }
-    const template2 = { 
+    const template3 = { 
       type: "product_list",
       header: { 
           type: "text",
@@ -1812,7 +1962,7 @@ class MessageHandler {
     }
     }
     //hacer un for para enviar ambos templates
-    const templates = [template, template1, template2];
+    const templates = [template, template1, template2, template3];
     for (const temp of templates) {
        await whatsappService.sendProductList(to, temp);
     }
@@ -2471,6 +2621,9 @@ class MessageHandler {
           {
             "title": "TÉS",
             "product_items": [
+              {
+                "product_retailer_id": "69d3c1a22440c8c59729a6de"
+              },
               {
                 "product_retailer_id": "69d3bd97337ef3c0ce1cf54b"
               },
