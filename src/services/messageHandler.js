@@ -2868,11 +2868,9 @@ class MessageHandler {
 
       // Crear un prompt para que Gemini extraiga los IDs de los productos de la respuesta anterior
       const promptExtraccion = `
-      [SISTEMA]: Basándote en la siguiente respuesta de una IA que sugirió productos, extrae SOLO los IDs de los productos que menciona a continuación:
-
+      [SISTEMA]: La siguiente respuesta es o son los productos que la IA encontró relacionados con la búsqueda del usuario:
 "${respuestaAnterior}"
-
-Responde ÚNICAMENTE con los IDs de los productos, uno por línea, sin explicaciones adicionales.
+Responde ÚNICAMENTE con los IDs de los productos anteriores, uno por línea, sin explicaciones adicionales.
 Si no hay IDs, responde: "No hay productos disponibles"
 `;
 
@@ -3112,7 +3110,7 @@ completeOrder(productos, data) {
 
     switch (state.step) {
       case 'question':
-        response = await geminiService(message, to);
+        response = await geminiService("[USUARIO]: " + message, to);
         // Guardar la respuesta de Gemini en memoria para procesarla después
         assistantResponseMap[to] = response;
         break;
@@ -3128,7 +3126,7 @@ completeOrder(productos, data) {
   async handleAssistant(userId, message) {
     try {
       // Obtener respuesta de Gemini con memoria de conversación
-      const response = await geminiService(message, userId);
+      const response = await geminiService("[USUARIO]: " + message, userId);
       
       // Enviar respuesta al usuario
       await whatsappService.sendMessage(userId, response);
