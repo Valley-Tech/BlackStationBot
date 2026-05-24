@@ -76,7 +76,7 @@ class WhatsAppService {
           type: "flow",
           header: {
             type: "text",
-            text: "Dame tus datos: "
+            text: "Dame tus datos para el domicilio: "
           },
           body: { 
             text: "Haz clic aquí 👇" 
@@ -128,6 +128,10 @@ class WhatsAppService {
                 {
                     "type": "text",
                     "text": variables[3]
+                },
+                {
+                    "type": "text",
+                    "text": variables[4]
                 }
               ]
             }

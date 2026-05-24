@@ -40,6 +40,7 @@ export const getNextScreen = async (decryptedBody, productos, total, pedidoStr, 
         (total += 3000).toLocaleString('es-CO');
         if (data.recomendacion) {
           details = `Nombre:    ${data.name}\n
+Telefono:    ${data.phone}\n
 Pedido: 
 ${pedidoStr}\n
 Total: $${total} (Domicilio: $3.000)\n
@@ -47,6 +48,7 @@ Medio de pago:    ${data.pago}\n
 Recomendaciones:    ${data.recomendacion}`;
         } else {
           details = `Nombre:    ${data.name}\n
+Telefono:    ${data.phone}\n
 Pedido: 
 ${pedidoStr}\n
 Total: $${total} (Domicilio: $3.000)\n

@@ -63,12 +63,14 @@ class MessageHandler {
         
         // 3. Enviar la imagen al número oficial
         const nombre = datosUsuario.name || "";
+        const telefono = datosUsuario.phone || "";
         const direccion = datosUsuario.address || "";
         const monto = datosUsuario.monto || "";
         const pedido = datosUsuario.pedidoStr || "";
 
         const templateVars = [
           nombre,
+          telefono,
           direccion,
           pedido,
           monto ? monto.toLocaleString('es-CO') : "",
@@ -3039,9 +3041,11 @@ async handleWompiEvent(transaction) {
       userData = [
         numero,
         data.name,
+        data.phone,
         productos,
         data.address,
         data.pago,
+        data.billete,
         total.toLocaleString('es-CO'),
         data.recomendacion,
         fechayhora,
