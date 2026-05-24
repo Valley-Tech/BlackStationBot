@@ -59,82 +59,114 @@ async function ensureSheetExists(auth, spreadsheetId, sheetName) {
         });
     }
 }
+// Para actualizar el estado del pago, se busca la fila por número y fecha/hora exactos, y luego se actualiza solo la columna "Estado del Pago".
+// export const saveUserDataByNumber = async (datos, spreadsheetId) => {
+//   try {
+//     const auth = new google.auth.GoogleAuth({
+//       credentials: {
+//         type: process.env.GOOGLE_TYPE,
+//         project_id: process.env.GOOGLE_PROJECT_ID,
+//         private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
+//         private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+//         client_email: process.env.GOOGLE_CLIENT_EMAIL,
+//         client_id: process.env.GOOGLE_CLIENT_ID,
+//         auth_uri: process.env.GOOGLE_AUTH_URI,
+//         token_uri: process.env.TOKEN_URI,
+//         auth_provider_x509_cert_url: process.env.GOOGLE_AUTH_PROVIDER_X509_CERT_URL,
+//         client_x509_cert_url: process.env.GOOGLE_CLIENT_X509_CERT_URL,
+//       },
+//       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+//     });
 
-export const saveUserDataByNumber = async (datos, spreadsheetId) => {
-  try {
-    const auth = new google.auth.GoogleAuth({
-      credentials: {
-        type: process.env.GOOGLE_TYPE,
-        project_id: process.env.GOOGLE_PROJECT_ID,
-        private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
-        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-        client_email: process.env.GOOGLE_CLIENT_EMAIL,
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        auth_uri: process.env.GOOGLE_AUTH_URI,
-        token_uri: process.env.TOKEN_URI,
-        auth_provider_x509_cert_url: process.env.GOOGLE_AUTH_PROVIDER_X509_CERT_URL,
-        client_x509_cert_url: process.env.GOOGLE_CLIENT_X509_CERT_URL,
-      },
-      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-    });
+//     const authClient = await auth.getClient();
+//     const sheetName = getTodaySheetName();
 
-    const authClient = await auth.getClient();
-    const sheetName = getTodaySheetName();
+//     // Leemos todas las filas (A2:H, suponiendo que la fecha/hora está en la columna H)
+//     const response = await sheets.spreadsheets.values.get({
+//       spreadsheetId,
+//       range: `${sheetName}!A2:H`,
+//       auth: authClient,
+//     });
 
-    // Leemos todas las filas (A2:H, suponiendo que la fecha/hora está en la columna H)
-    const response = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range: `${sheetName}!A2:H`,
-      auth: authClient,
-    });
+//     const rows = response.data.values || [];
+//     const numero = datos.numero;
+//     const fechayhora = datos.fechayhora;
 
-    const rows = response.data.values || [];
-    const numero = datos.numero;
-    const fechayhora = datos.fechayhora;
+//     // Busca la fila por número y fecha/hora exactos
+//     const rowIndex = rows.findIndex(row => row[0] == numero && row[7] == fechayhora);
+//     if (rowIndex === -1) {
+//       console.error(`No se encontró el pedido para número ${numero} y fecha/hora ${fechayhora}`);
+//       return false;
+//     }
+//     const sheetRow = rowIndex + 2; // A2 = fila 2
 
-    // Busca la fila por número y fecha/hora exactos
-    const rowIndex = rows.findIndex(row => row[0] == numero && row[7] == fechayhora);
-    if (rowIndex === -1) {
-      console.error(`No se encontró el pedido para número ${numero} y fecha/hora ${fechayhora}`);
-      return false;
-    }
-    const sheetRow = rowIndex + 2; // A2 = fila 2
+//     // Actualiza solo la columna "Estado del Pago" (ajusta la letra si tu hoja cambia)
+//     const updateRange = `${sheetName}!I${sheetRow}`;
+//     const estadoPago = datos.estado;
+//     const values = [[estadoPago]];
 
-    // Actualiza solo la columna "Estado del Pago" (ajusta la letra si tu hoja cambia)
-    const updateRange = `${sheetName}!I${sheetRow}`;
-    const estadoPago = datos.estado;
-    const values = [[estadoPago]];
+//     await sheets.spreadsheets.values.update({
+//       spreadsheetId,
+//       range: updateRange,
+//       valueInputOption: 'RAW',
+//       resource: { values },
+//       auth: authClient,
+//     });
 
-    await sheets.spreadsheets.values.update({
-      spreadsheetId,
-      range: updateRange,
-      valueInputOption: 'RAW',
-      resource: { values },
-      auth: authClient,
-    });
-
-    return true;
-  } catch (error) {
-    console.error("Error guardando estado de pago:", error.message);
-    return false;
-  }
-};
+//     return true;
+//   } catch (error) {
+//     console.error("Error guardando estado de pago:", error.message);
+//     return false;
+//   }
+// };
 
 async function addRowToSheet(auth, spreadsheetId, values, sheetName) {
-    const request = {
-        spreadsheetId,
-        range: `${sheetName}`,
-        valueInputOption: 'RAW',
-        insertDataOption: 'INSERT_ROWS',
-        resource: {
-            values: [values],
-        },
-        auth,
-    };
-
     try {
-        const response = (await sheets.spreadsheets.values.append(request)).data;
-        return response;
+        // Obtener el ID de la hoja
+        const getSheets = await sheets.spreadsheets.get({
+            spreadsheetId,
+            auth,
+        });
+        const sheet = getSheets.data.sheets.find(
+            (s) => s.properties.title === sheetName
+        );
+        const sheetId = sheet.properties.sheetId;
+
+        // Insertar una nueva fila en la posición A2 (índice 1)
+        const insertRequest = {
+            spreadsheetId,
+            auth,
+            requestBody: {
+                requests: [
+                    {
+                        insertRange: {
+                            range: {
+                                sheetId: sheetId,
+                                dimension: 'ROWS',
+                                startIndex: 1, // Fila 2 (índice 1)
+                                endIndex: 2,   // Insertar 1 fila
+                            },
+                        },
+                    },
+                ],
+            },
+        };
+
+        await sheets.spreadsheets.batchUpdate(insertRequest);
+
+        // Actualizar la nueva fila A2 con los valores
+        const updateRequest = {
+            spreadsheetId,
+            range: `${sheetName}!A2`,
+            valueInputOption: 'RAW',
+            resource: {
+                values: [values],
+            },
+            auth,
+        };
+
+        const response = await sheets.spreadsheets.values.update(updateRequest);
+        return response.data;
     } catch (error) {
         console.error(error);
     }

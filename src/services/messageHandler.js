@@ -3046,7 +3046,7 @@ async handleWompiEvent(transaction) {
         data.recomendacion,
         fechayhora,
       ]
-    paymentRowMap[numero] = fechayhora;
+    // paymentRowMap[numero] = fechayhora; // Para habilitar el seguimiento del pago en Wompi
     appendToSheet(userData, spreadsheetId);
   }
   
