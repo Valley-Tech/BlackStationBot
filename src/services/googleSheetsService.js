@@ -59,71 +59,11 @@ async function ensureSheetExists(auth, spreadsheetId, sheetName) {
         });
     }
 }
-// Para actualizar el estado del pago, se busca la fila por número y fecha/hora exactos, y luego se actualiza solo la columna "Estado del Pago".
-// export const saveUserDataByNumber = async (datos, spreadsheetId) => {
-//   try {
-//     const auth = new google.auth.GoogleAuth({
-//       credentials: {
-//         type: process.env.GOOGLE_TYPE,
-//         project_id: process.env.GOOGLE_PROJECT_ID,
-//         private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
-//         private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-//         client_email: process.env.GOOGLE_CLIENT_EMAIL,
-//         client_id: process.env.GOOGLE_CLIENT_ID,
-//         auth_uri: process.env.GOOGLE_AUTH_URI,
-//         token_uri: process.env.TOKEN_URI,
-//         auth_provider_x509_cert_url: process.env.GOOGLE_AUTH_PROVIDER_X509_CERT_URL,
-//         client_x509_cert_url: process.env.GOOGLE_CLIENT_X509_CERT_URL,
-//       },
-//       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-//     });
-
-//     const authClient = await auth.getClient();
-//     const sheetName = getTodaySheetName();
-
-//     // Leemos todas las filas (A2:H, suponiendo que la fecha/hora está en la columna H)
-//     const response = await sheets.spreadsheets.values.get({
-//       spreadsheetId,
-//       range: `${sheetName}!A2:H`,
-//       auth: authClient,
-//     });
-
-//     const rows = response.data.values || [];
-//     const numero = datos.numero;
-//     const fechayhora = datos.fechayhora;
-
-//     // Busca la fila por número y fecha/hora exactos
-//     const rowIndex = rows.findIndex(row => row[0] == numero && row[7] == fechayhora);
-//     if (rowIndex === -1) {
-//       console.error(`No se encontró el pedido para número ${numero} y fecha/hora ${fechayhora}`);
-//       return false;
-//     }
-//     const sheetRow = rowIndex + 2; // A2 = fila 2
-
-//     // Actualiza solo la columna "Estado del Pago" (ajusta la letra si tu hoja cambia)
-//     const updateRange = `${sheetName}!I${sheetRow}`;
-//     const estadoPago = datos.estado;
-//     const values = [[estadoPago]];
-
-//     await sheets.spreadsheets.values.update({
-//       spreadsheetId,
-//       range: updateRange,
-//       valueInputOption: 'RAW',
-//       resource: { values },
-//       auth: authClient,
-//     });
-
-//     return true;
-//   } catch (error) {
-//     console.error("Error guardando estado de pago:", error.message);
-//     return false;
-//   }
-// };
 
 async function addRowToSheet(auth, spreadsheetId, values, sheetName) {
     const request = {
         spreadsheetId,
-        range: `${sheetName}!A2`,
+        range: `${sheetName}`,
         valueInputOption: 'RAW',
         insertDataOption: 'INSERT_ROWS',
         resource: {
