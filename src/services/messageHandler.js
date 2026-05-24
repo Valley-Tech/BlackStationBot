@@ -3101,7 +3101,7 @@ completeOrder(productos, data) {
     const state = this.assistantState[to];
     let response;
 
-    const menuMessage = "¿Esto es lo que quieres?";
+    const menuMessage = "¿Esto es lo que buscas?\n\nSi hay varias opciones, da click en corregir para decirme de las opciones lo que necesitas.";
     const buttons = [
       { type: 'reply', reply: { id: 'finalizar', title: "Si, Gracias 😊" } },
       { type: 'reply', reply: { id: 'buscar', title: 'No, corregir' } },
