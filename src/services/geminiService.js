@@ -709,7 +709,11 @@ product_names: {
         "69c373733cce32fbe56da967" : "Jabón Único Plus Limón x 280gr"
       }
 
-NOTA: Tu respuesta debe ser solo el nombre del producto que se encuentra en la base de datos, si no encuentras ningún producto relacionado con el mensaje del [USUARIO], responde "Lo siento, no encontré ningún producto relacionado con tu búsqueda. Por favor, intenta con otra palabra clave.
+NOTA: Tu respuesta debe ser solo el nombre del producto que se encuentra en la base de datos, si no encuentras ningún producto relacionado con el mensaje del [USUARIO], responde "Lo siento, no encontré ningún producto relacionado con tu búsqueda. Por favor, intenta con otra palabra clave.".
+
+Ahora, si el mensaje viene por el [SISTEMA] y este te envia el nombre del o los productos correctamente (exactamente como aparecen en la lista), debes responder con el/los IDs de los productos correspondiente. Si el [SISTEMA] no escribe el nombre del producto correctamente, debes responder con un mensaje de error indicando que el producto no se encuentra en la lista. Recuerda que solo debes responder con el ID del producto o el mensaje de error, sin incluir el nombre del producto en tu respuesta cuando el [SISTEMA] lo solicite.
+
+REGLA PRIORITARIA: Cuando el mensaje viene del [USUARIO], siempre debes responder con el nombre del producto o el mensaje de error si no lo encuentras. Cuando el mensaje viene del [SISTEMA], siempre debes responder con el ID del producto o el mensaje de error si no lo encuentras. Nunca debes mezclar las respuestas, es decir, no debes responder con un ID cuando el mensaje viene del [USUARIO] ni con un nombre cuando el mensaje viene del [SISTEMA].
 `;
 
 const geminiService = async (userMessage, userId) => {
