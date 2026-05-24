@@ -3,7 +3,7 @@ import appendToSheet from './googleSheetsService.js';
 import geminiService from './geminiService.js';
 import { createWompiPaymentLink, getWompiTransactionStatus } from './wompiService.js';
 import { enviarPedidoALoggro } from './loggroService.js';
-import { saveUserDataByNumber } from './googleSheetsService.js';
+// import { saveUserDataByNumber } from './googleSheetsService.js';
 import { printDetailedError } from './printDetailError.js';
 import { downloadImageFromMeta } from './httpRequest/sendToWhatsApp.js';
 import { uploadToPublicStorage } from './awsS3Service.js';
@@ -2984,7 +2984,7 @@ async handleWompiEvent(transaction) {
       estadoPago = "Pendiente";
     }
     const fechayhora = paymentRowMap[phone]
-    await saveUserDataByNumber({ numero: phone, fechayhora, estado: estadoPago }, spreadsheetId);
+    // await saveUserDataByNumber({ numero: phone, fechayhora, estado: estadoPago }, spreadsheetId);
 
       let statusMsg = "";
       if (status === "APPROVED") {
