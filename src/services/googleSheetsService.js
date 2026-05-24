@@ -121,52 +121,20 @@ async function ensureSheetExists(auth, spreadsheetId, sheetName) {
 // };
 
 async function addRowToSheet(auth, spreadsheetId, values, sheetName) {
+    const request = {
+        spreadsheetId,
+        range: `${sheetName}!A2`,
+        valueInputOption: 'RAW',
+        insertDataOption: 'INSERT_ROWS',
+        resource: {
+            values: [values],
+        },
+        auth,
+    };
+
     try {
-        // Obtener el ID de la hoja
-        const getSheets = await sheets.spreadsheets.get({
-            spreadsheetId,
-            auth,
-        });
-        const sheet = getSheets.data.sheets.find(
-            (s) => s.properties.title === sheetName
-        );
-        const sheetId = sheet.properties.sheetId;
-
-        // Insertar una nueva fila en la posición A2 (índice 1)
-        const insertRequest = {
-            spreadsheetId,
-            auth,
-            requestBody: {
-                requests: [
-                    {
-                        insertRange: {
-                            range: {
-                                sheetId: sheetId,
-                                dimension: 'ROWS',
-                                startIndex: 1, // Fila 2 (índice 1)
-                                endIndex: 2,   // Insertar 1 fila
-                            },
-                        },
-                    },
-                ],
-            },
-        };
-
-        await sheets.spreadsheets.batchUpdate(insertRequest);
-
-        // Actualizar la nueva fila A2 con los valores
-        const updateRequest = {
-            spreadsheetId,
-            range: `${sheetName}!A2`,
-            valueInputOption: 'RAW',
-            resource: {
-                values: [values],
-            },
-            auth,
-        };
-
-        const response = await sheets.spreadsheets.values.update(updateRequest);
-        return response.data;
+        const response = (await sheets.spreadsheets.values.append(request)).data;
+        return response;
     } catch (error) {
         console.error(error);
     }
