@@ -3135,8 +3135,15 @@ completeOrder(productos, data) {
       // Obtener respuesta de Gemini con memoria de conversación
       const response = await geminiService("[USUARIO]: " + message, userId);
       
+      const menuMessage = "¿Esto es lo que buscas?\n\nSi hay varias opciones, da click en corregir para decirme de las opciones lo que necesitas.";
+      const buttons = [
+      { type: 'reply', reply: { id: 'finalizar', title: "Si, Gracias 😊" } },
+      { type: 'reply', reply: { id: 'buscar', title: 'No, corregir' } },
+      // { type: 'reply', reply: { id: '', title: 'Hablar con asesor 🤵' } }
+    ];
       // Enviar respuesta al usuario
       await whatsappService.sendMessage(userId, response);
+      await whatsappService.sendInteractiveButtons(userId, menuMessage, buttons);
     } catch (error) {
       console.error("Error en handleAssistant:", error);
       printDetailedError(error);
