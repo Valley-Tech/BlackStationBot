@@ -119,6 +119,9 @@ class MessageHandler {
   return (
     lower.includes('que') ||
     lower.includes('qué') ||
+    lower.includes('quiero') ||
+    lower.includes('quisiera') ||
+    lower.includes('necesito') ||
     lower.includes('quien') ||
     lower.includes('quién') ||
     lower.includes('cual') ||
@@ -2852,7 +2855,7 @@ class MessageHandler {
         response = 'Dime que quieres comprar, por favor sé específico: ';
         break;
       default:
-        response = "Oops😔\nPorfa, elige una de las opciones del menú o escribe *Hola* para volver a empezar";
+        response = "Oops😔\nPorfa, elige una de las opciones del menú o escribe *Hola* para volver a empezar\n\nPara buscar lo que necesitas, escríbeme lo utilizando el signo *¿?* ";
     }
     if (response) {
       await whatsappService.sendMessage(to, response);
