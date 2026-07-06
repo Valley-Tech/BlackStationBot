@@ -3134,7 +3134,7 @@ completeOrder(productos, data) {
     try {
       // Obtener respuesta de Gemini con memoria de conversación
       const response = await geminiService("[USUARIO]: " + message, userId);
-      
+      assistantResponseMap[userId] = response;
       const menuMessage = "¿Esto es lo que buscas?\n\nSi hay varias opciones, da click en corregir para decirme de las opciones lo que necesitas.";
       const buttons = [
       { type: 'reply', reply: { id: 'finalizar', title: "Si, Gracias 😊" } },
