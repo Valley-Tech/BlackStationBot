@@ -747,7 +747,7 @@ const geminiService = async (userMessage, userId) => {
       history: chatHistory,
       generationConfig: {
         maxOutputTokens: 4096,
-        temperature: 0.7,
+        temperature: 0.1,
         topP: 0.9,
         topK: 40
       }
