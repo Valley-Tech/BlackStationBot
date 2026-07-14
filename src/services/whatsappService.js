@@ -36,7 +36,7 @@ class WhatsAppService {
         messaging_product: 'whatsapp',
         to,
         type: 'interactive',
-        interactive: listMessage.interactive ? listMessage.interactive : listMessage
+        interactive: listMessage
       };
       await sendToWhatsApp(data);
     } catch (error) {
