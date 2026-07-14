@@ -3126,7 +3126,30 @@ completeOrder(productos, data) {
     }
 
     delete this.assistantState[to];
-    await whatsappService.sendMessage(to, response);
+    // await whatsappService.sendMessage(to, response);
+    // Codigo para hacer un for loop de todos los productos que Gemini encontró y enviarlos por medio de un mensaje interactivo de lista (botón list), se debe editar el campo "rows" de la cantidad de productos encontratos (maximo 10) y enviar un mensaje interactivo de lista de todos los productos encontrado, si hay más de 10 productos encontrados, se debe enviar otro mensaje interactivo de lista con los productos restantes, y así sucesivamente hasta enviar todos los productos encontrados.
+    const listMessage = {
+      type: "interactive",
+      interactive: {
+        type: "list",
+        body: {
+          text: "Productos encontrados:"
+        },
+        action: {
+          button: "Productos",
+          sections: [
+            {
+              title: "Opciones encontradas:",
+              rows: response.split("\n").map((item, index) => ({
+                id: `product_${index + 1}`,
+                title: item
+              }))
+            }
+          ]
+        }
+      }
+    };
+    await whatsappService.sendListMessage(to, listMessage);
     await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
   }
 
