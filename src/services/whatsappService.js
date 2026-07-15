@@ -91,11 +91,64 @@ class WhatsAppService {
     }
   }
 
+  async sendTemplatePedidoMessage(imageUrl, variables) {
+    try {
+      const data = {
+        messaging_product: 'whatsapp',
+        to: "573162822076", //573233082273
+        type: 'template',
+        template: {
+          name: "confirmacion_reserva",
+          language: { code: "es_CO" },
+          components: [
+            {
+              type: "header",
+              parameters: [
+                {
+                  type: "image",
+                  image: { link: imageUrl }
+                }
+              ]
+            },
+            {
+              type: "body",
+              parameters: [
+                {
+                  "type": "text",
+                  "text": variables[0]
+                },
+                {
+                    "type": "text",
+                    "text": variables[1]
+                },
+                {
+                    "type": "text",
+                    "text": variables[2]
+                },
+                {
+                    "type": "text",
+                    "text": variables[3]
+                },
+                {
+                    "type": "text",
+                    "text": variables[4]
+                }
+              ]
+            }
+          ]
+        }
+      };
+      await sendToWhatsApp(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async sendTemplateMediaMessage(imageUrl, variables) {
     try {
       const data = {
         messaging_product: 'whatsapp',
-        to: "573233082273",
+        to: "573162822076", //573233082273
         type: 'template',
         template: {
           name: "comprobante_pago",
@@ -143,7 +196,6 @@ class WhatsAppService {
       console.log(error);
     }
   }
-  
   async sendFlowReserva(to, action) {
     try {
       const data = {

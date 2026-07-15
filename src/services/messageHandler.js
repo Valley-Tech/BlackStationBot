@@ -2925,16 +2925,16 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
       if (datosPedido.datos.pago === "Efectivo") {
         const templateVars = [
           datosPedido.datos.name,
+          datosPedido.datos.phone,
           datosPedido.datos.address,
           pedidoStr,
           datosPedido.monto
         ];
-        await whatsappService.sendTemplateMediaMessage(
+        await whatsappService.sendTemplatePedidoMessage(
           "https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",
           templateVars
         );
         response = "✅¡Pedido recibido!\nPronto nos pondremos en contacto contigo! 🤗";
-        // await this.menuOpcionalHiring(to);
       } else if (datosPedido.datos.pago === "Codigo QR") { //Era antes PSE
         try {
           userOrderDataMap[to] = {
