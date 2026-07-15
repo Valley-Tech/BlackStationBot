@@ -3123,8 +3123,18 @@ completeOrder(productos, data) {
     }
 
     delete this.assistantState[to];
-    // await whatsappService.sendMessage(to, response);
-    // Codigo para hacer un for loop de todos los productos que Gemini encontró y enviarlos por medio de un mensaje interactivo de lista (botón list), se debe editar el campo "rows" de la cantidad de productos encontratos (maximo 10) y enviar un mensaje interactivo de lista de todos los productos encontrado, si hay más de 10 productos encontrados, se debe enviar otro mensaje interactivo de lista con los productos restantes, y así sucesivamente hasta enviar todos los productos encontrados.
+    
+    // Parseamos la respuesta en líneas limpias (sin bullets ni líneas vacías)
+    const productLines = response
+      .split("\n")
+      .map(line => line.replace(/^[-•*]\s*/, "").trim())
+      .filter(line => line.length > 0);
+
+    // Dividimos en chunks de máximo 10 (límite de WhatsApp por mensaje list)
+    const chunkSize = 10;
+    for (let i = 0; i < productLines.length; i += chunkSize) {
+      const chunk = productLines.slice(i, i + chunkSize);
+        
     const listMessage = {
         type: "list",
         body: {
@@ -3134,11 +3144,11 @@ completeOrder(productos, data) {
           button: "Productos",
           sections: [
             {
-              title: "Opciones encontradas:",
-              rows: [response.split("\n").map((item, index) => ({
-                id: `product_${index + 1}`,
-                title: item
-              }))]
+              rows: chunk.map((item, index) => ({
+                id: `product_${i + index + 1}`,
+                // WhatsApp corta el title a 24 caracteres, si no lo truncas tú, la API rechaza el mensaje
+                title: item.length > 24 ? item.slice(0, 23).trim() + "…" : item
+              }))
             }
           ]
         }
