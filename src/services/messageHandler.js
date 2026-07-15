@@ -3154,8 +3154,9 @@ completeOrder(productos, data) {
         }
     };
     await whatsappService.sendListMessage(to, listMessage);
-    await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
   }
+  await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
+}
 
   async handleAssistant(userId, message) {
     try {
