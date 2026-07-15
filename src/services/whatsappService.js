@@ -95,7 +95,7 @@ class WhatsAppService {
     try {
       const data = {
         messaging_product: 'whatsapp',
-        to: "573162822076", //573233082273
+        to: "573233082273",
         type: 'template',
         template: {
           name: "confirmacion_reserva",
@@ -148,7 +148,7 @@ class WhatsAppService {
     try {
       const data = {
         messaging_product: 'whatsapp',
-        to: "573162822076", //573233082273
+        to: "573233082273",
         type: 'template',
         template: {
           name: "comprobante_pago",
