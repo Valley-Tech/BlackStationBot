@@ -47,7 +47,14 @@ class MessageHandler {
         } else if (message?.interactive.type === 'list_reply') {
           // <-- Aquí manejas la respuesta de la lista
           const option = message?.interactive?.list_reply?.id;
-          await this.handleMenuOption(message.from, option);
+          const currentState = this.assistantState[message.from];
+          if (currentState?.step === 'product_selection') {
+            // Viene de la lista de productos generada por la IA
+            await this.handleProductSelection(message.from, option);
+          } else {
+            // Viene del menú de bienvenida u otro list message
+            await this.handleMenuOption(message.from, option);
+          }
           await whatsappService.markAsRead(message.id);
         } else {
           const option = message?.interactive?.button_reply?.id;
@@ -3115,8 +3122,6 @@ completeOrder(productos, data) {
     switch (state.step) {
       case 'question':
         response = await geminiService("[USUARIO]: " + message, to);
-        // Guardar la respuesta de Gemini en memoria para procesarla después
-        assistantResponseMap[to] = response;
         break;
       default:
         response = "Lo siento 😔 no entendí tu respuesta\nPor Favor, elige una de las opciones del menú.";
@@ -3145,7 +3150,7 @@ completeOrder(productos, data) {
           sections: [
             {
               rows: chunk.map((item, index) => ({
-                id: `product_${i + index + 1}`,
+                id: item,
                 // WhatsApp corta el title a 24 caracteres, si no lo truncas tú, la API rechaza el mensaje
                 title: item.length > 24 ? item.slice(0, 23).trim() + "…" : item
               }))
@@ -3153,9 +3158,21 @@ completeOrder(productos, data) {
           ]
         }
     };
+    this.assistantState[to] = { step: 'product_selection' };
+
     await whatsappService.sendListMessage(to, listMessage);
   }
   await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
+}
+
+async handleProductSelection(to, selectedProduct) {
+  delete this.assistantState[to]; // limpiamos el estado de selección de producto
+
+  // Guardamos el producto seleccionado para que procesarRespuestaAsistente() lo use
+  assistantResponseMap[to] = selectedProduct;
+
+  // Reutilizamos el flujo existente de 'finalizar', que ya sabe leer assistantResponseMap[to]
+  await this.handleMenuOption(to, 'finalizar');
 }
 
   async handleAssistant(userId, message) {
