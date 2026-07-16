@@ -2922,12 +2922,13 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
       if (datosPedido.datos.address) {
         (datosPedido.monto += 3000).toLocaleString('es-CO');
       }
+      const pedidoStrTemplate = pedidoStr.replace(/\n/g, ' | ');
       if (datosPedido.datos.pago === "Efectivo") {
         const templateVars = [
           datosPedido.datos.name,
           datosPedido.datos.phone,
           datosPedido.datos.address,
-          pedidoStr,
+          pedidoStrTemplate,
           datosPedido.monto
         ];
         await whatsappService.sendTemplatePedidoMessage(
@@ -2940,7 +2941,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
           userOrderDataMap[to] = {
             ...datosPedido.datos,
             monto: datosPedido.monto,
-            pedidoStr
+            pedidoStr: pedidoStrTemplate
           };
           // Enviar imagen de codigo QR con sendmediaMessage
           response = `*Resumen de tu compra*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP`;
@@ -2952,7 +2953,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
       userOrderDataMap[to] = {
         ...datosPedido.datos,
         monto: datosPedido.monto,
-        pedidoStr
+        pedidoStr: pedidoStrTemplate
       };
         response = `*Resumen de tu compra*🛒:\n\n${pedidoStr}\n*Total:* $${datosPedido.monto.toLocaleString('es-CO')} COP\n\n🏦Cuentas bancarias:\n\n*Nequi/Daviplata:* 3233082273\n\n*Bancolombia Ahorros:* 70416357747\n\n*Llave (Bre-B):* 0089662634\n\n🚨 Luego, envíanos el comprobante de la transferencia (captura) para confirmar tu pago 😊`;
       }
