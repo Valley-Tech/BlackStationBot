@@ -93,9 +93,16 @@ class WhatsAppService {
 
   async sendTemplatePedidoMessage(imageUrl, variables) {
     try {
+      const safeVariables = variables.map(v =>
+        String(v ?? '')
+          .replace(/[\n\t]/g, ' ')      // saltos de línea y tabs -> espacio
+          .replace(/ {2,}/g, ' ')       // colapsa espacios múltiples
+          .trim()
+      );
+
       const data = {
         messaging_product: 'whatsapp',
-        to: "573233082273",
+        to: "573162822076", //573233082273
         type: 'template',
         template: {
           name: "confirmacion_reserva",
@@ -112,28 +119,7 @@ class WhatsAppService {
             },
             {
               type: "body",
-              parameters: [
-                {
-                  "type": "text",
-                  "text": variables[0]
-                },
-                {
-                    "type": "text",
-                    "text": variables[1]
-                },
-                {
-                    "type": "text",
-                    "text": variables[2]
-                },
-                {
-                    "type": "text",
-                    "text": variables[3]
-                },
-                {
-                    "type": "text",
-                    "text": variables[4]
-                }
-              ]
+              parameters: safeVariables.map(text => ({ type: "text", text }))
             }
           ]
         }
@@ -146,9 +132,16 @@ class WhatsAppService {
 
   async sendTemplateMediaMessage(imageUrl, variables) {
     try {
+      const safeVariables = variables.map(v =>
+      String(v ?? '')
+        .replace(/[\n\t]/g, ' ')      // saltos de línea y tabs -> espacio
+        .replace(/ {2,}/g, ' ')       // colapsa espacios múltiples
+        .trim()
+      );
+      
       const data = {
         messaging_product: 'whatsapp',
-        to: "573233082273",
+        to: "573162822076", //573233082273
         type: 'template',
         template: {
           name: "comprobante_pago",
@@ -165,28 +158,7 @@ class WhatsAppService {
             },
             {
               type: "body",
-              parameters: [
-                {
-                  "type": "text",
-                  "text": variables[0]
-                },
-                {
-                    "type": "text",
-                    "text": variables[1]
-                },
-                {
-                    "type": "text",
-                    "text": variables[2]
-                },
-                {
-                    "type": "text",
-                    "text": variables[3]
-                },
-                {
-                    "type": "text",
-                    "text": variables[4]
-                }
-              ]
+              parameters: safeVariables.map(text => ({ type: "text", text }))
             }
           ]
         }
@@ -196,6 +168,7 @@ class WhatsAppService {
       console.log(error);
     }
   }
+  
   async sendFlowReserva(to, action) {
     try {
       const data = {
