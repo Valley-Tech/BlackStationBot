@@ -2922,14 +2922,14 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
       if (datosPedido.datos.address) {
         (datosPedido.monto += 3000).toLocaleString('es-CO');
       }
-      const pedidoStrTemplate = pedidoStr.replace(/\n/g, ' | ');
+      const pedidoStrTemplate = pedidoStr.replace(/\n/g, '  |  ');
       if (datosPedido.datos.pago === "Efectivo") {
         const templateVars = [
           datosPedido.datos.name,
           datosPedido.datos.phone,
           datosPedido.datos.address,
           pedidoStrTemplate,
-          datosPedido.monto
+          datosPedido.monto ? datosPedido.monto.toLocaleString('es-CO') : ""
         ];
         await whatsappService.sendTemplatePedidoMessage(
           "https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",

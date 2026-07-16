@@ -102,7 +102,7 @@ class WhatsAppService {
 
       const data = {
         messaging_product: 'whatsapp',
-        to: "573162822076", //573233082273
+        to: "573233082273",
         type: 'template',
         template: {
           name: "confirmacion_reserva",
@@ -141,7 +141,7 @@ class WhatsAppService {
       
       const data = {
         messaging_product: 'whatsapp',
-        to: "573162822076", //573233082273
+        to: "573233082273",
         type: 'template',
         template: {
           name: "comprobante_pago",
@@ -168,7 +168,7 @@ class WhatsAppService {
       console.log(error);
     }
   }
-  
+
   async sendFlowReserva(to, action) {
     try {
       const data = {
