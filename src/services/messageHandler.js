@@ -73,6 +73,7 @@ class MessageHandler {
         const telefono = datosUsuario.phone || "";
         const direccion = datosUsuario.address || "";
         const monto = datosUsuario.monto || "";
+        const pago = datosUsuario.pago || "";
         const pedido = datosUsuario.pedidoStr || "";
 
         const templateVars = [
@@ -80,6 +81,7 @@ class MessageHandler {
           telefono,
           direccion,
           pedido,
+          pago,
           monto ? monto.toLocaleString('es-CO') : "",
         ];
 
@@ -2938,6 +2940,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
           datosPedido.datos.phone,
           datosPedido.datos.address,
           pedidoStrTemplate,
+          datosPedido.datos.pago,
           datosPedido.monto ? datosPedido.monto.toLocaleString('es-CO') : ""
         ];
 
