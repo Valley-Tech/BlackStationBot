@@ -2945,7 +2945,7 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
           "573233082273", // Número secundario
           "573125030531", // Número principal
           "573161763710"
-        ];
+        ]; 
 
         for (const numero of numerosOficiales) {
           await whatsappService.sendTemplatePedidoMessage(
