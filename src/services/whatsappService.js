@@ -91,7 +91,7 @@ class WhatsAppService {
     }
   }
 
-  async sendTemplatePedidoMessage(imageUrl, variables) {
+  async sendTemplatePedidoMessage(to, imageUrl, variables) {
     try {
       const safeVariables = variables.map(v =>
         String(v ?? '')
@@ -102,7 +102,7 @@ class WhatsAppService {
 
       const data = {
         messaging_product: 'whatsapp',
-        to: "573233082273",
+        to: to,
         type: 'template',
         template: {
           name: "confirmacion_reserva",
@@ -130,7 +130,7 @@ class WhatsAppService {
     }
   }
 
-  async sendTemplateMediaMessage(imageUrl, variables) {
+  async sendTemplateMediaMessage(to, imageUrl, variables) {
     try {
       const safeVariables = variables.map(v =>
       String(v ?? '')
@@ -141,7 +141,7 @@ class WhatsAppService {
       
       const data = {
         messaging_product: 'whatsapp',
-        to: "573233082273",
+        to: to,
         type: 'template',
         template: {
           name: "comprobante_pago",

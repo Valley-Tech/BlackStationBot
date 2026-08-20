@@ -83,10 +83,19 @@ class MessageHandler {
           monto ? monto.toLocaleString('es-CO') : "",
         ];
 
-        await whatsappService.sendTemplateMediaMessage(
-          publicUrl,         // URL pública de la imagen en S3
-          templateVars
-        );
+        const numerosOficiales = [
+          "573233082273", // Número secundario
+          "573125030531", // Número principal
+          "573161763710"
+        ];
+
+        for (const numero of numerosOficiales) {
+          await whatsappService.sendTemplateMediaMessage(
+            numero,
+            publicUrl,         // URL pública de la imagen en S3
+            templateVars
+          );
+        }
         
         const msg = "Gracias por compartirnos el comprobante de tu pago ✅\n\nPronto nos pondremos en contacto contigo para confirmar tu compra 😊";
         await whatsappService.sendMessage(message.from, msg);
@@ -2931,10 +2940,20 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
           pedidoStrTemplate,
           datosPedido.monto ? datosPedido.monto.toLocaleString('es-CO') : ""
         ];
-        await whatsappService.sendTemplatePedidoMessage(
-          "https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",
-          templateVars
-        );
+
+        const numerosOficiales = [
+          "573233082273", // Número secundario
+          "573125030531", // Número principal
+          "573161763710"
+        ];
+
+        for (const numero of numerosOficiales) {
+          await whatsappService.sendTemplatePedidoMessage(
+            numero,
+            "https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",
+            templateVars
+          );
+        }
         response = "✅¡Pedido recibido!\nPronto nos pondremos en contacto contigo! 🤗";
       } else if (datosPedido.datos.pago === "Codigo QR") { //Era antes PSE
         try {
