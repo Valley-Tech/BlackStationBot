@@ -84,21 +84,26 @@ class MessageHandler {
           pago,
           monto ? monto.toLocaleString('es-CO') : "",
         ];
+        
+        await whatsappService.sendTemplateMediaMessage(
+          "573233082273",
+          publicUrl,         // URL pública de la imagen en S3
+          templateVars
+        );
 
         const numerosOficiales = [
-          "573233082273", // Número secundario
-          "573125030531", // Número principal
+          "573125030531",
           "573161763710"
         ];
 
         for (const numero of numerosOficiales) {
           await whatsappService.sendTemplateMediaMessage(
             numero,
-            publicUrl,         // URL pública de la imagen en S3
+            "https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",
             templateVars
           );
         }
-        
+
         const msg = "Gracias por compartirnos el comprobante de tu pago ✅\n\nPronto nos pondremos en contacto contigo para confirmar tu compra 😊";
         await whatsappService.sendMessage(message.from, msg);
       }
