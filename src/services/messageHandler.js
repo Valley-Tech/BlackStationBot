@@ -86,14 +86,14 @@ class MessageHandler {
         ];
         
         await whatsappService.sendTemplatePedidoMessage(
-          "573161763710",
+          "573233082273",
           "comprobante_pago",
           publicUrl,         // URL pública de la imagen en S3
           templateVars
         );
 
         await whatsappService.sendTemplatePedidoMessage(
-          "573161763710",
+          "573125030531",
           "nuevo_pedido",
           "https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",
           templateVars
@@ -2944,8 +2944,8 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
           datosPedido.monto ? datosPedido.monto.toLocaleString('es-CO') : ""
         ];
 
-        await whatsappService.sendTemplatePedidoMessage("573161763710","nuevo_pedido","https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",templateVars);
-        await whatsappService.sendTemplatePedidoMessage("573161763710","confirmacion_reserva","https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",templateVars);
+        await whatsappService.sendTemplatePedidoMessage("573125030531","nuevo_pedido","https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",templateVars);
+        await whatsappService.sendTemplatePedidoMessage("573233082273","confirmacion_reserva","https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",templateVars);
         
         response = "✅¡Pedido recibido!\nPronto nos pondremos en contacto contigo! 🤗";
       } else if (datosPedido.datos.pago === "Codigo QR") { //Era antes PSE
