@@ -91,7 +91,7 @@ class WhatsAppService {
     }
   }
 
-  async sendTemplatePedidoMessage(to, imageUrl, variables) {
+  async sendTemplatePedidoMessage(to, template, imageUrl, variables) {
     try {
       const safeVariables = variables.map(v =>
         String(v ?? '')
@@ -105,7 +105,7 @@ class WhatsAppService {
         to: to,
         type: 'template',
         template: {
-          name: "confirmacion_reserva",
+          name: template,
           language: { code: "es_CO" },
           components: [
             {

@@ -2949,19 +2949,9 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
           datosPedido.monto ? datosPedido.monto.toLocaleString('es-CO') : ""
         ];
 
-        const numerosOficiales = [
-          "573233082273", // Número secundario
-          "573125030531", // Número principal
-          "573161763710"
-        ]; 
-
-        for (const numero of numerosOficiales) {
-          await whatsappService.sendTemplatePedidoMessage(
-            numero,
-            "https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",
-            templateVars
-          );
-        }
+        await whatsappService.sendTemplatePedidoMessage("573161763710","nuevo_pedido","https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",templateVars);
+        await whatsappService.sendTemplatePedidoMessage("573161763710","confirmacion_reserva","https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",templateVars);
+        
         response = "✅¡Pedido recibido!\nPronto nos pondremos en contacto contigo! 🤗";
       } else if (datosPedido.datos.pago === "Codigo QR") { //Era antes PSE
         try {
