@@ -85,11 +85,11 @@ class MessageHandler {
           monto ? monto.toLocaleString('es-CO') : "",
         ];
         
-        await whatsappService.sendTemplateMediaMessage(
-          "573233082273",
-          publicUrl,         // URL pública de la imagen en S3
-          templateVars
-        );
+        // await whatsappService.sendTemplateMediaMessage(
+        //   "573233082273",
+        //   publicUrl,         // URL pública de la imagen en S3
+        //   templateVars
+        // );
 
         const numerosOficiales = [
           "573125030531",
