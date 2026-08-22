@@ -86,14 +86,14 @@ class MessageHandler {
         ];
         
         await whatsappService.sendTemplatePedidoMessage(
-          "573233082273",
+          "573233082273", // Número de Andres
           "comprobante_pago",
           publicUrl,         // URL pública de la imagen en S3
           templateVars
         );
 
         await whatsappService.sendTemplatePedidoMessage(
-          "573125030531",
+          "573125030531", // Número de Lucho
           "nuevo_pedido",
           "https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",
           templateVars
@@ -2944,8 +2944,8 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
           datosPedido.monto ? datosPedido.monto.toLocaleString('es-CO') : ""
         ];
 
-        await whatsappService.sendTemplatePedidoMessage("573125030531","nuevo_pedido","https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",templateVars);
-        await whatsappService.sendTemplatePedidoMessage("573233082273","confirmacion_reserva","https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",templateVars);
+        await whatsappService.sendTemplatePedidoMessage("573125030531","nuevo_pedido","https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",templateVars); // Número de Lucho
+        await whatsappService.sendTemplatePedidoMessage("573233082273","confirmacion_reserva","https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",templateVars); // Número de Andres
         
         response = "✅¡Pedido recibido!\nPronto nos pondremos en contacto contigo! 🤗";
       } else if (datosPedido.datos.pago === "Codigo QR") { //Era antes PSE
