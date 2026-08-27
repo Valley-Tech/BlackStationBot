@@ -31,7 +31,7 @@ function horarioJose() {
   const hour = colombiaTime.getHours();
   const minute = colombiaTime.getMinutes();
 
-  const opening = 12 * 60; // 2:00 p.m. en minutos 
+  const opening = 14 * 60; // 2:00 p.m. en minutos 
   const closing = 22 * 60; // 10:00 p.m. en minutos
   const current = hour * 60 + minute;
 
