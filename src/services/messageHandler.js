@@ -24,11 +24,18 @@ function horarioLaboral() {
   return current >= opening && current < closing;
 }
 
-console.log(`Horario laboral: ${horarioLaboral()}`);
-const horaColombia = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' })
-horaColombia.slice(11, 19)
-if (horaColombia > "12:25:00") {
-  console.log("Es después de las 12:00 PM en Colombia");
+function horarioJose() {
+  const now = new Date();
+  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  const colombiaTime = new Date(utc - (5 * 60 * 60000));
+  const hour = colombiaTime.getHours();
+  const minute = colombiaTime.getMinutes();
+
+  const opening = 12 * 60; // 2:00 p.m. en minutos 
+  const closing = 22 * 60; // 10:00 p.m. en minutos
+  const current = hour * 60 + minute;
+
+  return current >= opening && current < closing;
 }
 
 const transactionToPhoneMap = {}; // Memoria para mapear transactionId a número de teléfono
@@ -115,6 +122,15 @@ async handleIncomingMessage(message, senderInfo, screen, datosPedido, pedidoStr)
           publicUrl,         // URL pública de la imagen en S3
           templateVars
         );
+        
+        if(horarioJose()) {
+          await whatsappService.sendTemplatePedidoMessage(
+            "573117658005", // Número de Jose
+            "comprobante_pago",
+            publicUrl,         // URL pública de la imagen en S3
+            templateVars
+          );
+        }
 
         await whatsappService.sendTemplatePedidoMessage(
           "573125030531", // Número de Lucho
@@ -2974,10 +2990,13 @@ Total: $${datosPedido.monto.toLocaleString('es-CO')} COP`;
           datosPedido.datos.pago,
           datosPedido.monto ? datosPedido.monto.toLocaleString('es-CO') : ""
         ];
-
+        
         await whatsappService.sendTemplatePedidoMessage("573125030531","nuevo_pedido","https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",templateVars); // Número de Lucho
         await whatsappService.sendTemplatePedidoMessage("573233082273","confirmacion_reserva","https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",templateVars); // Número de Andres
-        
+        if (horarioJose()) {
+          await whatsappService.sendTemplatePedidoMessage("573117658005","confirmacion_reserva","https://sorteo-chatbot.s3.us-east-1.amazonaws.com/descarga.jfif",templateVars); // Número de Jose
+        }
+
         response = "✅¡Pedido recibido!\nPronto nos pondremos en contacto contigo! 🤗";
       } else if (datosPedido.datos.pago === "Codigo QR") { //Era antes PSE
         try {
