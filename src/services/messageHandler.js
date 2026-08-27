@@ -27,7 +27,7 @@ function horarioLaboral() {
 console.log(`Horario laboral: ${horarioLaboral()}`);
 const horaColombia = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' })
 horaColombia.slice(11, 19)
-if (horaColombia > "12:00:00") {
+if (horaColombia > "12:25:00") {
   console.log("Es después de las 12:00 PM en Colombia");
 }
 
