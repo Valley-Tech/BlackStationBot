@@ -21,7 +21,7 @@ function horarioLaboral() {
   const closing = 22 * 60; // 10:00 p.m. en minutos
   const current = hour * 60 + minute;
 
-  return current >= opening && current < closing;
+  return current;
 }
 
 console.log(`Horario laboral: ${horarioLaboral()}`);
