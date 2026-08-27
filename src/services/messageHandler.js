@@ -26,7 +26,7 @@ function horarioLaboral() {
 
 console.log(`Horario laboral: ${horarioLaboral()}`);
 
-console.log(`Hora actual Now(): ${new Date()}`);
+console.log(`Hora actual Now(): ${new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' })}`);
 
 const transactionToPhoneMap = {}; // Memoria para mapear transactionId a número de teléfono
 const idNumber = {}
