@@ -21,12 +21,15 @@ function horarioLaboral() {
   const closing = 22 * 60; // 10:00 p.m. en minutos
   const current = hour * 60 + minute;
 
-  return current;
+  return current >= opening && current < closing;
 }
 
 console.log(`Horario laboral: ${horarioLaboral()}`);
 const horaColombia = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' })
-console.log(`Hora actual Now(): ${horaColombia.slice(11, 19)}`); // Solo necesito sacar la hora actual en Colombia para verificar el horario laboral
+horaColombia.slice(11, 19)
+if (horaColombia > "12:00:00") {
+  console.log("Es después de las 12:00 PM en Colombia");
+}
 
 const transactionToPhoneMap = {}; // Memoria para mapear transactionId a número de teléfono
 const idNumber = {}
