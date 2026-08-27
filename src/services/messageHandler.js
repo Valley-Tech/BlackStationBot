@@ -8,6 +8,26 @@ import { printDetailedError } from './printDetailError.js';
 import { downloadImageFromMeta } from './httpRequest/sendToWhatsApp.js';
 import { uploadToPublicStorage } from './awsS3Service.js';
 
+function horarioLaboral() {
+  // Hora actual en Colombia (GMT-5)
+  const now = new Date();
+  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  const colombiaTime = new Date(utc - (5 * 60 * 60000));
+  const hour = colombiaTime.getHours();
+  const minute = colombiaTime.getMinutes();
+
+  // Horario: 06:00 (6 a.m.) a 22:00 (10 p.m.)
+  const opening = 6 * 60; // 06:00 a.m. en minutos 
+  const closing = 22 * 60; // 10:00 p.m. en minutos
+  const current = hour * 60 + minute;
+
+  return current >= opening && current < closing;
+}
+
+console.log(`Horario laboral: ${horarioLaboral()}`);
+
+console.log(`Hora actual Now(): ${new Date()}`);
+
 const transactionToPhoneMap = {}; // Memoria para mapear transactionId a número de teléfono
 const idNumber = {}
 const accion = {}
@@ -22,8 +42,9 @@ class MessageHandler {
     this.assistantState = {};
   }
 
-  async handleIncomingMessage(message, senderInfo, screen, datosPedido, pedidoStr) {
-    try {
+async handleIncomingMessage(message, senderInfo, screen, datosPedido, pedidoStr) {
+  try {
+    if (horarioLaboral()) {
       if (message?.type === 'text' && message.text) {
         const incomingMessage = message.text.body.toLowerCase().trim();
         const userId = message.from;
@@ -103,7 +124,14 @@ class MessageHandler {
         await whatsappService.sendMessage(message.from, msg);
       }
       
-    } catch (error) {
+    } else {
+        const name = this.getSenderName(senderInfo).match(/^(\w+)/)?.[1];
+        const msg = `¡Hola ${name}! 😊\nNuestro horario de atención es *todos los días* de *06:00 a.m. a 10:00 p.m.*\nSi necesitas una respuesta inmediata, haz tu pregunta con el signo ❓\n\n ¡Gracias por escribirnos! 😊`;
+        await whatsappService.sendMessage(message.from, msg);
+        await whatsappService.markAsRead(message.id);
+        return;
+   }
+  } catch (error) {
       console.log(error);
     }
   }
