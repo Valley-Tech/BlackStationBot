@@ -26,7 +26,7 @@ function horarioLaboral() {
 
 console.log(`Horario laboral: ${horarioLaboral()}`);
 
-console.log(`Hora actual Now(): ${new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' })}`);
+console.log(`Hora actual Now(): ${new Date().getTime().toLocaleString('es-CO', { timeZone: 'America/Bogota' })}`); // Solo necesito sacar la hora actual en Colombia para verificar el horario laboral
 
 const transactionToPhoneMap = {}; // Memoria para mapear transactionId a número de teléfono
 const idNumber = {}
