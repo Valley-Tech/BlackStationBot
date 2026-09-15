@@ -1,15 +1,10 @@
 import { decryptRequest, encryptResponse, FlowEndpointException } from "../services/encryption.js";
-// import { getNextScreen } from '../services/flowSorteo.js';
+import { getNextScreen } from '../services/flowSorteo.js';
 import messageHandler from '../services/messageHandler.js';
 import config from '../config/env.js';
 import crypto from "crypto";
-<<<<<<< HEAD
-import { CRM_MODE, forwardWebhook, toMetaMessage } from '../services/crmAdapter.js';
-import fs from 'fs'
-=======
 import fs from 'fs';
 import { CRM_MODE, forwardWebhook, toMetaMessage } from '../services/crmAdapter.js';
->>>>>>> 633f577d1142dd6e095c32ee0ff2a4f98da729ea
 
 const privateKey = config.PRIVATE_KEY;
 function isRequestSignatureValid(req) {
@@ -36,74 +31,40 @@ let ventana;
 let datosSorteo = {};
 let datosPedido = {};
 let pedidoStr;
-<<<<<<< HEAD
-const idNumber = {}
-class WebhookController {  
-  /**
-   * Webhook de Meta (modo espejo). Se reenvía al CRM ANTES del filtro por
-   * número para que el CRM vea también estados y eventos. Se responde 200
-   * enseguida: Meta reintenta (y duplica) si el bot tarda en contestar.
-=======
 class WebhookController {
   /**
    * Webhook de Meta (modo espejo). Se reenvía al CRM ANTES del filtro por
    * número para que el CRM vea también estados y eventos de otros números
    * conectados a la misma app.
->>>>>>> 633f577d1142dd6e095c32ee0ff2a4f98da729ea
    */
   async handleIncoming(req, res) {
     if (CRM_MODE !== 'gateway') forwardWebhook(req.body); // sin await: no frena la respuesta a Meta
 
     const message = req.body.entry?.[0]?.changes[0]?.value?.messages?.[0];
     const recipientPhone = req.body.entry?.[0]?.changes[0]?.value?.metadata?.phone_number_id;
-<<<<<<< HEAD
-
-=======
->>>>>>> 633f577d1142dd6e095c32ee0ff2a4f98da729ea
     // Solo responde si el mensaje es para el número de este bot
     if (recipientPhone !== process.env.BUSINESS_PHONE) {
       return res.sendStatus(200); // Ignora el mensaje
     }
 
     const senderInfo = req.body.entry?.[0]?.changes[0]?.value?.contacts?.[0];
-<<<<<<< HEAD
-    res.sendStatus(200);
-=======
     res.sendStatus(200); // Meta reintenta si se tarda; Gemini puede tardar segundos
->>>>>>> 633f577d1142dd6e095c32ee0ff2a4f98da729ea
     if (message) await this.dispatch(message, senderInfo);
   }
 
   /**
    * Evento del CRM (modo gateway): el CRM ya guardó el mensaje y comprobó que
-<<<<<<< HEAD
-   * el bot está activo en esa conversación. Se reconstruye el mensaje con el
-   * formato de Meta y se entra por la misma lógica de siempre.
-   */
-  async handleCrmEvent(event) {
-    if (event.event !== 'message.received' || !event.message) return;
-    // Doble seguro: el CRM ya filtra por "Atiende", pero si BUSINESS_PHONE está definido solo se atiende ese número.
-=======
    * el bot está activo. Se reconstruye el mensaje con el formato de Meta y se
    * entra por la misma lógica de siempre.
    */
   async handleCrmEvent(event) {
     if (event.event !== 'message.received' || !event.message) return;
     // Si el bot tiene BUSINESS_PHONE, solo atiende su número (el CRM ya filtra por "Atiende", esto es doble seguro).
->>>>>>> 633f577d1142dd6e095c32ee0ff2a4f98da729ea
     if (process.env.BUSINESS_PHONE && event.integration?.phoneNumberId && event.integration.phoneNumberId !== process.env.BUSINESS_PHONE) return;
     const { message, senderInfo } = toMetaMessage(event);
     await this.dispatch(message, senderInfo);
   }
 
-<<<<<<< HEAD
-  /** La lógica original de handleIncoming, intacta, usada por los dos caminos. */
-  async dispatch(message, senderInfo) {
-    try {
-      idNumber["numero"] = message.from;
-      if (message?.type === 'interactive' && message?.interactive.type === 'nfm_reply') {
-        await messageHandler.handleIncomingMessage(message, senderInfo, ventana, datosPedido, pedidoStr);
-=======
   /** La lógica original de handleIncoming, sin cambios, reutilizada por los dos caminos. */
   async dispatch(message, senderInfo) {
     try {
@@ -112,7 +73,6 @@ class WebhookController {
       }
       else if (message?.type === 'interactive' && message?.interactive.type === 'nfm_reply') {
         await messageHandler.handleIncomingMessage(message, senderInfo, datosPedido, pedidoStr, datosSorteo);
->>>>>>> 633f577d1142dd6e095c32ee0ff2a4f98da729ea
       }
       else if (message?.type === 'order') {
         const order = message.order;
@@ -167,7 +127,7 @@ async handleFlow(req, res) {
     
     try {
       if (decryptedBody.action === "data_exchange" || decryptedBody.action === "ping") {
-        // screenResponse = await getNextScreen(decryptedBody);
+        screenResponse = await getNextScreen(decryptedBody);
       }
       ventana = decryptedBody.screen
     if (ventana === "FINALIZAR") {
