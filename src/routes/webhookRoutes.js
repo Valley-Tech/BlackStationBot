@@ -4,9 +4,9 @@ import { createCrmEventsRouter } from '../services/crmAdapter.js';
 
 const router = express.Router();
 
-router.post('/webhook', (req, res) => webhookController.handleIncoming(req, res)); // arrow: conserva 'this'
-router.get('/webhook', webhookController.verifyWebhook);
 router.post('/flow', webhookController.handleFlow);
+router.post('/webhook', (req, res) => webhookController.handleIncoming(req, res)); // función flecha: conserva 'this'
+router.get('/webhook', webhookController.verifyWebhook);
 router.post('/wompi', express.json({ type: '*/*' }), webhookController.handleEvent);
 
 // Modo gateway: el CRM entrega aquí los mensajes (endpointUrl = https://<bot>/crm/events).
