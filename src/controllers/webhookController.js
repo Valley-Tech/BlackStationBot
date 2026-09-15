@@ -1,5 +1,5 @@
 import { decryptRequest, encryptResponse, FlowEndpointException } from "../services/encryption.js";
-import { getNextScreen } from '../services/flowSorteo.js';
+// import { getNextScreen } from '../services/flowSorteo.js';
 import messageHandler from '../services/messageHandler.js';
 import config from '../config/env.js';
 import crypto from "crypto";
@@ -124,7 +124,7 @@ async handleFlow(req, res) {
     
     try {
       if (decryptedBody.action === "data_exchange" || decryptedBody.action === "ping") {
-        screenResponse = await getNextScreen(decryptedBody);
+        // screenResponse = await getNextScreen(decryptedBody);
       }
       ventana = decryptedBody.screen
     if (ventana === "FINALIZAR") {
