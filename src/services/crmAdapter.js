@@ -1,5 +1,9 @@
 /**
+<<<<<<< HEAD
  * Puente BlackStationBot ↔ CRM ValleyTech.
+=======
+ * Puente ValleyTechBot ↔ CRM ValleyTech.
+>>>>>>> 633f577d1142dd6e095c32ee0ff2a4f98da729ea
  *
  * Dos modos, elegidos con la variable CRM_MODE:
  *
