@@ -30,6 +30,9 @@ export const CRM_MODE = (process.env.CRM_MODE || 'mirror').toLowerCase();
 const CRM_BASE_URL = (process.env.CRM_BASE_URL || '').replace(/\/$/, '');
 const CRM_API_KEY = process.env.CRM_API_KEY;
 const CRM_SIGNING_SECRET = process.env.CRM_SIGNING_SECRET;
+// phone_number_id del número por el que envía este bot. Así el CRM sabe a qué
+// número (y a qué chatbot) pertenece cada chat aunque lo haya abierto el bot.
+const CRM_PHONE_NUMBER_ID = process.env.CRM_PHONE_NUMBER_ID || process.env.BUSINESS_PHONE || undefined;
 
 export const crmEnabled = Boolean(CRM_BASE_URL && CRM_API_KEY);
 if (!crmEnabled) console.warn('[crm] CRM_BASE_URL o CRM_API_KEY vacíos: el bot funciona sin CRM');
@@ -93,12 +96,37 @@ export async function recordSent(to, data, metaResponse) {
   try {
     await crm.post('/messages/record', {
       to,
+      phoneNumberId: CRM_PHONE_NUMBER_ID,
       ...message,
       waMessageId: metaResponse?.messages?.[0]?.id,
       sentAt: new Date().toISOString(),
     });
   } catch (error) {
     console.warn('[crm] no se pudo registrar el mensaje enviado:', describe(error));
+  }
+}
+
+/**
+ * Pide al CRM la respuesta de la IA de ESTE chatbot (Chatbots → IA y
+ * conocimiento: instrucciones, preguntas frecuentes, archivos y sitio web,
+ * más el historial del chat guardado en el CRM). Devuelve el texto, o null si
+ * la IA está apagada o sin conocimiento en el CRM (409 ai_disabled /
+ * ai_no_knowledge / ai_not_configured) o si el CRM no respondió: el bot sigue
+ * con su menú. No usa Gemini por su cuenta.
+ */
+export async function askAi(to, text) {
+  if (!crmEnabled) return null;
+  try {
+    const { data } = await crm.post('/ai/reply', { to, text, phoneNumberId: CRM_PHONE_NUMBER_ID }, { timeout: 45000 });
+    return data?.text ?? null;
+  } catch (error) {
+    const code = error.response?.data?.error?.code ?? error.response?.data?.code;
+    if (error.response?.status === 409 && ['ai_disabled', 'ai_no_knowledge', 'ai_not_configured'].includes(code)) {
+      console.log(`[crm] IA no disponible para este chatbot (${code}); se responde con el menú`);
+      return null;
+    }
+    console.warn('[crm] la IA del CRM no respondió:', describe(error));
+    return null;
   }
 }
 
@@ -110,7 +138,7 @@ export async function canBotReply(to) {
   const cached = activeCache.get(to);
   if (cached && Date.now() - cached.at < 10_000) return cached.active;
   try {
-    const { data } = await crm.get('/conversations/lookup', { params: { to } });
+    const { data } = await crm.get('/conversations/lookup', { params: { to, phoneNumberId: CRM_PHONE_NUMBER_ID } });
     activeCache.set(to, { active: data.botActive !== false, at: Date.now() });
     return data.botActive !== false;
   } catch (error) {
@@ -131,7 +159,7 @@ export async function sendViaCrm(to, data) {
   const message = toCrmMessage(data);
   if (!message) return { ok: true, skipped: 'read' };
   try {
-    const { data: created } = await crm.post('/messages', { to, ...message });
+    const { data: created } = await crm.post('/messages', { to, phoneNumberId: CRM_PHONE_NUMBER_ID, ...message });
     return created;
   } catch (error) {
     const code = error.response?.data?.error?.code ?? error.response?.data?.code;
