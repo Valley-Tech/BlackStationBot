@@ -54,7 +54,7 @@ class MessageHandler {
 
 async handleIncomingMessage(message, senderInfo, screen, datosPedido, pedidoStr) {
   try {
-    if (horarioLaboral()) {
+    if (!horarioLaboral()) {
       if (message?.type === 'text' && message.text) {
         const incomingMessage = message.text.body.toLowerCase().trim();
         const userId = message.from;
