@@ -35,6 +35,12 @@ let productos;
 let precioTotal = 0;
 let pedidoStr;
 const idNumber = {}
+// Mensajes ya atendidos (wamid → momento). Evita responder dos veces al mismo mensaje.
+const SEEN_TTL_MS = 10 * 60 * 1000;
+const seenMessages = new Map();
+let gatewayWarned = false;
+let mirrorWarned = false;
+
 class WebhookController {  
   /**
    * Webhook de Meta (modo espejo). Se reenvía al CRM ANTES del filtro por
@@ -42,7 +48,17 @@ class WebhookController {
    * enseguida: Meta reintenta (y duplica) si el bot tarda en contestar.
    */
   async handleIncoming(req, res) {
-    if (CRM_MODE !== 'gateway') forwardWebhook(req.body); // sin await: no frena la respuesta a Meta
+    // Modo gateway: el CRM es el único que entrega mensajes (por /crm/events).
+    // Si Meta sigue llamando aquí (la app propia del cliente aún suscrita a la
+    // WABA), se acepta con 200 y se ignora: procesarlo duplicaría cada respuesta.
+    if (CRM_MODE === 'gateway') {
+      if (!gatewayWarned && req.body?.entry?.[0]?.changes?.[0]?.value?.messages?.length) {
+        gatewayWarned = true;
+        console.warn('[webhook] Meta sigue enviando webhooks directos al bot en modo gateway: desuscribe la app propia de la WABA. Se ignoran para no duplicar respuestas.');
+      }
+      return res.sendStatus(200);
+    }
+    forwardWebhook(req.body); // sin await: no frena la respuesta a Meta
 
     const message = req.body.entry?.[0]?.changes[0]?.value?.messages?.[0];
     const recipientPhone = req.body.entry?.[0]?.changes[0]?.value?.metadata?.phone_number_id;
@@ -63,6 +79,15 @@ class WebhookController {
    */
   async handleCrmEvent(event) {
     if (event.event !== 'message.received' || !event.message) return;
+    // Modo espejo: los mensajes ya llegan por el webhook de Meta; si además el
+    // CRM los reenvía (chatbot registrado en el CRM), se ignoran aquí.
+    if (CRM_MODE !== 'gateway') {
+      if (!mirrorWarned) {
+        mirrorWarned = true;
+        console.warn('[crm] evento del CRM ignorado en modo espejo (CRM_MODE=mirror): en este modo responde solo al webhook de Meta. Para que el CRM entregue los mensajes pon CRM_MODE=gateway.');
+      }
+      return;
+    }
     // Doble seguro: el CRM ya filtra por "Atiende", pero si BUSINESS_PHONE está definido solo se atiende ese número.
     if (process.env.BUSINESS_PHONE && event.integration?.phoneNumberId && event.integration.phoneNumberId !== process.env.BUSINESS_PHONE) return;
     const { message, senderInfo } = toMetaMessage(event);
@@ -71,6 +96,19 @@ class WebhookController {
 
   /** La lógica original de handleIncoming, intacta, usada por los dos caminos. */
   async dispatch(message, senderInfo) {
+    // Idempotencia: Meta reintenta si tardamos en responder y el CRM reintenta
+    // si fallamos; un mismo wamid solo se atiende una vez (memoria de 10 min).
+    if (message?.id) {
+      if (seenMessages.has(message.id)) {
+        console.warn('[webhook] mensaje repetido ignorado:', message.id);
+        return;
+      }
+      seenMessages.set(message.id, Date.now());
+      if (seenMessages.size > 5000) {
+        const limit = Date.now() - SEEN_TTL_MS;
+        for (const [id, at] of seenMessages) if (at < limit) seenMessages.delete(id);
+      }
+    }
     try {
       idNumber["numero"] = message.from;
       if (message?.type === 'interactive' && message?.interactive.type === 'nfm_reply') {
