@@ -181,7 +181,7 @@ const SEND_SINGLE = `async sendSingleProduct(to, id) {
       interactive: {
         type: "product",
         action: {
-          catalog_id: "2277977052727019",
+          catalog_id: process.env.CATALOG_ID || "2277977052727019",
           product_retailer_id: productId
         }
       }

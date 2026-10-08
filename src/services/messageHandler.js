@@ -3299,9 +3299,9 @@ async handleProductSelection(to, selectedProduct) {
           ]
         }
     };
-    this.assistantState[to] = { step: 'product_selection' };
+    this.assistantState[userId] = { step: 'product_selection' };
 
-    await whatsappService.sendListMessage(to, listMessage);
+    await whatsappService.sendListMessage(userId, listMessage);
   }
     
       await whatsappService.sendInteractiveButtons(userId, menuMessage, buttons);
