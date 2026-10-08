@@ -29,8 +29,71 @@ export const ROW_PREFIX = 'prod:';
 /** Memoria corta: productos encontrados por número, para "Sí, gracias". */
 const found = new Map();
 
-const title = (s) => (s.length > 24 ? `${s.slice(0, 23).trim()}…` : s);
-const price = (p) => (p.price != null ? `$${Number(p.price).toLocaleString('es-CO', { maximumFractionDigits: 0 })}` : undefined);
+// ---- Títulos de fila (WhatsApp: título ≤ 24, descripción ≤ 72) ----
+const TITLE_MAX = 24;
+const DESC_MAX = 72;
+/** Palabras que se pueden quitar del nombre sin perder el sentido (nunca la primera). */
+const FILLER = new Set(['de', 'del', 'la', 'las', 'los', 'el', 'con', 'para', 'y', 'en', 'a', 'al', 'sabor']);
+const ABBR = {
+  acondicionador: 'Acond.', tratamiento: 'Trat.', desodorante: 'Desod.', detergente: 'Deterg.',
+  protectores: 'Protect.', protector: 'Protect.', mantequilla: 'Mantq.', chocolate: 'Choc.',
+  galletas: 'Gall.', mayonesa: 'Mayon.', unidades: 'und', unidad: 'und', paquete: 'Paq.',
+  extra: 'Ext.', original: 'Orig.', tradicional: 'Trad.', clásico: 'Clás.', clasico: 'Clás.',
+};
+const SIZE_RE = /\s+x\s*((?:\d+(?:[.,]\d+)?\s*[a-záéíóú]*\.?)|unidad(?:es)?)\s*$/i;
+
+/** "x 110 gr" → "110gr" · "x 15 Unidades" → "15und" · "x Unidad" → "und" */
+function sizeOf(name) {
+  const m = SIZE_RE.exec(name);
+  if (!m) return { base: name, size: '' };
+  const size = m[1].replace(/\s+/g, '').replace(/unidad(es)?/i, 'und');
+  return { base: name.slice(0, m.index).trim(), size };
+}
+const join = (base, size) => (size ? `${base} ${size}` : base);
+const cut = (s, max) => {
+  if (s.length <= max) return s;
+  const words = s.slice(0, max).split(' ');
+  // Corta en el último espacio si no se pierde demasiado; si no, corta la palabra.
+  const byWord = words.length > 1 ? words.slice(0, -1).join(' ') : '';
+  return byWord.length >= max - 6 ? byWord : s.slice(0, max).trim();
+};
+
+/**
+ * Título corto que conserva la presentación (110gr, 75gr, 1.5L…):
+ *   "Jabón Protex Avena x 110gr"                       → "Jabón Protex Avena 110gr"
+ *   "Tratamiento Nutribela 15 Con Células Madres x 27ml" → "Trat. Nutribela 15… 27ml"
+ * El nombre completo va en la descripción de la fila.
+ */
+export function shortTitle(name) {
+  const full = String(name ?? '').replace(/\s+/g, ' ').trim();
+  if (full.length <= TITLE_MAX) return full;
+  const { base, size } = sizeOf(full);
+  let t = join(base, size);
+  if (t.length <= TITLE_MAX) return t;
+  // Quitar conectores ("de", "con", "y"…) y abreviar palabras largas.
+  const words = base.split(' ');
+  const compact = words.filter((w, i) => i === 0 || !FILLER.has(w.toLowerCase()));
+  t = join(compact.join(' '), size);
+  if (t.length <= TITLE_MAX) return t;
+  const abbr = compact.map((w) => ABBR[w.toLowerCase()] ?? w).join(' ');
+  t = join(abbr, size);
+  if (t.length <= TITLE_MAX) return t;
+  // Último recurso: recortar el nombre pero dejar siempre la presentación al final.
+  const room = TITLE_MAX - (size ? size.length + 1 : 0) - 1;
+  return join(`${cut(abbr, room)}…`, size);
+}
+
+const money = (p) => (p.price != null && p.price !== '' && !Number.isNaN(Number(p.price))
+  ? `$${Number(p.price).toLocaleString('es-CO', { maximumFractionDigits: 0 })}` : '');
+
+/** Descripción de la fila: nombre completo + precio (≤ 72). */
+export function rowDescription(p) {
+  const full = String(p.name ?? '').replace(/\s+/g, ' ').trim();
+  const price = money(p);
+  const tail = price ? ` · ${price}` : '';
+  const room = DESC_MAX - tail.length;
+  return `${full.length > room ? `${full.slice(0, room - 1).trim()}…` : full}${tail}`;
+}
 
 /**
  * Busca lo que escribió el cliente y le muestra la lista de coincidencias.
@@ -63,8 +126,8 @@ export async function buscarProductos(to, message, assistantState) {
         sections: [{
           rows: chunk.map((p) => ({
             id: `${ROW_PREFIX}${p.id}`.slice(0, 200),
-            title: title(p.name),
-            ...(price(p) ? { description: price(p) } : {}),
+            title: shortTitle(p.name),          // ≤ 24: conserva la presentación (110gr, 75gr…)
+            description: rowDescription(p),    // ≤ 72: nombre completo + precio
           })),
         }],
       },
