@@ -3269,8 +3269,41 @@ async handleProductSelection(to, selectedProduct) {
       { type: 'reply', reply: { id: 'buscar', title: 'No, corregir' } },
       // { type: 'reply', reply: { id: '', title: 'Hablar con asesor 🤵' } }
     ];
-      // Enviar respuesta al usuario
-      await whatsappService.sendMessage(userId, response);
+      
+    // Parseamos la respuesta en líneas limpias (sin bullets ni líneas vacías)
+    const productLines = response
+      .split("\n")
+      .map(line => line.replace(/^[-•*]\s*/, "").trim())
+      .filter(line => line.length > 0);
+
+    // Dividimos en chunks de máximo 10 (límite de WhatsApp por mensaje list)
+    const chunkSize = 10;
+    for (let i = 0; i < productLines.length; i += chunkSize) {
+      const chunk = productLines.slice(i, i + chunkSize);
+        
+    const listMessage = {
+        type: "list",
+        body: {
+          text: "Productos encontrados:"
+        },
+        action: {
+          button: "Productos",
+          sections: [
+            {
+              rows: chunk.map((item, index) => ({
+                id: item,
+                // WhatsApp corta el title a 24 caracteres, si no lo truncas tú, la API rechaza el mensaje
+                title: item.length > 24 ? item.slice(0, 23).trim() + "…" : item
+              }))
+            }
+          ]
+        }
+    };
+    this.assistantState[to] = { step: 'product_selection' };
+
+    await whatsappService.sendListMessage(to, listMessage);
+  }
+    
       await whatsappService.sendInteractiveButtons(userId, menuMessage, buttons);
     } catch (error) {
       console.error("Error en handleAssistant:", error);
