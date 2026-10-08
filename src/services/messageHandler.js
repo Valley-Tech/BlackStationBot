@@ -54,7 +54,7 @@ class MessageHandler {
 
 async handleIncomingMessage(message, senderInfo, screen, datosPedido, pedidoStr) {
   try {
-    if (!horarioLaboral()) {
+    if (horarioLaboral()) {
       if (message?.type === 'text' && message.text) {
         const incomingMessage = message.text.body.toLowerCase().trim();
         const userId = message.from;
@@ -156,8 +156,28 @@ async handleIncomingMessage(message, senderInfo, screen, datosPedido, pedidoStr)
   }
 
   isGreeting(message) {
-    const greetings = ["hola", "hi", "ok", "listo", "bien", "bueno", "hello", "HL", "Oe", "buenas", "buenos dias", "buenas tardes", "buenas noches", "saludos", "como estás", "hl", "gracias", "muchas gracias"];
-    return greetings.includes(message);
+    const lower = message.toLowerCase();
+    return (
+      lower.includes('hola') ||
+      lower.includes('holi') ||
+      lower.includes('hole') ||
+      lower.includes('hello') ||
+      lower.includes('ole') ||
+      lower.includes('ola') ||
+      lower.includes('oli') ||
+      lower.includes('hl') ||
+      lower.includes('hi') ||
+      lower.includes('buenas') ||
+      lower.includes('buenos dias') ||
+      lower.includes('buen dia') ||
+      lower.includes('buen día') ||
+      lower.includes('buenos días') ||
+      lower.includes('buenas tardes') ||
+      lower.includes('buena tarde') ||
+      lower.includes('buenas noches') ||
+      lower.includes('buena noche') ||
+      lower.includes('saludos')
+    );
   }
 
   async getDay() {
@@ -2917,7 +2937,7 @@ async handleIncomingMessage(message, senderInfo, screen, datosPedido, pedidoStr)
         response = 'Dime que quieres comprar, por favor sé específico: ';
         break;
       default:
-        response = "Oops😔\nPorfa, elige una de las opciones del menú o escribe *Hola* para volver a empezar\n\nPara buscar lo que necesitas, escríbeme lo utilizando el signo *¿?* ";
+        this.assistantState[to] = { step: 'question' };
     }
     if (response) {
       await whatsappService.sendMessage(to, response);
