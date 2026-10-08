@@ -228,6 +228,13 @@ class WhatsAppService {
   }
   
   async sendSingleProduct(to, id) {
+    // Un product_retailer_id es un código sin espacios (ej. 69d5082a9bf0d32ae9a89dd9).
+    // Si llega un texto (respuesta de la IA), no se manda a Meta: evitaba el error #131009.
+    const productId = String(id ?? '').trim();
+    if (!productId || /\s/.test(productId) || productId.length > 100) {
+      console.warn('[catalogo] product_retailer_id inválido, no se envía:', productId.slice(0, 80));
+      return false;
+    }
     try {
       const data = {
         messaging_product: "whatsapp",
@@ -235,17 +242,18 @@ class WhatsAppService {
         to,
         type: "interactive",
         interactive: {
-            type: "product",
-            action: {
-                catalog_id: "2277977052727019",
-                product_retailer_id: id
-            }
+          type: "product",
+          action: {
+            catalog_id: "2277977052727019",
+            product_retailer_id: productId
+          }
         }
       };
-  
-    await sendToWhatsApp(data);
+      await sendToWhatsApp(data);
+      return true;
     } catch (error) {
       printDetailedError(error);
+      return false;
     }
   }
   

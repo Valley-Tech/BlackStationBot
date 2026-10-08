@@ -7,6 +7,7 @@ import { enviarPedidoALoggro } from './loggroService.js';
 import { printDetailedError } from './printDetailError.js';
 import { downloadImageFromMeta } from './httpRequest/sendToWhatsApp.js';
 import { uploadToPublicStorage } from './awsS3Service.js';
+import { buscarProductos, elegirProducto, enviarProductosEncontrados, ROW_PREFIX } from './productSearchFlow.js';
 
 function horarioLaboral() {
   // Hora actual en Colombia (GMT-5)
@@ -79,7 +80,7 @@ async handleIncomingMessage(message, senderInfo, screen, datosPedido, pedidoStr)
           // <-- Aquí manejas la respuesta de la lista
           const option = message?.interactive?.list_reply?.id;
           const currentState = this.assistantState[message.from];
-          if (currentState?.step === 'product_selection') {
+          if (currentState?.step === 'product_selection' || String(option).startsWith(ROW_PREFIX)) {
             // Viene de la lista de productos generada por la IA
             await this.handleProductSelection(message.from, option);
           } else {
@@ -2945,40 +2946,13 @@ async handleIncomingMessage(message, senderInfo, screen, datosPedido, pedidoStr)
   }
 
   async procesarRespuestaAsistente(to) {
+    // Botón "Si, Gracias": envía los productos encontrados en la última búsqueda (IDs del CRM).
     try {
-      const respuestaAnterior = assistantResponseMap[to];
-      
-      if (!respuestaAnterior) {
-        await whatsappService.sendMessage(to, "No encontré tu solicitud anterior. Por favor, intenta nuevamente.");
-        return;
-      }
-
-      // Crear un prompt para que Gemini extraiga los IDs de los productos de la respuesta anterior
-      const promptExtraccion = `
-      [SISTEMA]: La siguiente respuesta es o son los productos que la IA encontró relacionados con la búsqueda del usuario:
-"${respuestaAnterior}"
-Responde ÚNICAMENTE con los IDs de los productos anteriores, uno por línea, sin explicaciones adicionales.
-Si no hay IDs, responde: "No hay productos disponibles"
-`;
-
-      // Enviar a Gemini para extraer los IDs
-      const idsProductos = await geminiService(promptExtraccion, to);
-      // Si idsProductos es un string, convertirlo a un array dividiéndolo por saltos de línea
-      let idsArray = [];
-      if (typeof idsProductos === "string") {
-        idsArray = idsProductos.split("\n").filter(id => id.trim() !== "");
-      } else if (Array.isArray(idsProductos)) {
-        idsArray = idsProductos;
-      }
-      for (const ids of idsArray) {
-        await whatsappService.sendSingleProduct(to, ids);
-      }
-      // Limpiar la memoria
-      delete assistantResponseMap[to];
+      await enviarProductosEncontrados(to);
     } catch (error) {
-      console.error("Error en procesarRespuestaAsistente:", error);
+      console.error('Error en procesarRespuestaAsistente:', error);
       printDetailedError(error);
-      await whatsappService.sendMessage(to, "Lo siento, hubo un error procesando tu solicitud 🔧");
+      await whatsappService.sendMessage(to, 'Lo siento, hubo un error procesando tu solicitud 🔧');
     }
   }
 
@@ -3193,122 +3167,34 @@ completeOrder(productos, data) {
 
   async handleAssistantFlow(to, message) {
     const state = this.assistantState[to];
-    let response;
-
-    const menuMessage = "¿Esto es lo que buscas?\n\nSi hay varias opciones, da click en corregir para decirme de las opciones lo que necesitas.";
-    const buttons = [
-      { type: 'reply', reply: { id: 'finalizar', title: "Si, Gracias 😊" } },
-      { type: 'reply', reply: { id: 'buscar', title: 'No, corregir' } },
-      // { type: 'reply', reply: { id: '', title: 'Hablar con asesor 🤵' } }
-    ];
-
-    switch (state.step) {
-      case 'question':
-        response = await geminiService("[USUARIO]: " + message, to);
-        break;
-      default:
-        response = "Lo siento 😔 no entendí tu respuesta\nPor Favor, elige una de las opciones del menú.";
-    }
-
     delete this.assistantState[to];
-    
-    // Parseamos la respuesta en líneas limpias (sin bullets ni líneas vacías)
-    const productLines = response
-      .split("\n")
-      .map(line => line.replace(/^[-•*]\s*/, "").trim())
-      .filter(line => line.length > 0);
-
-    // Dividimos en chunks de máximo 10 (límite de WhatsApp por mensaje list)
-    const chunkSize = 10;
-    for (let i = 0; i < productLines.length; i += chunkSize) {
-      const chunk = productLines.slice(i, i + chunkSize);
-        
-    const listMessage = {
-        type: "list",
-        body: {
-          text: "Productos encontrados:"
-        },
-        action: {
-          button: "Productos",
-          sections: [
-            {
-              rows: chunk.map((item, index) => ({
-                id: item,
-                // WhatsApp corta el title a 24 caracteres, si no lo truncas tú, la API rechaza el mensaje
-                title: item.length > 24 ? item.slice(0, 23).trim() + "…" : item
-              }))
-            }
-          ]
-        }
-    };
-    this.assistantState[to] = { step: 'product_selection' };
-
-    await whatsappService.sendListMessage(to, listMessage);
+    if (state?.step !== 'question') {
+      await whatsappService.sendMessage(to, 'Lo siento 😔 no entendí tu respuesta\nPor Favor, elige una de las opciones del menú.');
+      return;
+    }
+    try {
+      await buscarProductos(to, message, this.assistantState);
+    } catch (error) {
+      console.error('Error en handleAssistantFlow:', error);
+      printDetailedError(error);
+      await whatsappService.sendMessage(to, 'Lo siento, estoy teniendo problemas técnicos. Intenta nuevamente 🔧');
+    }
   }
-  await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
-}
 
-async handleProductSelection(to, selectedProduct) {
-  delete this.assistantState[to]; // limpiamos el estado de selección de producto
-
-  // Guardamos el producto seleccionado para que procesarRespuestaAsistente() lo use
-  assistantResponseMap[to] = selectedProduct;
-
-  // Reutilizamos el flujo existente de 'finalizar', que ya sabe leer assistantResponseMap[to]
-  await this.handleMenuOption(to, 'finalizar');
+async handleProductSelection(to, rowId) {
+  // Fila "prod:<id>" de la lista de productos → tarjeta del producto del catálogo.
+  const ok = await elegirProducto(to, rowId, this.assistantState);
+  if (!ok) await this.handleMenuOption(to, rowId);
 }
 
   async handleAssistant(userId, message) {
+    // El cliente escribió una pregunta/búsqueda: el CRM devuelve los productos con sus IDs reales.
     try {
-      // Obtener respuesta de Gemini con memoria de conversación
-      const response = await geminiService("[USUARIO]: " + message, userId);
-      assistantResponseMap[userId] = response;
-      const menuMessage = "¿Esto es lo que buscas?\n\nSi hay varias opciones, da click en corregir para decirme de las opciones lo que necesitas.";
-      const buttons = [
-      { type: 'reply', reply: { id: 'finalizar', title: "Si, Gracias 😊" } },
-      { type: 'reply', reply: { id: 'buscar', title: 'No, corregir' } },
-      // { type: 'reply', reply: { id: '', title: 'Hablar con asesor 🤵' } }
-    ];
-      
-    // Parseamos la respuesta en líneas limpias (sin bullets ni líneas vacías)
-    const productLines = response
-      .split("\n")
-      .map(line => line.replace(/^[-•*]\s*/, "").trim())
-      .filter(line => line.length > 0);
-
-    // Dividimos en chunks de máximo 10 (límite de WhatsApp por mensaje list)
-    const chunkSize = 10;
-    for (let i = 0; i < productLines.length; i += chunkSize) {
-      const chunk = productLines.slice(i, i + chunkSize);
-        
-    const listMessage = {
-        type: "list",
-        body: {
-          text: "Productos encontrados:"
-        },
-        action: {
-          button: "Productos",
-          sections: [
-            {
-              rows: chunk.map((item, index) => ({
-                id: item,
-                // WhatsApp corta el title a 24 caracteres, si no lo truncas tú, la API rechaza el mensaje
-                title: item.length > 24 ? item.slice(0, 23).trim() + "…" : item
-              }))
-            }
-          ]
-        }
-    };
-    this.assistantState[userId] = { step: 'product_selection' };
-
-    await whatsappService.sendListMessage(userId, listMessage);
-  }
-    
-      await whatsappService.sendInteractiveButtons(userId, menuMessage, buttons);
+      await buscarProductos(userId, message, this.assistantState);
     } catch (error) {
-      console.error("Error en handleAssistant:", error);
+      console.error('Error en handleAssistant:', error);
       printDetailedError(error);
-      await whatsappService.sendMessage(userId, "Lo siento, estoy teniendo problemas técnicos. Intenta nuevamente 🔧");
+      await whatsappService.sendMessage(userId, 'Lo siento, estoy teniendo problemas técnicos. Intenta nuevamente 🔧');
     }
   }
 
